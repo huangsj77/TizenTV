@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VIEW PHOTO</title>
+    <meta name="viewport" content="width=1920" />
+    <link rel="stylesheet" href="../photo/css/info.css"/>
+    <style type="text/css">
+.arrow_ll {
+  display: block;
+  float: left;  
+  margin-left: 50px;
+}
+.arrow_rr {
+  display: block;
+  float: right;
+  margin-right: 50px;
+}
+
+    </style>
+</head>
+<body>
+<div class="main">
+  <div id="photo_view" class="photo-view">
+      <img class="arrow_ll" src="../image/ar_hotel_l.png" />
+      <img class="arrow_rr" src="../image/ar_hotel_r.png" />
+      <div class="photo-text" style="display:none;">
+      	<div id="photo_title"></div>
+      	<div id="photo_cont"></div>
+      </div>
+  </div>
+  <img src="../image/op_intro.png" class="op-intro" style="display:none;" />
+</div>
+</body>
+</html>
+    <script type="text/javascript" src="../video/public/js/config.js"></script>
+    <script type="text/javascript" src="../video/public/js/jsget.js"></script>
+    <script type="text/javascript" src="../js/querystring.js"></script>
+    <script type="text/javascript" src="../../js/cate.js"></script>
+
+<script type="text/javascript">
+  var photoItem = new PhotoItem();
+  photoItem.onload = function( photoInfo ) {
+  	photoItem.current = 0;
+
+  	this.setPhoto = function( idx ) {
+  		var l = this.photoInfo.photolist.length;
+  		var nidx = (l + idx) % l ;
+  		this.current = nidx;
+  		var item = this.photoInfo.photolist[nidx];
+  		document.getElementById("photo_view").style.backgroundImage = "url("+item.logo+")";
+  		document.getElementById("photo_title").innerHTML = item.name;
+  		document.getElementById("photo_cont").innerHTML = item.about;  		
+  	}
+
+  	this.setPhoto(0);
+  }
+
+
+
+  document.addEventListener("keydown",function(e){
+  	var k = e.keyCode;
+  	//alert(k);
+    console.log("get key : " + k );
+  	switch( k ) {
+  		case 68:
+//  		case 39:
+  			photoItem.setPhoto( photoItem.current + 1);
+  			break;
+  		case 65:
+//  		case 37:
+  			photoItem.setPhoto( photoItem.current - 1);
+  			break;
+  		case 8:
+  		case 27:
+	  		break;
+  	}
+  },false);        
+
+
+//window.onWAEReady = function(waeObj){
+    //var settingObj = wae.create("WAE.Setting");
+    //settingObj.setUseLocalImageCache(true);
+
+    //var uiSettings = wae.create("UI.UISettings");
+    //uiSettings.set1080P();
+
+
+
+    if ( isNaN(parseInt(Request.q("photo_id"))) == false ) {
+      photoItem.load( Request.q("photo_id") );
+      return;
+    }
+
+    //var param = wae.create("DATA.Parameters");
+    //var title = param.get("name");
+    //var apiUrl = param.get("apiUrl");
+
+    var res = apiUrl.match(new RegExp("cat_id=(\\d+)","i"));
+    var cid = apiUrl;
+    if ( res )
+      cid = res[1];
+
+    itemList.load( cid , 1, 10 );
+ // }
+
+
+  var itemList = new ItemList();
+  itemList.onload = function( ilist ) {
+      var photo_id = ilist[0].id ;
+      photoItem.load( photo_id );
+  }  
+
+</script>

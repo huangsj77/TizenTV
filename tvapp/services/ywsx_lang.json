@@ -1,0 +1,42 @@
+﻿{
+  "tw" : {
+    "Wash Services" : "衣物送洗",
+    "Call Services, Press" : "衣物送洗，請按",
+    "Notice" : "送洗須知：\n1. 第一次送洗衣物或有紀念價值的衣物，請事先告知。\n2. 如衣物有特殊材質或有特殊洗法，請事先告知。\n3. 衣物送洗時，請記得索取件單并留意取件時間。\n4. 送洗時，請將重要貨幣、物品、飾品取下，經洗滌造成損壞、遺失概不負責。5. 如遇洗滌過失及理賠爭議時，雙方同意依洗衣定型化契約為依據行之。",
+    "Call Services" : "已通知衣物送洗！",
+    
+  },
+
+  "cn" : {
+    "Wash Services" : "衣物送洗",
+    "Call Services, Press" : "衣物送洗，请按",
+    "Notice" : "送洗须知：\n1. 第一次送洗衣物或有纪念价值的衣物，请事先告知。 \n2. 如衣物有特殊材质或有特殊洗法，请事先告知。 \n3. 衣物送洗时，请记得索取件单并留意取件时间。 \n4. 送洗时，请将重要货币、物品、饰品取下，经洗涤造成损坏、遗失概不负责。 5. 如遇洗涤过失及理赔争议时，双方同意依洗衣定型化契约为依据行之。 ",
+    "Call Services" : "已通知衣物送洗！",
+    
+  },
+
+  "jp" : {
+    "Wash Services" : "ランドリーバレー",
+    "Call Services, Press" : "ランドリーボーイ、プレス",
+    "Notice" : "バレット注：\n 洗濯物や記念衣類を送信するのは初めてN1、事前に知らされてください。 \n N2。服は特殊な材料を持っているか、特殊な洗浄方法で、ご連絡ください。 \n N3。ランドリー係員は、単一の部品を入手し、ピックアップに時間が注意を払うことを忘れないでください。 \n 洗濯物は、重要な通貨を設定N4。、グッズ、ジュエリーが除去されるが、ダメージを洗浄し、損失は責任を負いません。 5.過失および特許請求の範囲洗浄紛争の場合には、2つの側面は、基礎として、洗濯株による契約を確定することに合意しました。 「
+    「コールサービス」：「私は、係員付き洗濯物を通知してきました！",
+    
+  },
+
+  "en" : {
+    "Wash Services" : " Laundry valet ",
+    "Call Services, Press" : " Laundry valet, press ",
+    "Notice" : " Valet Notes: \n n1 the first time to send the laundry or commemorative clothing, please be informed in advance. \n N2. The clothes have special materials or with special washing method, please inform. \n N3. When the laundry valet, please remember to obtain a single piece and pay attention to pick-up time. \n N4. When the laundry, set an important currency, goods, jewelry is removed, washed damage, loss is not responsible. 5. In case of negligence and claims washed dispute, the two sides agreed to finalize a contract by laundry lines as the basis of. ",
+     "Call Services": "I have informed valet laundry!",
+    
+  },
+
+  "kr" : {
+    "Wash Services" : "세탁 대행",
+    "Call Services, Press" : "세탁 대행을 누릅니다",
+    "Notice" : "주차 대행 참고 : \n 세탁 또는 기념 의류를 보내 처음으로 N1, 사전에 연락 주시기 바랍니다. \n N2. 옷은 특수 소재를 특수 세척 방법, 알려주십시오. \n N3. 세탁 주차가 하나의 조각을 얻기 위해 기억하고 픽업 시간을주의하십시오합니다. \n N4는. 세탁은, 중요한 통화, 상품, 보석 제거를 설정하면 피해를 세척, 손실은 책임을지지 않습니다. 5. 과실 및 청구 세척 분쟁의 경우, 양측의 기초로 세탁 라인에 의해 계약을 마무리하기로 합의했다. ",
+     "전화 서비스": "나는 주차 세탁을 통보했습니다!",
+    
+  },
+
+}

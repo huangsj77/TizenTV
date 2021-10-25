@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FOOD</title>
+  <meta name="viewport" content="width=1920" />
+  <link rel="stylesheet" href="../message/public.css"/>
+  <link rel="stylesheet" href="../shop/css/shop.css"/>
+</head>
+<body>
+<div class="tvmain">
+  <div class="tvcontent" style="background-image: url(image/bg_food.jpg)">
+    <div id="foodtitle" class="foodtitlecont">購物車</div>
+
+    <div class="foodlistcont">
+      <div  class="foodcart">
+        <div class="carthead">
+          <span class="col1" id="pitem">項目</span>
+          <span class="col2" id="pcount">數量</span>
+          <span class="col3" id="pprice">單價</span>
+          <span class="col4" id="pdelete">刪除</span>
+        </div>
+        <div class="cartbody" id="cartbody">
+        </div>
+        <div class="carttotal" id="carttotal">        </div>
+      </div>
+      <div class="paycont">
+        <a id="lastpay" style="width:300px;border: 2px solid #fff" href="javascript:doPay()">已確認，執行付款</a>
+
+        <!--<span id="confirmpress">確認購買請按</span>-->
+        <!--<img src="../public/image/btn_blue.png" />-->
+        <!--<span id="cancelpress">放棄購物請按</span>-->
+        <!--<img src="../public/image/btn_red.png" />-->
+
+      </div>
+    </div>
+  </div>
+  <div class="remoterhint"></div>
+  <div class="remoterhotkeyhint" style="display: none">
+      <img src="../image/btn_blue.png" />
+      <span onclick="hotKey.blue();" id="checkout1">結賬</span>
+      <br />
+      <img src="../image/btn_red.png" />
+      <span onclick="hotKey.back();" id="cancel1">放棄購物</a>
+  </div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../video/public/js/lang.js"></script>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../../js/cate.js"></script>
+<script type="text/javascript" src="../video/public/js/deviceinfo.js"></script>
+<script type="text/javascript">
+    var deviceInfo = new DeviceInfo();
+    deviceInfo.onload = function( dinfo ) {}
+    deviceInfo.load();
+</script>
+
+<script type="text/javascript">
+    document.getElementById("foodtitle").innerHTML = TR("Cart");
+    document.getElementById("pitem").innerHTML = TR("Item");
+    document.getElementById("pcount").innerHTML = TR("Count");
+    document.getElementById("pprice").innerHTML = TR("Price");
+    document.getElementById("pdelete").innerHTML = TR("Delete");
+    document.getElementById("lastpay").innerHTML = TR("Pay");
+    document.getElementById("confirmpress").innerHTML = TR("Confirm to Press");
+    document.getElementById("cancelpress").innerHTML = TR("Cancel to Press");
+    document.getElementById("checkout1").innerHTML = TR("Checkout");
+    document.getElementById("cancel1").innerHTML = TR("Cancel");
+
+</script>
+<script type="text/javascript" src="../video/public/js/sharedata.js"></script>
+<script type="text/javascript" src="player/js/key.js"></script>
+<script type="text/javascript">
+
+    function $(e) { return document.getElementById(e);  }
+
+    var totalPrice = 0;
+    function setCartList() {
+        var str = "";
+        var list = CartItem.getList();
+        totalPrice = 0;
+        for( var i = 0 ; i<list.length; i++ )  {
+            var citem = new CartItem( list[i] );
+            var s = "<a href='javascript:delItem("+citem.id+")' onfocus='focusItem(this)'><span class='col1'>"+citem.getName()+"</span>"
+                + "<span class='col2'>" + citem.getNum() + "</span>"
+                + "<span class='col3'>" + citem.getPrice() + "</span>"
+                + "<span class='col4'></span>"
+                + "</a>";
+            str += s;
+            totalPrice += parseInt(citem.getNum()) * parseInt(citem.getPrice());
+        }
+        $("cartbody").innerHTML = str;
+        $("carttotal").innerHTML= TR("Total") + " : " + totalPrice;
+    }
+
+    function focusItem( ele ) {
+        console.log("focus item ...");
+        if ( !! focusItem.ele ) focusItem.ele.style.backgroundImage = "";
+        focusItem.ele = ele;
+        ele.style.backgroundImage = "url(image/bar_bg.png)";
+    }
+
+    function delItem( id ) {
+        var citem = new CartItem( id );
+        citem.add("","",0);
+        setCartList();
+    }
+
+    function doPay() {
+        var cartMessage = "";
+        var list = CartItem.getList();
+        if(list.length <=0 ) {
+            alert("Shopping carts are empty!\n Please add some goods!");
+            return;
+        }
+        // alert(JSON.stringify(deviceInfo.info))
+        if( typeof deviceInfo.info == "undefined" || deviceInfo.info.contacts=="") {
+            alert("Please config the Room No First");
+            return;
+        }
+        var res = confirm( TR("Do you sure to pay?") );
+        if ( res ) {
+            totalPrice = 0;
+            for( var i = 0 ; i<list.length; i++ )  {
+                var citem = new CartItem( list[i] );
+                var s = citem.id+","+citem.getName()+"," + citem.getNum() + "," + citem.getPrice() + ",,\n";
+                cartMessage += s;
+                totalPrice += parseInt(citem.getNum()) * parseInt(citem.getPrice());
+            }
+            cartMessage += "\n,Total,," +  totalPrice + ",,\n";
+
+            var msg = new PushMessage();
+
+            msg.push( 17, "Food Order", deviceInfo.info.contacts, cartMessage , "");
+
+            CartItem.clearAll();
+            setCartList();
+            alert( TR("Thanks") );
+
+            var app = wae.create("Application");
+            app.finishActivity();
+        }
+    }
+
+    setCartList();
+
+    VatataKeyMove.fallDn = function() {
+        VatataKeyMove.initById( "lastpay" );
+    }
+
+
+    const SYS_KEY_BACK = 4;
+    const SYS_KEY_RED = 183;
+    const SYS_KEY_BLUE = 186;
+
+    function hotKey() {
+    }
+
+    hotKey.init = function() {
+        var eventListener = wae.create("EventListener");
+        eventListener.addJs( SYS_KEY_BLUE,   "hotKey.blue();" );
+        eventListener.addJs( SYS_KEY_RED,   "hotKey.red();" );
+        eventListener.addJs( SYS_KEY_BACK,   "hotKey.back();" );
+    }
+    hotKey.blue = function() {
+        doPay();
+        var app = wae.create("Application");
+        app.finishActivity();
+    }
+    hotKey.red = function() {
+        CartItem.clearAll();
+        setCartList();
+        var app = wae.create("Application");
+        setTimeout(function(){app.finishActivity();}, 1000);
+    }
+    hotKey.back = function() {
+        history.go(-1);
+        // var re = confirm( TR("Cancel") + "?");
+        // if ( !re ) return;
+        // hotKey.red();
+    }
+
+    window.onWAEReady = function() {
+        hotKey.init();
+    }
+
+
+</script>
+

@@ -1,0 +1,73 @@
+﻿{
+  "tw" : {
+    "cloudy" : "多雲",
+    "hail" : "冰雹",
+    "rainy" : "雨",
+    "snowy" : "雪",
+    "sunny" : "晴",
+    "thunder" : "雷雨",
+  },
+
+  "cn" : {
+    "cloudy" : "多云",
+    "hail" : "冰雹",
+    "rainy" : "雨",
+    "snowy" : "雪",
+    "sunny" : "晴",
+    "thunder" : "雷雨",
+  },
+
+  　
+  "en" : {
+    "星期一" : "Mon",
+    "星期二" : "Tus",
+    "星期三" : "Wed",
+    "星期四" : "Thu",
+    "星期五" : "Fri",
+    "星期六" : "Sat",
+    "星期日" : "Sun",
+    "上海" : "Shanghai", 
+    "cloudy" : "Cloudy",
+    "hail" : "Hail",
+    "rainy" : "Rainy",
+    "snowy" : "Snowy",
+    "sunny" : "Sunny",
+    "thunder" : "Thunder",
+  },
+
+  "jp" : {
+    "星期一" : "Mon",
+    "星期二" : "Tus",
+    "星期三" : "Wed",
+    "星期四" : "Thu",
+    "星期五" : "Fri",
+    "星期六" : "Sat",
+    "星期日" : "Sun",
+    "上海" : "Shanghai", 
+    "cloudy" : "日中は晴れ",
+    "hail" : "ひょう",
+    "rainy" : "雨",
+    "snowy" : "雪",
+    "sunny" : "晴れ",
+    "thunder" : "雷雨",
+  },
+    　
+  "kr" : {
+    "星期一" : "월요일",
+    "星期二" : "화요일",
+    "星期三" : "수요일",
+    "星期四" : "목요일",
+    "星期五" : "금요일",
+    "星期六" : "토요일",
+    "星期日" : "일요일",
+    "上海" : "샹하이", 
+    "cloudy" : "낮에는 구름이 많다",
+    "hail" : "우박",
+    "rainy" : "소나기",
+    "snowy" : "눈",
+    "sunny" : "쾌청",
+    "thunder" : "뇌우",
+  },
+
+}
+

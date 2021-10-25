@@ -1,0 +1,386 @@
+body{
+	background: url(../image/bg.png) no-repeat;
+	font-family: "Product Sans";
+}
+
+@font-face {
+	font-family: 'Product Sans';
+	src: url('Product-Sans-Regular.ttf');
+}
+
+.maincate {
+	width: 550px;
+	margin: 280px auto 0 auto;
+	text-align: center;
+}
+
+.maincate a{
+	display: block;
+	font-size: 45px;
+	line-height: 140px;
+	text-align: center;
+	width: 530px;
+	height: 136px;
+	overflow: hidden;
+	letter-spacing: 5px;
+	background: url(../image/bg_l_btn.png) no-repeat;
+}
+
+.maincate a:hover, .maincate a.currentFocus{
+	background: url(../image/bg_l_btnh.png) no-repeat;
+}
+
+.catelist{
+	/*position: relative;*/
+	height:800px;
+	overflow:hidden;
+	padding-top: 120px;
+	background-image: url(../image/hs1.png);
+}
+.catelist a {
+	color: white;
+    display: block;
+    font-size: 32px;
+    line-height: 100px;
+    float: left;
+    width: 495px;
+    height: 100px;
+    border: 2px solid transparent;
+    text-align: left;
+    padding-left: 70px;
+    box-sizing: border-box;
+}
+.catelist a:hover , .catelist a.currentFocus {
+}
+
+.catlistSel {
+	/*ba;ckground-image: url(../img/hs3.png)*/
+	background: #355bc7;
+}
+
+.movielist {
+	position: relative;
+	overflow: hidden;
+	height: 280px;
+	margin-left: 20px;
+}
+
+.movielist a {
+	float: left;
+	display: block;
+	text-align: center;
+	width: 260px;
+	height: 320px;
+	margin-left: 6px
+}
+
+.movielist a img {
+	display: block;
+	width:240px;
+	height: 310px;
+}
+.movielist a span {
+	display: block;
+	font-size: 20px;
+	line-height: 40px;
+	height: 40px;
+	width: 100%;
+	overflow: hidden;
+}
+
+.tvtop {
+    width: 1390px;
+    height: 520px;
+	overflow: hidden;
+	margin-top: 120px;
+    /*background: url(../image/info_bg.png) no-repeat;*/
+    /*background-position: 20px 100px;*/
+ }
+.tvlist {
+    width: 1320px;
+    height: 250px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+
+.pagenum {
+	position: absolute;
+	bottom: 30px;
+	right: 580px;
+	font-size: 32px;
+	line-height: 40px;
+	display: block;
+	text-align: center;
+}
+
+
+.movie-img {
+	width: 682px;
+	height: 447px;
+	display: block;
+	margin: 30px 0px 0px 40px;
+}
+
+.movie-title {
+	margin: 10px 0px;
+	color: white;
+	/*height: 100px;*/
+	overflow: hidden;
+	min-height: 60px;
+	max-height: 100px;
+}
+
+.movie-style{
+	font-size: 22px;
+	min-height: 0px;
+	max-height: 30px;
+}
+
+.movie-price{
+	font-size: 22px;
+	min-height: 0px;
+	max-height: 30px;
+	float: right;
+	margin-top: 10px;
+	min-width: 0px;
+	max-width: 120px;
+	color:#f8e71c;
+}
+
+.movie-level {
+	display: none;
+	float: left;
+	margin-right: 50px;
+}
+
+.movie-title1 {
+	display: block;
+	font-size: 48px;
+	line-height: 50px;
+	height: 50px;
+	overflow: hidden;
+}
+
+.movie-title2 {
+	font-size: 32px;
+	height: 40px;
+	overflow: hidden;
+}
+
+.movie-info {
+	clear: both;
+	font-size: 22px;
+	height: 190px;
+	letter-spacing: 2px;
+	width: 480px;
+	overflow: hidden;
+	color: white;
+	margin-top: 10px;
+	min-height: 100px;
+	max-height: 200px;
+}
+
+.movie-info span {
+	display: inline;
+	vertical-align: top;
+}
+
+.movie-button {
+	margin-top: 20px;
+}
+
+.movie-button img{
+	position: absolute;
+	top: 500px;
+	left: 1550px;
+}
+
+.movie-button a {
+	font-size: 22px;
+	color: white;
+	width: 100px;
+	height: 45px;
+	line-height: 45px;
+	background: #355bc7;
+	/*display: block;*/
+	text-align: center;
+	border-radius: 10px;
+	display: inline-block;
+	margin-right: 20px;
+}
+ 
+
+.movie-button a:hover, .movie-button a.currentFocus{
+	background: white;
+	color: #355bc7 ;
+	/*background: url(../image/button_bg_focus.png) no-repeat;*/
+	/*-webkit-transform: scale(1.1);
+	transform: scale(1.1);
+	z-index: 100;*/
+}
+
+
+
+.show-main {
+	margin: 20px auto 0 400px;
+	width: 1360px;
+	height: 100%;
+	overflow-x: hidden;
+}
+
+.show-img {
+	width: 340px;
+	height: 485px;
+	display: block;
+	float: left;
+	margin: 140px 0px 0px 70px;
+}
+
+.show-level {
+	float: right;
+	display: none;
+	margin: 130px 200px 0px 0px;
+}
+
+.show-info {
+	margin: 140px 140px 0px 420px;
+	line-height: 45px;
+}
+
+
+.show-info a {
+	font-size: 32px;
+	color: #fff;
+	display: table-cell;
+	width: 280px;
+	height: 160px;
+	overflow: hidden;
+	text-align: center;
+	vertical-align: middle;
+	background: url(../image/btn.png) center no-repeat;
+}
+
+.show-info a:hover , .show-info a.currentFocus {
+	background: url(../image/btn_h.png) center no-repeat;
+}
+
+.epsidelist {
+	position: absolute;
+	clear: both;
+}
+
+.epsidelist a {
+	font-size: 32px;
+	color: #fff;
+	display: table-cell;
+	width: 280px;
+	height: 160px;
+	overflow: hidden;
+	text-align: center;
+	vertical-align: middle;
+	background: url(../image/btn.png) center no-repeat;
+}
+
+.epsidelist a:hover , .epsidelist a:focus {
+	background: url(../image/btn_h.png) center no-repeat;
+}
+
+
+.show-title1 {
+	font-size: 40px;
+	line-height: 50px;
+	height: 50px;
+	padding-left: 40px;
+	overflow: hidden;
+}
+
+.show-title2 {
+	font-size: 32px;
+	height: 35px;
+	padding-left: 40px;
+	overflow: hidden;
+}
+
+.show-items{
+	font-size: 28px;
+	margin: 30px 0px 0px 30px;
+	height: 360px;
+	overflow: hidden;
+}
+
+.show-item{
+	display: block;
+	line-height: 40px;
+}
+
+.show-item span{
+	display: inline-block;
+	vertical-align: top;
+}
+
+.show-info2 {
+	font-size: 28px;
+	margin: 0px 50px 0px 60px;
+	line-height: 45px;
+}
+
+.show-info2 span{
+	display: inline-block;
+	line-height: 40px;
+	width: 100%;
+}
+
+.passinput {
+	text-align: center;
+	margin: 300px auto auto auto;
+	width: 632px;
+	height: 360px;
+	overflow: hidden;
+	background: url(../image/bg_password.png) center no-repeat;
+	font-size: 50px;
+	line-height: 80px;
+	padding-top: 120px;
+}
+.passinput span {
+	display: inline-block;
+	margin: 40px 0 0 0;
+	width:  92px;
+	height: 80px;
+	font-size: 60px;
+	color: black;
+}
+
+
+.tvleft {
+    float: left;
+    width: 50px;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+.tvtitle {
+	position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 120px;
+    font-size: 42px;
+    line-height: 120px;
+    text-align: left;
+    overflow: hidden;
+    width: 500px;
+	color: white;
+    padding-left: 70px;
+    box-sizing: border-box;
+    display:block;
+}
+
+.timenow{
+	position: absolute;
+	top: 0;
+	line-height: 50px;
+	height: 50px;
+	font-size: 30px;
+	margin-left: 800px;
+	margin-top: 50px;
+}

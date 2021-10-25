@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BACKGROUND Page</title>
+    <link rel="stylesheet" href="../../css/portal.css"/>
+</head>
+<body style="background: black;">
+<div class="main">
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../js/ajax.js"></script>
+<script type="text/javascript" src="../../js/portaldata.js"></script>
+<script type="text/javascript">
+
+var portalData = new PortalData();
+var myidx = portalData.findIndexByUrl( location.href );
+var pdata = null;
+try {
+	pdata = portalData.getPortalData(myidx).putong[0];
+	localStorage.setItem("BKIMAGES_MID", pdata.param );
+}catch(e){}
+
+var mainurl = localStorage.getItem("MAIN_PORTAL");
+location.replace(  mainurl );
+
+</script>
+

@@ -1,0 +1,449 @@
+.servicescont {
+	background-image: url(bg_services.jpg);
+}
+
+.servicescont div {
+	display: inline-block;
+	height: 1080px;
+	overflow: hidden;	
+}
+.leftbar {
+	width: 350px;
+	background: black;
+	opacity: 0.5;
+}
+.arrowcont {
+	display: inline-block;
+	width: 80px;
+	vertical-align: middle;
+}
+.arrowcont img{
+	display: block;
+}
+.funcscont {
+	display: inline-block;
+	width: 1360px;
+	overflow: hidden;
+}
+.funcscont-in {
+	display: block;
+	width: 8000px;
+	height: 1080px;
+	overflow: hidden;
+}
+.funcscont-in a {
+	display: block;
+	width: 340px;
+	height: 1080px;
+	overflow: hidden;
+	float: left;
+	background-position: -35px 0;
+}
+.stitle {
+	display: block;
+	margin: 200px 0 50px 0;
+	text-align: center;
+	font-size: 42px;
+}
+.stext {
+	display: block;
+	margin: 80px 50px;
+	text-align: center;
+	font-size: 30px;
+	line-height: 60px;
+}
+
+
+.clockcont {
+	background-image: url(bg_clock.jpg);
+}
+
+
+.clockinput {
+	margin: 175px 0 0 480px;
+}
+
+.clockinput a {
+	display: inline-block;
+	font-size: 200px;
+	line-height: 600px;
+	width: 380px;
+	height: 620px;
+	padding-left: 120px;
+}
+
+.clockinput a:hover, .clockinput a.currentFocus {
+	background: url(clockinput.png) center no-repeat;
+}
+
+.clockalert {
+	position: absolute;
+	top: 250px;
+	left: 550px;
+	width: 810px;
+	height: 450px;
+	padding: 30px 100px;
+	background: url(clockalert.png)  no-repeat;
+}
+
+.clockalert h2 {
+	font-size: 50px;
+}
+.clockalert span {
+	font-size: 40px;
+	display: block;
+	width: 600px;
+}
+
+.clockalert a {
+	
+}
+
+
+.ywsxcont {
+	background-image: url(bg_clothes.jpg);
+}
+
+#ywsxb {
+	display: block;
+	width: 1343px;
+	height: 600px;
+	margin: 50px auto 10px auto;
+	overflow: hidden;
+	background: url(bg_ywsxb.png) center no-repeat;
+}
+#ywsxb div{
+	display: block;
+	width: 100%;
+	height: 155px;
+	overflow: hidden;
+	background-image: url(bg_line.png);
+	background-repeat: no-repeat;
+	background-position: 50% 99%;
+}
+
+.ywsxcate {
+	width: 100px;
+	height: 100%;
+	display: block;
+	overflow: hidden;
+	float: left;
+	margin: 20px 40px;
+	font-size: 32px;
+	color: #09f;
+}
+
+.ywsxprice {
+	width: 200px;
+	height: 100%;
+	float: right;
+	overflow: hidden;
+	display: block;
+	margin: 70px 30px 20px 0;
+	font-size: 32px;
+	color: black;
+}
+.ywsxprice span {
+	font-size: 50px;
+}
+.ywsxtitle {
+	width: 900px;
+	display: inline-block;
+	font-size: 32px;
+	margin: 10px auto;
+	color: black;
+}
+.ywsxdetail {
+	width: 900px;
+	margin: 10px auto;
+	display: inline-block;
+	font-size: 32px;
+	color: #555;	
+}
+
+
+#ywsxxz {
+	display: block;
+	width: 1343px;
+	height: 286px;
+	margin: 10px auto 10px auto;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	background: url(bg_ywsxxz.png) center no-repeat;
+	font-size: 32px;
+	color: #444;
+}
+#ywsxxz  span {
+	display: block;
+	margin: 20px 50px;
+}
+#ywsxxz div {
+	display: block;
+	width: 50px;
+	height: 270px;
+	overflow: hidden;
+	float: right;
+	background: url(bg_ywsxvs.png) center no-repeat;
+	margin: 10px 10px auto auto;
+}
+
+#ywsxmsg {
+	margin: 20px auto;
+	text-align: center;
+	font-size: 40px;
+}
+
+#ywsxmsg img {
+	vertical-align: middle;
+	padding-left: 30px;
+}
+
+.fwpfcont {
+	background-image: url(bg_fwpf.jpg);
+}
+
+.fwpftitle {
+	font-size: 50px;
+	position: absolute;
+	top: 40px;
+	left: 220px;
+	color: #eee;
+}
+.fwpftext {
+	font-size: 26px;
+	position: absolute;
+	top: 70px;
+	right: 200px;
+	color: #eee;
+}
+
+#pfdiv {
+	display: block;
+	margin: 150px 50px 0 auto;
+	width: 1820px;
+	height: 650px;
+}
+
+#pfheader {
+	font-size: 30px;
+	text-align: center;
+	color: #eee;
+	display: block;
+	height: 150px;
+	margin-left: 450px;
+}
+#pfheader span{
+	display: inline-block;
+	width: 240px;
+	height: 150px;
+	overflow: hidden;
+}
+#pfheader span img{
+	display: block;
+	margin: 20px auto 0 auto;
+	text-align: center;
+}
+
+.pfline {
+	width: 1800px;
+	height: 82px;
+	display: block;
+	overflow: hidden;
+	margin-top: 10px;
+}
+
+.pfline a {
+	display: inline-block;
+	width: 250px;
+	height: 80px;
+	overflow: hidden;
+	background: url(pf_normal.png) center no-repeat;
+}
+
+.pfline a img {
+	display: block;
+	margin: 0 auto;
+}
+
+.pfline a:hover,.pfline a.currentFocus {
+	background: url(pf_focused.png) center no-repeat;
+}
+.pfline span {
+	display: inline-block;
+	width: 450px;
+	margin-left: 50px;
+	overflow: hidden;
+	font-size: 32px;
+	line-height: 80px;
+	color: #444;
+	text-align: left;
+}
+
+#thanksmsg {
+	background: url(bg_thanks.png) top no-repeat;
+	background-position: 0 0;
+	width: 700px;
+	height: 196px;
+	display: block;
+	overflow: hidden;
+	font-size: 30px;
+	color: #09f;
+	display: none;
+	padding: 40px 200px 0 60px;
+	margin-left: 600px;
+	line-height: 50px;
+}
+
+.xfzdcont {
+	background: url(bg_fwzd.jpg) top no-repeat;
+}
+.zdtitle {
+	font-size: 38px;
+	margin: 80px auto 0 400px;
+}
+
+.zdroomnum {
+	width: 250px;
+	display: inline-block;
+	overflow: hidden;
+}
+.zdguestname {
+	width: 500px;
+	display: inline-block;
+	overflow: hidden;
+}
+.zdheader {
+	font-size: 32px;
+	margin: 30px 0;
+	height: 56px;
+	width: 1920px;
+	overflow: hidden;
+	background-image: url(bg_zdhdh.png);
+}
+.zdheader span {
+	display: inline-block;
+	overflow: hidden;
+	margin: 0 40px;
+}
+.zddate {
+	padding-left: 360px;
+	width: 170px;
+	overflow: hidden;
+}
+
+.zdtime {
+	width: 450px;
+	display: inline-block;
+	overflow: hidden;
+}
+
+.zditem {
+	width: 150px;
+	overflow: hidden;
+}
+.zdprice {
+	width: 200px;
+	overflow: hidden;
+}
+.zddetail {
+	width: 100px;
+	overflow: hidden;
+}
+
+
+.zdline {
+	font-size: 32px;
+	margin: 30px 0;
+	height: 50px;
+	width: 1920px;
+	overflow: hidden;
+	background-image: url(bg_zdline.png);
+	background-repeat: no-repeat;
+	background-position: 300px 99%;
+}
+.zdline span {
+	display: inline-block;
+	overflow: hidden;
+	margin: 0 40px;
+}
+
+.hotkeymsg {
+	position: absolute;
+	bottom: 50px;
+	width: 100%;
+	text-align: center;
+	margin: 20px auto;
+	text-align: center;
+	font-size: 40px;
+}
+
+.hotkeymsg img {
+	vertical-align: middle;
+	padding-left: 30px;
+}
+
+
+.remoterhotkeyhint {
+	position: absolute;
+	bottom: 290px;
+	left: 40px;
+	width: 380px;
+	height: 100px;
+}
+.remoterhotkeyhint img{
+	vertical-align: middle;
+}
+.remoterhotkeyhint span{
+	font-size: 30px;
+	padding: 15px 0 0 5px;
+	line-height: 30px;
+}
+
+.cleaningbox {
+	position: absolute;
+	width: 740px;
+	height: 540px;
+	top: 150px;
+	left: 600px;
+	overflow: hidden;
+	border-radius: 20px;
+	background-color: white;
+	opacity: 0.9;
+	padding: 80px;
+}
+
+.cleaningbox label {
+	display: block;
+	font-size: 40px;
+	color: black;
+}
+
+.cleaningbox span {
+	display: block;
+	font-size: 30px;
+	color: 30px;
+	color: #666;
+	padding: 50px 0;
+}
+
+.cleaningboxtips {
+	position: absolute;
+	top: 950px;
+	left: 0;
+	width: 100%;
+	height: 50px;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 32px;
+	color: white;
+}
+
+.cleaningboxtips span {
+	vertical-align: middle;
+}
+.cleaningboxtips img {
+	vertical-align: middle;
+}
+
+
+

@@ -1,0 +1,258 @@
+
+.weather{
+	width:1920px;height:1080px;
+	background: url(../image/bg_weather.jpg) no-repeat;
+	background-repeat: no-repeat;
+	overflow:hidden;
+}
+
+.main-title {
+	font-size: 48px;
+	color: #666;
+	padding: 50px 100px 0 100px;
+	line-height: 100px;
+}
+.main-cont{
+	width: 1200px;
+	height: 700px;
+	margin: 0 auto;
+}
+.main-cont span{
+	display: block;
+	float: left;
+	margin: 0 auto;
+	width: 48%;
+	height: 100%;
+}
+.main-cont span img{
+	display: block;
+	margin: 0 auto;
+}
+.main-cont span a{
+	font-size: 30px;
+	line-height: 80px;
+	padding-left: 60px;
+	color: white;
+	display: block;
+	text-align: center;
+	letter-spacing: 10px;
+	background-image: url(../image/bg_weather_btn.png);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.main-cont span a:hover, .main-cont span a.currentFocus {
+	background-image: url(../image/bg_weather_btnh.png);	
+}
+
+.weather-menu {
+	display: block;
+	position: fixed;
+	width: 500px;
+	height: 700px;
+}
+.weather-menu a{
+	display: block;
+	width: 100%;
+	font-size: 40px;
+	color: #696;
+	line-height: 80px;
+	height: 90px;
+	padding-left: 80px;
+	background-image: url(../image/bg_weather_btn2.png);
+	background-repeat: no-repeat;
+	background-position: 0;	
+}
+.weather-menu a:hover, .weather-menu a.currentFocus{
+	color: #eee;
+	background-image: url(../image/bg_weather_btn2h.png);
+}
+.weather-menu2 {
+	display: block;
+	position: fixed;
+	top: 50px;
+	left: 1490px;
+	width: 430px;
+	height: 1000px;
+}
+.weather-menu2 a{
+	display: block;
+	width: 100%;
+	font-size: 40px;
+	color: #696;
+	line-height: 80px;
+	height: 90px;
+	padding-left: 100px;
+	background-image: url(../image/bg_weather_btn3.png);
+	background-repeat: no-repeat;
+	background-position: 0;	
+}
+.weather-menu2 a:hover, .weather-menu2 a.currentFocus{
+	color: #eee;
+	background-image: url(../image/bg_weather_btn3h.png);
+}
+.weather-menu3 {
+	display: block;
+	position: fixed;
+	top: 369px;
+	left: 1100px;
+	z-index: 100;
+	width: 430px;
+	height: 1000px;
+}
+.weather-menu3 a{
+	display: block;
+	width: 100%;
+	font-size: 40px;
+	color: #696;
+	line-height: 80px;
+	height: 90px;
+	padding-left: 100px;
+	background-image: url(../image/bg_weather_btn4.png);
+	background-repeat: no-repeat;
+	background-position: 0;	
+}
+.weather-menu3 a:hover, .weather-menu3 a.currentFocus{
+	color: #eee;
+	background-image: url(../image/bg_weather_btn4h.png);
+}
+.weather-menu4 {
+	display: block;
+	position: fixed;
+	top: 920px;
+	left: 710px;
+	z-index: 100;
+	width: 430px;
+}
+.weather-menu4 a{
+	display: block;
+	width: 100%;
+	font-size: 40px;
+	color: #696;
+	line-height: 80px;
+	height: 90px;
+	padding-left: 100px;
+	background-image: url(../image/bg_weather_btn4.png);
+	background-repeat: no-repeat;
+	background-position: 0;	
+}
+.weather-menu4 a:hover, .weather-menu4 a.currentFocus{
+	color: #eee;
+	background-image: url(../image/bg_weather_btn4h.png);
+}
+
+.spacediv {
+	display: block;
+	height: 50px;
+}
+.spacediv2 {
+	display: block;
+	height: 140px;
+}
+.weather-loc {
+	margin-left: 500px;
+}
+
+.weather2{
+	width:1920px;height:1080px;
+	background: url(../image/qixiangresult_demo.jpg) no-repeat;
+	background-repeat: no-repeat;
+	overflow:hidden;
+	color: #eee;
+}
+.main-title2 {
+	display: inline-block;
+	font-size: 40px;
+	color: #eee;
+	padding: 50px 0px 0 20px;
+	width: 280px;
+	overflow: hidden;
+	line-height: 100px;
+}
+
+.citylist {
+	display: inline-block;
+	vertical-align: top;
+	margin: 10px auto;
+	padding: 0px;
+	width: 1550px;
+	height: 945px;
+	overflow: hidden;
+}
+
+.cityitem {
+	display: inline-block;
+	margin: 0px 60px;
+	height: 470px;
+	overflow: hidden;
+}
+.cityitemh {
+	color: #333;
+	font-size: 30px;
+	margin: 10px;
+}
+
+.cityitemb {
+	background: url(../image/cityitemb.png) no-repeat;	
+	width: 634px;
+	height: 422px;
+	overflow: hidden;
+}
+.cityitemb ul {
+	width: 160px;
+	overflow: hidden;
+	vertical-align: top;
+	display: inline-block;
+	margin: 0 22px;
+	padding: 0px;
+}
+
+.cityitemb li {
+	list-style: none;
+	text-align: center;
+}
+
+.itemday {
+	color: #eee;
+	font-size: 30px;
+	line-height: 50px;
+}
+
+.itemdate {
+	font-size: 30px;
+	line-height: 50px;
+	color: lightblue;
+}
+
+.itempic {
+	margin: 10px auto;
+}
+
+.itemtitle {
+	font-size: 30px;
+	height: 40px;
+	overflow: hidden;
+	color: lightblue;
+}
+
+.itemhtem {
+	font-size: 50px;
+	color: blue;
+}
+.itemltem {
+	font-size: 50px;
+	color: lightblue;
+}
+
+.btnidx {
+	margin: 10px auto;
+	text-align: center;
+}
+
+.btnidx span {
+	font-size: 36px;
+	vertical-align: middle;
+	color: blue;
+}
+.btnidx img {
+	vertical-align: middle;
+}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=1920" />
+    <link rel="stylesheet" href="../message/public.css"/>
+</head>
+<body>
+	PreLoading EPG ...
+</body>
+</html>
+
+<script type="text/javascript" src="./lib/js/config.js"></script>
+<script type="text/javascript" src="./lib/js/jsget.js"></script>
+<script type="text/javascript" src="./lib/js/cate.js"></script>
+<script type="text/javascript" src="./lib/js/auth.js"></script>
+<script type="text/javascript" src="../livetv/data/livetvdata.js"></script>
+
+<script type="text/javascript">
+
+if(localStorage.getItem("appbackground")) {
+	document.body.style.backgroundImage = "url(' " + localStorage.getItem("appbackground") + " ')";
+}
+var livetvdata = new LiveTVData();
+var res = livetvdata.init();
+if ( res == false ) {
+    livetvdata.onbeforeloadcate = function( cate ) {
+    	document.body.innerHTML += "<br /> Loading " + cate.app_name ;
+    }
+    livetvdata.onupdate = function() {
+		location.replace( "player.html");
+    }
+    livetvdata.update();
+} else {
+	location.replace( "player.html");
+}
+
+</script>
+

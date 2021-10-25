@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MESSAGES</title>
+    <meta name="viewport" content="width=1920" />
+    <link rel="stylesheet" href="../message/public.css"/>
+    <link rel="stylesheet" href="../message/message.css"/>
+</head>
+<body>
+<div class="main">
+  <div id="messagecont" class="maincont messagecont">
+  	<div class="msgitemlistzone">
+	  	<div id="msgitemlist" class="msgitemlist" >
+	  	</div>
+	 </div>
+	<div id="msgitemzone" style="display:none">
+		<span>TIME</span>
+		<div>CONTENT</div>
+	</div>
+
+  </div>
+
+  <div class="maintitle" id="maintitle">飯店訊息</div>
+  <img src="../image/op_intro.png" class="remoter-tips"/>
+
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../../js/cate.js"></script>
+<script type="text/javascript" src="player/js/key.js"></script>
+<script type="text/javascript" src="../video/public/js/lang.js"></script>
+<script type="text/javascript" src="../js/querystring.js"></script>
+<script type="text/javascript" src="../video/public/js/deviceinfo.js"></script>
+<script type="text/javascript" src="../public/js/autolist.js"></script>
+
+<script type="text/javascript">
+
+var removelist = [];
+var removemap = {};
+
+var autolist = null;
+
+  var itemList = new ItemList();
+  itemList.skipcache = true;
+  itemList.onload = function( infoList, count, page ) {
+	try{
+		if ( !fileobj )  fileobj = wae.create("DATA.File");
+		removelist = JSON.parse( fileobj.readAll( "/sdcard/TVATA/FS/removelist" ) );			
+	}catch(e){
+		removelist = [];
+	}
+	for( var i =0; i<removelist.length; i++ ) {
+		removemap[ removelist[i] ] = true;
+	}
+	// alert( JSON.stringify(removemap) );
+
+  	for( var i = infoList.length -1; i>=0; i-- ) {
+  		var photoItem = new PhotoItem();
+  		photoItem.skipcache = true;
+  		photoItem.onload = function( iInfo ) {
+  			// console.log("photoItem " + this.apiurl )
+  			//alert( JSON.stringify(iInfo) );
+
+  			for( var j=iInfo.photolist.length-1; j>=0; j-- ) {
+				var item = iInfo.photolist[j] ;
+				if( parseInt(item.status) != 1 ) {
+					console.log("message item skip with status 0: " + JSON.stringify(item) );
+					continue;							
+				}
+				if ( !!item.roomNo 
+					&& itemList.contactName != null
+					&& itemList.contactName != item.roomNo ) {
+					console.log("message item room is not me : " + JSON.stringify(item) );
+					continue;			
+				}
+
+				if( !!removemap[ item.id ] ) {
+					console.log("message item has been removed!");
+					continue;
+				}
+
+				// console.log("message item get: " + JSON.stringify(item) );
+				itemList.appendMessage( item );
+  			}
+  			
+  			// if ( iInfo.region == "all" || !iInfo.region ) {
+  			// 	for( var j=0; j<iInfo.photolist.length; j++ ) {
+  			// 		itemList.appendMessage( iInfo.photolist[j] );
+  			// 	}
+  			// }
+  			// else if ( iInfo.region == itemList.contactName  ) {
+  			// 	for( var j=0; j<iInfo.photolist.length; j++ ) {
+  			// 		itemList.appendMessage( iInfo.photolist[j] );
+  			// 	}  				
+  			// }
+
+  			autolist = new AutoLister(  itemList.msgList , 3 );
+			try{
+				VatataKeyMove.initById( itemList.msgList.getElementsByTagName("a")[0] );
+			}catch(e){}
+  		}
+  		photoItem.load( infoList[i].id );
+  	}
+  }
+  itemList.msgList = document.getElementById('msgitemlist');
+  itemList.msgList.innerHTML = '';
+  itemList.msgcount = 0;
+  itemList.msgArray = new Array();
+  itemList.appendMessage = function( item ) {
+	
+  	var idx = itemList.msgArray.push( item ) - 1;
+
+//  	console.log("itemList.msgArray length " + idx );
+	var content = item.about;
+	var ctime = item.created;
+	var title = item.name;
+	// var msgid = item.begin;
+	var msgid = item.id;
+	var date = "";
+	var time = "";
+	try {
+			var dstr = ctime.split(/ /);
+			date = dstr[0].replace( /^\d+-/, "");
+			time = dstr[1].replace( /:\d+$/, "");
+	}catch(e) { 
+		console.log(e);
+	}
+
+	itemList.msgcount ++;
+	var str = '<a href="javascript:;" '
+			+ ' onclick="itemList.removeItem(this, \''+ msgid +'\')" ' 
+		    + ' onfocus="itemList.show(this,\''+encodeURI(content)+'\', \''+date + ' ' + time +'\')" > '
+		    + ' <span> '+ date + '</span> '
+		    + ' <div> ' + itemList.msgcount + ' ' + time + ' ' + title + '</div> '
+		    + '</a>';
+
+	itemList.msgList.innerHTML  = str + itemList.msgList.innerHTML;
+  }
+
+var orderno = "";
+var cRoomNo = "";
+var fileobj = null;
+
+  itemList.removeItem = function( ele, msgid ) {
+  	// alert( "remove: " + msgid )
+	var r = confirm( TR("Do you want to delete the message?"));
+	if (  ! r ) return;
+
+	var nextele = ele.nextSibling;
+	while( nextele != null && nextele.tagName != "A" ) {
+		nextele = nextele.nextSibling;
+		console.log("get  nextsbileing "+ nextele.outerHTML );
+	}  
+	if ( nextele == null ) {
+		nextele = ele.previousSibling;
+		while( nextele != null && nextele.tagName != "A" ) {
+			nextele = nextele.previousSibling;
+		console.log("get  previousSibling "+ nextele.outerHTML );
+		}
+	}
+	var pele = ele.parentNode;
+	pele.removeChild(ele);
+
+	autolist.reset();
+
+	removelist.push( msgid );
+	if ( !fileobj )  fileobj = wae.create("DATA.File");
+	fileobj.writeAll( "/sdcard/TVATA/FS/removelist", JSON.stringify(removelist) );
+
+	try{
+		VatataKeyMove.initById( nextele );
+	}catch(e){}
+
+	if ( ! cRoomNo ) {
+		alert( TR("Fatal: No Room Number Found!") );
+		return;		
+	}
+	if( ! orderno || orderno == "0" ) {
+		try {
+			if ( !fileobj )  fileobj = wae.create("DATA.File");
+			orderno = fileobj.readAll( "/sdcard/TVATA/FS/orderno" );
+			orderno = orderno.replace( /\s+/,"");
+		}catch(e){
+			//alert( TR("Fatal: No Order Number for the Room!") + "\n\n" + e );
+			// return;
+			orderno = "";
+		}
+	}
+
+	if( ! orderno || orderno == "0" ) {
+		// alert( TR("Fatal: No Order Number for the Room!") );
+		// return;
+			orderno = "";
+	}
+
+	var burl = SERVER_URL + "index.php/opera/api/MessageDel?roomNo=" + cRoomNo + "&resNo=" + orderno + "&msgid=" + msgid ;
+
+	// console.log( burl );
+
+	var uget = new EasyGet();
+	uget.onsuccess = function( u , d ) {
+		var r = JSON.parse(d);
+		if ( !!r && parseInt(r.code) == 200 ) {
+			alert(TR("Message Removed!"));
+		} else {
+			alert(TR("Message Remove Failed!"));
+		}
+	}
+	uget.onerror = function() {
+		// alert("error!")
+	}
+	uget.open(burl, true);
+  }
+
+  itemList.hasSaved = false;
+  itemList.show = function( ele, cont , datetime ) {
+  	if ( !ele ) {
+  		alert("Fatal, system component need update!");
+  		return;
+  	}
+  	autolist.onfocus( ele );
+
+		var content = decodeURI( cont ).replace(/\n/g,"<br />");
+		var ele = document.getElementById("msgitemzone");
+		if ( ! itemList.msgTemplate ) {
+		  	itemList.msgTemplate = ele.innerHTML;			
+		}
+		var istr = itemList.msgTemplate.replace("TIME", datetime)
+								.replace("CONTENT", content);
+		ele.innerHTML = istr;
+		ele.style.display = "";
+
+		if ( itemList.hasSaved == false ) {
+			setTimeout( function() {
+				var msgfile = wae.create("DATA.File");
+				var msgObj = {};
+				msgObj.data = itemList.msgArray;
+				msgObj.cid =  itemList.cid;
+				msgObj.name = itemList.contactName;
+
+				var msgcontent = JSON.stringify( msgObj );
+				msgfile.writeAll( "/sdcard/TVATA/msgBox",  msgcontent );
+			}, 1000 * 3);
+			itemList.hasSaved = true;
+		}
+  }
+
+
+
+  function setBackground() {
+    var file_obj = null;
+    try {
+      file_obj = wae.create("DATA.File");
+    }catch(e) {
+      setTimeout( function() { setBackground();}, 1000 * 3 );
+      return;
+    }
+    // var fpath = file_obj.getFilesDir() + "/background.loc";
+    var fpath = "/sdcard/tva_bg.loc";
+    var bgpath = file_obj.readAll( fpath );
+    var contele = document.getElementById("messagecont");
+
+    if ( !bgpath ) {
+    	contele.style.backgroundImage = "url(bg_message.jpg)";
+    } else {
+    	bgpath = "file://"  + bgpath;
+    	console.log("bk is : " + bgpath );
+    	contele.style.backgroundImage = "url("+ bgpath+")";    	
+    }
+
+  }
+
+  //window.onWAEReady = function() {
+	setBackground();
+    //var settingObj = wae.create("WAE.Setting");
+    //settingObj.setUseLocalImageCache(true);
+
+	//var uiSettings = wae.create("UI.UISettings");
+	//uiSettings.set1080P();
+
+    //var param = wae.create("DATA.Parameters");
+    //var title = param.get("name");
+    //var apiUrl = param.get("apiUrl");
+
+    console.log("message start with apiurl:  " + apiUrl);
+
+    if ( !! title )
+	    document.getElementById("maintitle").innerHTML = title;
+
+	var devInfo = new DeviceInfo();
+	devInfo.onload = function(info) {
+		cRoomNo = info.contacts;
+		itemList.contactName = info.contacts;
+		var cid = apiUrl.match(new RegExp("id=([^\&]*)(\&?)","i"));
+		cid = cid ? cid[1] : 1855;
+
+		itemList.cid = cid;
+		itemList.load(cid, 1, 100);
+	}
+	devInfo.load();
+
+    //message.photoItem.load( apiUrl );
+ // }
+
+
+</script>
+
+

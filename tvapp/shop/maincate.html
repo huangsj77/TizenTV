@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CATERING</title>
+    <meta name="viewport" content="width=1920" />
+    <link rel="stylesheet" href="../message/public.css"/>
+    <link rel="stylesheet" href="../shop/css/shop.css"/>
+</head>
+<body>
+<div class="tvmain">
+  <div class="tvcontent" style="background-image: url(image/bg_food.jpg)">
+    <div id="maincate" style="display: none;" class="foodmenucont">
+      <div class="foodtime1">
+      <a href="javascript:;" onclick="location.href='list.html?cid={cat_id}&n={cat_name}';">{cat_name}<span>{cat_desc}</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="remoterhint"></div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../../js/cate.js"></script>
+<script type="text/javascript" src="../js/querystring.js"></script>
+<script type="text/javascript" src="player/js/key.js"></script>
+<script type="text/javascript" src="../public/js/vlist.js"></script>
+
+<script type="text/javascript">
+
+var cateList = new CateList();
+cateList.ele = document.getElementById("maincate");
+cateList.htmltemp = maincate.innerHTML;
+cateList.htmlreg  = /\{.*?\}/g ;
+cateList.onload = function( category ) {
+  var mc_str = "";
+  for( var i = 0; i< category.length ; i++ ) {
+    var str = cateList.htmltemp;
+    var res = cateList.htmltemp.match(cateList.htmlreg);
+    for( var j=0; res != null && j<res.length; j++ ) {
+      var key = res[j].substr(1, res[j].length-2);
+      if (  category[i][ key ] !== undefined ) {
+        str = str.replace( res[j] , category[i][ key ] );
+      }
+    } 
+    mc_str += str;
+  }
+  cateList.ele.innerHTML = mc_str ;
+  cateList.ele.style.display = "block";
+  new VLister( cateList.ele, 3 );
+}
+
+if ( isNaN(parseInt(Request.q("cid",""))) == false ) {
+  cateList.load( Request.q("cid","") );
+} else {
+  var failtimer = 
+  setTimeout( function() {
+    if ( document.getElementById("maincate").style.display == "none" )
+      cateList.load( 2260 ); // for debug
+  } , 1000 );
+
+  window.onWAEReady = function() {
+    var settingObj = wae.create("WAE.Setting");
+    settingObj.setUseLocalImageCache(true);
+    var uiSettings = wae.create("UI.UISettings");
+    uiSettings.set1080P();
+
+    if ( !!failtimer ) clearTimeout( failtimer );
+    var param = wae.create("DATA.Parameters");
+    var title = param.get("name");
+    var apiUrl = param.get("apiUrl");
+
+    var res = apiUrl.match(new RegExp("cat_id=(\\d+)","i"));
+    var cid = apiUrl;
+    if ( res )
+      cid = res[1];
+
+    cid = '2260';
+    cateList.load( cid );
+  }
+}
+
+</script>

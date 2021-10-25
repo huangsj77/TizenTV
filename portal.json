@@ -1,0 +1,148 @@
+﻿{
+  "public": {
+    "top": {
+      "logo": "images/portallogo/top.png",
+      "size": 38971
+    },
+    "button": {
+      "logo": "images/portallogo/button.png",
+      "size": false
+    },
+    "background": {
+      "logo": "images/portallogo/background.jpg",
+      "size": 1470651
+    },
+    "toolbackground": {
+      "logo": "images/portallogo/toolbackground.png",
+      "size": 2140
+    },
+    "appbackground": {
+      "logo": "images/portallogo/appbackground.png",
+      "size": false
+    },
+    "greeting": {
+      "logo": "images/portallogo/greeting.png",
+      "size": false
+    },
+    "wel_pic": {
+      "logo": "images/portallogo/wel_pic.png",
+      "size": false
+    },
+    "pass": {
+      "ncpass": "123",
+      "fepass": "123"
+    },
+    "video_url": {
+      "video_url": "",
+      "ss_url": "",
+      "duration": "0"
+    },
+    "welcome": {
+      "wel_pic": null
+    }
+  },
+  "portallist": [
+    {
+      "id": "206",
+      "name": "Live TV",
+      "logo": "images/portal/5d5e57924c44e_1xXW.png",
+      "icoa": "images/portal/5d5e576831fac_zCK3.png",
+      "icob": "images/portal/5d5e577f8d4a4_byq6.png",
+      "bao": "com.vatata.angel.link.OPEN",
+      "color": "#242404",
+      "default": "1",
+      "tpl": "1",
+      "number": "6",
+      "dataUrl": "./livetv/loading.html",
+      "apiUrl": "",
+      "list_id": "21",
+      "app_index": "./livetv/loading.html",
+      "defaultinit": "1"
+    },
+    {
+      "id": "209",
+      "name": "Entertainment",
+      "logo": "images/portal/5d5e5dc3c8164_JGng.png",
+      "icoa": "images/portal/5d5e5dcc04c72_KKKA.png",
+      "icob": "images/portal/5d5e5dd3e6015_SasY.png",
+      "bao": "com.tv",
+      "color": "#5E5E45",
+      "default": "0",
+      "tpl": "1",
+      "number": "6",
+      "dataUrl": "http://122.10.88.37:22230/index.php/portal/api_new?action=getversion&id=209",
+      "apiUrl": "http://122.10.88.37:22230/index.php/api?action=angel&cat_id=1",
+      "list_id": "21",
+      "app_index": "./movie/index.html",
+      "defaultinit": "0"
+    },
+    {
+      "id": "208",
+      "name": "Information",
+      "logo": "images/portal/5d5e4ccd5a363_D2cP.png",
+      "icoa": "images/portal/5d5e4cd733f7c_bX1B.png",
+      "icob": "images/portal/5d5e4cdf55d0f_SBBy.png",
+      "bao": "com.tv",
+      "color": "",
+      "default": "0",
+      "tpl": "1",
+      "number": "6",
+      "dataUrl": "./radio/radio.html",
+      "apiUrl": "http://122.10.88.37:22230/index.php/api?action=angel&cat_id=1955",
+      "list_id": "21",
+      "app_index": "./radio/radio.html",
+      "defaultinit": "0"
+    },
+    {
+      "id": "211",
+      "name": "Room Service",
+      "logo": "images/portal/5d5e4cf72e4bf_rG9K.png",
+      "icoa": "images/portal/5d5e4d02308a4_XHz3.png",
+      "icob": "images/portal/5d5e4d0b34abc_o7Jq.png",
+      "bao": "com.vatata.angel.link.OPEN",
+      "color": "",
+      "default": "0",
+      "tpl": "1",
+      "number": "6",
+      "dataUrl": "http://122.10.88.37:22230/index.php/portal/api_new?action=getversion&id=211",
+      "apiUrl": "http://122.10.88.37:22230/index.php/api?action=angel&cat_id=2060",
+      "list_id": "21",
+      "app_index": "./shop/cate.html",
+      "defaultinit": "0"
+    },
+    {
+      "id": "210",
+      "name": "Facilities",
+      "logo": "images/portal/5d5e4d1dd7595_7d1H.png",
+      "icoa": "images/portal/5d5e4d2c754f4_iH31.png",
+      "icob": "images/portal/5d5e4d395f2d3_ZICF.png",
+      "bao": "com.vatata.angel.link.OPEN",
+      "color": "",
+      "default": "0",
+      "tpl": "1",
+      "number": "6",
+      "dataUrl": "http://122.10.88.37:22230/index.php/portal/api_new?action=getversion&id=210",
+      "apiUrl": "http://122.10.88.37:22230/index.php/api?action=angel&cat_id=2301",
+      "list_id": "21",
+      "app_index": "./photo/list.html",
+      "defaultinit": "0"
+    },
+    {
+      "id": "213",
+      "name": "Promotions",
+      "logo": "images/portal/5d5e4d533180d_TiMj.png",
+      "icoa": "images/portal/5d5e4d5fad32f_O9o8.png",
+      "icob": "images/portal/5d5e4d6905e9d_R8k8.png",
+      "bao": "com.vatata.angel.link.OPEN",
+      "color": "",
+      "default": "0",
+      "tpl": "1",
+      "number": "6",
+      "dataUrl": "http://122.10.88.37:22230/index.php/portal/api_new?action=getversion&id=213",
+      "apiUrl": "http://122.10.88.37:22230/index.php/api?action=angel&cat_id=2303",
+      "list_id": "21",
+      "app_index": "./photo/list.html",
+      "defaultinit": "0"
+    }
+  ]
+}

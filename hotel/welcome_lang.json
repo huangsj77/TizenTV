@@ -1,0 +1,26 @@
+﻿{
+	"English" : {
+		"to your hotel room" : "to your hotel room",
+	    "we hope you will enjoy your stay at our hotel" : "We hope you will enjoy your stay at our hotel",
+		"english" : "English",
+		"deutsch" : "Deutsch",
+		"slovensky" : "Slovensky"
+	},
+	"Deutsch" : {
+		"to your hotel room" : "to your hotel room",
+		"we hope you will enjoy your stay at our hotel" : "We hope you will enjoy your stay at our hotel",
+		"english" : "English",
+		"deutsch" : "Deutsch",
+		"slovensky" : "Slovensky"
+	},
+	"Slovensky" : {
+		"to your hotel room" : "to your hotel room",
+		"we hope you will enjoy your stay at our hotel" : "We hope you will enjoy your stay at our hotel",
+		"english" : "English",
+		"deutsch" : "Deutsch",
+		"slovensky" : "Slovensky"
+	},
+}
+
+
+

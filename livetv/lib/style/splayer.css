@@ -1,0 +1,30 @@
+.errormsg {
+    position: absolute;
+    margin: 300px auto;
+    padding: 0 200px;
+    text-align: center;
+    font-size: 26px;
+    color:  white;
+    display: none;
+}
+.maintainmsg {
+    position: absolute;
+    top: 450px;
+    width: 900px;
+    margin: 0 500px;
+    text-align: center;
+    display: none;
+}
+
+.maintainmsg img{
+    margin: 40px auto;
+    text-align: center;
+    width: 150px;
+}
+.maintainmsg div{
+    font-size: 55px;
+}
+.maintainmsg span{
+    font-size: 35px;
+    display: block;
+}

@@ -1,0 +1,180 @@
+<!-- <!doctype html> -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=1920" />
+<style>
+
+body{
+	width: 1920px;
+	height: 1080px;
+	margin:0;padding:0;
+	font-family:'微软雅黑';
+	overflow:hidden;
+	color: #ddd;
+	background: url(image/bg_maincate.jpg) no-repeat black;
+}
+a{text-decoration:none; color: #ddd;}
+a:focus {outline: none;}
+
+.dr { border: solid red 1px;}
+
+.atitle {
+	position: absolute;
+	top: 260px;
+	width: 1920px;
+	margin: 0 auto;
+	text-align: center;
+	color: white;
+	font-size: 36px;
+	letter-spacing: 3px;
+}
+
+.ainput {
+	position: absolute;
+	top: 420px;
+	width: 1240px;
+	padding: 0 340px;
+	font-size: 32px;
+	line-height: 60px;
+	letter-spacing: 2px;
+}
+.ainput a {
+	display: block;
+	width: 100%;
+	overflow: hidden;
+}
+
+.ainput a:hover ,.ainput a:focus , .ainput a.currentFocus{
+	box-shadow: 0 0 5px 5px white;
+}
+
+.ainput a span {
+	display: inline-block;
+	width: 300px;
+	text-align: right;
+}
+.ainput a div {
+	display: inline-block;
+	width: 800px;
+	margin-left: 40px;
+}
+
+.abutton {
+	position: absolute;
+	top: 760px;
+	width: 1920px;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 36px;
+	color: white;
+	line-height: 60px;
+}
+
+.abutton a {
+	display: inline-block;
+	width: 180px;
+	margin: 0 50px;
+}
+
+.abutton a:hover,.abutton a:focus ,.abutton a.currentFocus {
+	box-shadow: 0 0 10px 10px white;
+}
+
+.amessage {
+	position: absolute;
+	top: 940px;
+	width: 1920px;
+	background-color: #003070;
+	font-size: 26px;
+	text-align: center;
+	line-height: 50px;
+}
+</style>
+</head>
+<body>
+
+<div class="atitle">
+	Public DRM Login 
+	<span id=""></span>
+</div>
+
+<div class="ainput">
+	<a href="javascript:;" onclick="doinput(this);">
+		<span>DRM URL:</span>
+		<div id="drmurl" >udrm://220.113.14.11:443/udrmservice/services/UdrmSysWS.UdrmSysWSHttpSoap12Endpoint/</div>
+	</a>
+	<a href="javascript:;" onclick="doinput(this);">
+		<span>UserName:</span>
+		<div id="username">unitend</div>
+	</a>
+	<a href="javascript:;" onclick="doinput(this);">
+		<span>Password:</span>
+		<div id="password">123456</div>
+	</a>
+</div>
+
+<div class="abutton">
+	<a href="javascript:doLogin();">Login</a>
+	<a href="javascript:closeapp();">Cancel</a>
+</div>
+
+<div class="amessage">
+	The page is shown to debug, it will hide in offcial version!
+</div>
+
+</body>
+</html>
+<script type="text/javascript">
+	function doinput( ele ) {
+		var e = ele.getElementsByTagName("div");
+		ele = e[0];
+
+		var r = prompt("Please Input");
+		ele.innerHTML = r;
+	}
+
+	function closeapp() {
+		var app = wae.create("Application");
+		app.finishActivity();
+	}
+</script>
+<script type="text/javascript">
+
+
+function doLogin() {
+	var drmurl  = document.getElementById("drmurl").innerHTML;
+	var username = document.getElementById("username").innerHTML;
+	var password = document.getElementById("password").innerHTML;
+	//alert(drmurl + "\n" + username + "\n" + password );
+
+	var drmobj = wae.create("UnitedDRM");
+
+	drmobj.onLogin = function() {
+		history.back();
+	}
+
+	drmobj.onFail = function(a) {
+		if ( a.arguments[0] == "bind" )
+			alert( "DRM bind failed: " + a.arguments[1] );
+		else
+			alert( "DRM login failed!" + a.arguments[1] );
+	}
+
+	drmobj.drmLogin( username, password, drmurl );
+}
+
+</script>
+
+<script type="text/javascript">
+    window.onWAEReady = function(waeObj){
+        var settingObj = wae.create("WAE.Setting");
+        settingObj.setUseLocalImageCache(true);
+        
+        var uiSettings = wae.create("UI.UISettings");
+        uiSettings.set1080P();
+    }
+</script>
+<script type="text/javascript" src="player/js/key.js"></script>
+

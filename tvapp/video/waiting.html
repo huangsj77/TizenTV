@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../video/css/movie.css">
+    <style>
+        strong{margin: 0 auto;}
+        p{margin: 0 auto;padding-top: 20px;font-size: 20px;}
+        .info{
+            width: 100%;
+            height: 400px;
+            display: block;
+            position: relative;
+            top: 180px;
+            color: white;
+            text-align: center;
+            font-size: 28px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div id="title" style="font-size: 32px;color: white;margin-top: 20px;margin-left: 40px;">Room Control</div>
+    <div class="info">
+        <strong>Coming Soon</strong>
+        <p>We are still working on it.</p>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    window.onWAEReady = function () {
+        var uiSettings = wae.create("UI.UISettings");
+        uiSettings.set1080P();
+
+        var param = wae.create("DATA.Parameters");
+        var title = param.get("title");
+
+        var apiUrl = param.get("apiUrl");
+        if( ! apiUrl ) {
+            apiUrl = param.get("DATA");
+        }
+
+
+    }
+
+    var file_obj = null;
+    function setTopLogo( do_update ) {
+        var logo_path = localStorage.getItem("logo_path");
+        if ( !! logo_path ) {
+            var ele = document.getElementById("toplogo");
+            //if( !!ele ) ele.src = "file://" + logo_path;
+        }
+
+        var bg_path = localStorage.getItem("bg_path");
+        if ( !! bg_path ) {
+            var ele = document.body;
+            if( !!ele ) ele.style.backgroundImage = "url(file://"+bg_path+")";
+        }
+
+        if ( do_update == false ) return;
+
+        if ( file_obj == null ) {
+            try {
+                file_obj = wae.create("DATA.File");
+            }catch(e) {
+                setTimeout( function() {setTopLogo( true );}, 1000  );
+                return;
+            }
+        }
+
+        // var path = file_obj.readAll( file_obj.getFilesDir() + "/logo.loc"  );
+        // if ( !!path )	localStorage.setItem( "logo_path", path );
+        // alert( path );
+        path = file_obj.readAll( file_obj.getFilesDir() + "/bg.loc"  );
+        if ( !!path )  localStorage.setItem( "bg_path", path );
+
+        setTopLogo( false );
+    }
+
+    setTopLogo( true );
+
+</script>

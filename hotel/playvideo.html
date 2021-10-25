@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Play Video Page</title>
+</head>
+<body style="background: black;">
+</body>
+</html>
+<script type="text/javascript" src="../js/ajax.js"></script>
+<script type="text/javascript" src="../../js/portaldata.js"></script>
+<script type="text/javascript" src="../../hotel/usbscanner.js"></script>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../../js/cate.js"></script>
+<script type="text/javascript" src="../video/public/js/deviceinfo.js"></script>
+<script type="text/javascript" src="../../hotel/lplayer.js"></script>
+<script type="text/javascript">
+
+
+
+function setLoadingImage( path ) {
+    var file_obj = null;
+    try {
+      file_obj = wae.create("DATA.File");
+    }catch(e) {
+      setTimeout( function() {setLoadingImage(path);}, 1000 * 3 );
+      return;
+    }
+    path = location.href.replace("file://","").replace( /html\/hotel.*$/, "images/" ) + path ;
+    file_obj.writeAll( file_obj.getFilesDir() + "/welcome.loc" , path );
+}
+
+var portalData = new PortalData();
+var myidx = portalData.findIndexByUrl( location.href );
+var pdata = null;
+try {
+	pdata = portalData.getPortalData(myidx).putong[0];
+	setLoadingImage( pdata.logo );	
+}catch(e){}
+
+var ADListTimeoutChecker = null;
+var play_once = false;
+var compat_timer = null;
+function ADList( itemlistId ) {
+	var itemList = new ItemList();
+	itemList.onload = function( listInfo ) {
+		clearTimeout( compat_timer );
+		var lplayer = new LPlayer();
+		lplayer.play_over = function(){
+			if( play_once ) GotoNext();
+		}
+		lplayer.videos = [];
+		
+		for( var j=0; j<listInfo.length; j++ ) {
+			var mediaItem = new MediaItem();
+			mediaItem.onload = function( info ) {
+				lplayer.videos.push( info.urlAddress );
+				if ( lplayer.isplaying == false ) {
+					lplayer.start();
+				}
+				if ( ADListTimeoutChecker != null ) {
+					clearTimeout( ADListTimeoutChecker );
+					ADListTimeoutChecker = null;
+				}
+			}
+			mediaItem.load( listInfo[j].id );
+		}				
+	}
+	itemList.load( itemlistId );
+	compat_timer = setTimeout( function(){
+		old_ADItem( itemlistId );
+	}, 1000 * 3 );
+}
+
+function old_ADItem ( mediaId ) {
+	var mediaItem = new MediaItem();
+	mediaItem.onload = function( info ) {
+		var lplayer = new LPlayer();
+		lplayer.play_over = function(){
+			if( play_once ) GotoNext();
+		}
+		lplayer.videos = [];
+
+		lplayer.videos.push( info.urlAddress );
+		if ( lplayer.isplaying == false ) {
+			lplayer.start();
+		}
+		if ( ADListTimeoutChecker != null ) {
+			clearTimeout( ADListTimeoutChecker );
+			ADListTimeoutChecker = null;
+		}
+	}
+	mediaItem.load( mediaId );
+
+}
+
+function CatAdList( catelistId , devName ) {
+	var cateList = new CateList();
+	cateList.onload = function( category ) {
+		// alert( "CatAdList: " + JSON.stringify(category))
+		if ( category.length == 0 ) {
+			ADList( catelistId );
+			return;
+		}
+		var foundcat = null;
+		for( var i = 0; i<category.length; i++ ) {
+//			console.log("check startup video cat : " + devName + ":" + category[i].cat_name + ":" + category[i].cat_desc );
+			if( category[i].cat_name == devName ) {
+				foundcat = category[i];
+				break;
+			}
+			if( category[i].cat_name == "default" &&  foundcat == null ) {
+//				console.log("check startup video cat in default "  );				
+				foundcat = category[i];	
+			}
+
+//			console.log("check startup video cat in desc: " + category[i].cat_desc );				
+			var list = category[i].cat_desc.split(',');
+			for( var j=0; j<list.length;j++ ) {
+//				console.log("check startup video cat : " + j + ":" + list[j] );				
+				if ( list[j] == devName ) {
+//					console.log("check startup video cat , found! : " + j + ":" + list[j] );				
+					foundcat = category[i];
+					break;
+				}
+			}
+		}
+		if ( foundcat == null ) {
+			return;	
+		}
+//		console.log("found startup video cat: " + JSON.stringify(foundcat) );
+		ADList(foundcat.cat_id);
+	}
+	cateList.load( catelistId );
+}
+
+
+var usbScanner = new USBScanner();
+
+usbScanner.onfound = function( videos ) {
+	var lplayer = new LPlayer();
+		lplayer.play_over = function(){
+			if( play_once ) GotoNext();
+		}
+	lplayer.videos = videos;
+	lplayer.start();
+}
+
+usbScanner.onfail = usbScanner.onnotfound = function() {
+	console.log("usbScanner.onfail");
+
+	if ( pdata == null )
+		return;
+	var cid = parseInt( pdata.param );
+	try {
+		cid =	pdata.param.match(new RegExp("[\?\&]cat_id=([^\&]*)(\&?)","i"))[1];		
+	}catch(e){}
+//console.log("pdata.param: " + pdata.param + " : " + cid );
+	var devInfo = new DeviceInfo();
+	devInfo.onload = function( info ) {
+		var devName = "default";
+		if ( info != null && !! info.contacts ) {
+			devName = info.contacts;
+		} 
+
+		CatAdList( cid,  devName );
+	}
+	devInfo.load();
+
+	ADListTimeoutChecker = setTimeout( function() {
+		GotoNext();
+	}, 1000 * 10 );	
+}
+
+usbScanner.scan();
+
+function GotoNext() {
+	var plist = portalData.getPortalList();
+	var portal = plist[ myidx + 1];
+	if ( ! portal ) {
+		alert("fatal error!");
+		return;
+	}
+	location.replace( "../" + portal.app_index );	
+}
+
+
+document.onkeydown = function( e )
+{
+	GotoNext();
+}
+
+document.onclick = function() {
+	GotoNext();
+}
+
+setTimeout( function() {
+	wae.onPause = function() {
+		GotoNext();
+	}
+}, 1000 * 3);
+
+window.onWAEReady = function() {
+	wae.onPause = function() {
+		GotoNext();
+	}	
+}
+
+</script>
+<script type="text/javascript" src="player/js/key.js"></script>
+<script type="text/javascript">
+SysKey.onBack = function() {
+	GotoNext();
+}
+SysKey.disableBack();
+</script>
+

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VIEW PHOTO</title>
+    <meta name="viewport" content="width=1920" />
+    <link rel="stylesheet" href="../photo/css/info.css"/>
+</head>
+<body>
+<div class="main">
+  <div id="photo_view" class="photo-view">
+      <img src="../image/ar_hotel_l.png" />
+      <img class="arrow_r" src="../image/ar_hotel_r.png" />
+      <div id="photo_detail" class="photo-text" >
+      	<div id="photo_title"></div>
+      	<div id="photo_cont"></div>
+      </div>
+  </div>
+  <img src="../image/op_intro.png" class="op-intro"/>
+</div>
+</body>
+</html>
+    <script type="text/javascript" src="../video/public/js/config.js"></script>
+    <script type="text/javascript" src="../video/public/js/jsget.js"></script>
+    <script type="text/javascript" src="../js/querystring.js"></script>
+    <script type="text/javascript" src="../../js/cate.js"></script>
+
+<script type="text/javascript">
+  var photoItem = new PhotoItem();
+  photoItem.onload = function( photoInfo ) {
+
+  	photoItem.current = 0;
+
+  	this.setPhoto = function( idx ) {
+  		var l = this.photoInfo.photolist.length;
+  		var nidx = (l + idx) % l ;
+  		this.current = nidx;
+  		var item = this.photoInfo.photolist[nidx];
+  		document.getElementById("photo_view").style.backgroundImage = "url("+item.logo+")";
+
+      if ( !item.name  || !item.about ) {
+        document.getElementById("photo_detail").style.display = "none";
+      } else {
+        document.getElementById("photo_detail").style.display = "";
+        document.getElementById("photo_title").innerHTML = item.name;
+        document.getElementById("photo_cont").innerHTML = item.about;             
+      }
+  	}
+  	this.setPhoto(0);
+  }
+
+
+  if ( isNaN(parseInt(Request.q("photo_id"))) ) {
+  	location.href="list.html";
+  } else {
+    photoItem.load( Request.q("photo_id") );
+  }
+
+  document.addEventListener("keydown",function(e){
+  	var k = e.keyCode;
+  	//alert(k);
+    console.log("get key : " + k );
+  	switch( k ) {
+  		case 68:
+//  		case 39:
+  			photoItem.setPhoto( photoItem.current + 1);
+  			break;
+  		case 65:
+//  		case 37:
+  			photoItem.setPhoto( photoItem.current - 1);
+  			break;
+  		case 8:
+  		case 27:
+	  		location.href="list.html";
+	  		break;
+  	}
+  },false);        
+
+</script>

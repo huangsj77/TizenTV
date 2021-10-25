@@ -1,0 +1,178 @@
+﻿{
+  "en" : {
+    "search" : "Search",
+    "history":  "History",
+    "allcate":  "All",
+    "All":  "All",
+    "total":  "Total:",
+    "pages":  "Pages",
+
+    "director" :  "Director",
+    "cast" :  "Cast",
+    "info" :  "Info",
+    "story" :  "Story",
+    "play": "Play",
+
+    "favroite":"Favorite",
+    "favroites":"Favorites",
+    "lock":"Lock",
+    "refresh":"Refresh",
+    "sort":"Sort",
+
+    "my_apps" : "My Apps",
+
+    "livetv": "LIVE TV",
+    "movie": "MOVIE",
+    "series": "SERIES",
+    "variety": "VARIETY",
+    "cartoon": "Cartoon",
+    "music": "MUSIC",
+    "review": "REVIEW",
+    "box_info": "BOX INFO",
+    "app": "APP",
+    "setting": "SETTING",
+    "cus_tel":  "CUS TEL NO.",
+    "app_version": "Version:",
+
+    "tv_review":  "TV Review",
+    "channels": "Channels",
+    "date":"Date",
+    "program_list": "Program List",
+  
+    "account" : "Account",
+    "information" : "Information",
+    "box_id" : "Box ID",
+    "expiry_date" : "Expiry Date",
+    "my_package" : "My Package",
+    "activation" : "Activation",
+    "select_activation_method" : "Select Activation Method",
+    "activation_code" : "Activation Code",
+
+    "mon": "Mon",
+    "tue": "Tues",
+    "wed": "Wed",
+    "thu": "Thur",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun":  "Sun"
+
+  },
+  "cn" : {
+    "search" : "搜索",
+    "history":  "历史记录",
+    "allcate":  "全部",
+    "All":  "全部",
+    "total":  "总计：",
+    "pages":  "当前页：",
+
+    "director" :  "导演",
+    "cast" :  "主演",
+    "info" :  "信息",
+    "story" :  "简介",
+    "play": "播放",
+	
+    "refresh":"刷新",
+    "sort":"排序",
+
+    "my_apps" : "我的应用",
+
+    "livetv": "直播",
+    "movie": "电影",
+    "series": "电视剧",
+    "variety": "综艺",
+    "cartoon": "卡通",
+    "music": "音乐",
+    "review": "回看",
+    "box_info": "资费",
+    "app": "应用",
+    "setting": "设置",
+    "cus_tel":  "客服电话：",
+    "app_version": "版本号：",
+
+    "tv_review":  "电视回看",
+    "channels": "频道列表",
+    "date":"日期",
+    "program_list": "频道节目信息",
+
+    "account" : "Account",
+    "information" : "Information",
+    "box_id" : "Box ID",
+    "expiry_date" : "Expiry Date",
+    "my_package" : "My Package",
+    "activation" : "Activation",
+    "select_activation_method" : "Select Activation Method",
+    "activation_code" : "Activation Code",
+
+    "mon": "周一",
+    "tue": "周二",
+    "wed": "周三",
+    "thu": "周四",
+    "fri": "周五",
+    "sat": "周六",
+    "sun":  "周日"
+  },
+  "mm" : {
+    "search" : "ရွာေဖြျခင္း",
+    "history":  "မွတ္တမ္း",
+    "allcate":  "All",
+    "All":  "All",
+    "total":  "စုစုေပါင္း",
+    "pages":  "စာမ်က္နွာ ",
+
+    "director" :  "ဒါရိုက္တာ",
+    "cast" :  "သရွပ္ေဆာင္",
+    "info" :  "အေၾကာင္းအရာ",
+    "story" :  "ဇာတ္လမ္း",
+    "play": "ၾကည့္သည္",
+
+    "refresh": "Refresh",
+    "sort": "အစဥ္လိုက္",
+
+    "my_apps" : "ေဆာ့၀ဲ",
+
+    "livetv": "Lတိုက္ရိွက္ၾကည့္ရွျခင္း",
+    "movie": "ရွပ္ရွင္",
+    "series": "ဆက္လမ္းတြဲ",
+    "variety": "ရိႈး",
+    "cartoon": "ကာတြန္း",
+    "music": "သီခ်င္း",
+    "review": "ျပန္လည္ၾကည့္ရွျခင္း",
+    "box_info": "အခ်က္အလက္",
+    "app": "APP",
+    "setting": "SETTING",
+    "cus_tel":  "ဆက္သြယ္ရမည့္ဖုန္း",
+    "app_version": "ဗားရွင္း",
+
+    "tv_review":  "ျပန္လည္ျပသသည္",
+    "channels": "Channel လိုင္းမ်ား",
+    "date":"ရက္စြဲ",
+    "program_list": "ၾကည့္ရႈရန္အခ်ိန္ဇယား",
+   
+    "account" : "အေကာင့္",
+    "information" : "သတင္းအခ်က္အလက္",
+    "box_id" : "Box ID",
+    "expiry_date" : "ကုန္ဆံုးရက္စြဲ",
+    "my_package" : "၀န္ေဆာင္မႈ",
+    "activation" : "ခလုတ္ဖြင့္ျခင္း",
+    "select_activation_method" : "Activation ဇယား",
+    "activation_code" : "Activation Code",
+
+    "mon": "တနလာၤ",
+    "tue": "အဂၤါ",
+    "wed": "ဗုဒၶဟူ",
+    "thu": "ၾကာသပေတ",
+    "fri": "ေသာၾကာ",
+    "sat": "စေန",
+    "sun":  "တနဂၤေႏြ"
+  },
+  "tw" : {
+  },
+ "jp" : {
+  },
+
+ "ka" : {
+  },
+}
+
+
+

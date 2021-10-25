@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WELCOME</title>
+    <link rel="stylesheet" href="../../css/portal.css"/>
+    <style type="text/css">
+        body{
+            width: 1920px;
+            height: 1080px;
+            font-family: "Product Sans Regular";
+            margin: auto 0px;
+            /*background-image:  url(../image/bg_welcome.jpg);*/
+            background-size: 1920px 1080px;
+            /*background: #c0a830;*/
+            color:#676767;
+        }
+
+        .welInfo{position:absolute;top:560px;width:1920px;height:315px;background: url(../images/tool.png) no-repeat;background-size: 1920px 315px;}
+        .welTitle{position: absolute;top:465px;width:1000px;margin-left:200px;}
+        .welLogo{width:390px;height: 300px;float:left;z-index: 100;}
+        .welLogo img{width: 100%;height: 100%;float:left;background:white;}
+        .welText{font-size:100px;color: white;margin-left:50px;float: left;}
+        .userInfo{
+            width: 680px;
+            overflow: hidden;
+            display: inline-block;
+            margin-left: 640px;
+        }
+
+        .userInfo .userName{font-size: 40px;margin: 20px 0px;}
+        .userInfo .roomNo{font-size: 28px;padding:20px 0px;}
+        .userInfo .welDesc{font-size: 22px;}
+        .langInfo{display: inline-block; width:520px;height: 180px;position: relative;top: 90px; text-align: center;}
+        .langInfo a{width:120px;height: 180px;display: inline-block;text-align: center;margin:20px;}
+        .langInfo a.currentFocus{color:#000;}
+        .langInfo a img{width:100px;height: 100px;background:white;}
+        .langInfo a span{color: #676767;display:block;overflow: hidden;font-size: 20px;height: 40px;line-height: 40px;}
+        .langInfo a.currentFocus span{background:#3aa84f;color: white;}
+        .splitline{position:relative;width:1920px;height:15px;top:100px;background: url(../images/splitline.png) repeat-x;background-size:1270px 15px;display: block;}
+    </style>
+</head>
+<body style="background:url(../images/welcome.jpg);">
+<div class="welInfo">
+    <div class="splitline"></div>
+    <div class="userInfo">
+        <div class="userName"  id="userName">&nbsp;</div>
+        <div class="roomNo" id="roomNo">&nbsp;</div>
+        <div class="welDesc" id="welDesc">We hope you will enjoy your stay at our hotel.</div>
+    </div>
+    <div class="langInfo">
+        <a href="#"
+           onfocus="changeLan('English')" onclick="GoLan('21','Chinese')">
+           <img src="../../images/lang1.png" alt="">
+           <span id="langEn">English</span>
+        </a>
+        <a href="#"
+           onfocus="changeLan('Deutsch')" >
+           <img src="../../images/lang2.png" alt="">
+           <span id="langDe">Deutsch</span>
+        </a>
+        <a href="#"
+           onfocus="changeLan('Slovensky')" >
+           <img src="../../images/lang3.png" alt=""><span id="langSl">Slovensky</span>
+        </a>
+    </div>
+</div>
+<div class="welTitle">
+    <div class="welLogo" id="welLogo"><img src="../../images/logo.png" alt="" ></div>
+    <div class="welText">Welcome</div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../js/lang.js"></script>
+<script type="text/javascript" src="../js/ajax.js"></script>
+<script type="text/javascript" src="../js/config.js"></script>
+<script type="text/javascript" src="../js/jsget.js"></script>
+<script type="text/javascript" src="../js/portaldata.js"></script>
+<script type="text/javascript" src="../js/deviceinfo.js"></script>
+<script type="text/javascript">
+    var waeSession = null;
+    var userName = document.getElementById("userName");
+    var userNameVal = null;
+    var roomNo = document.getElementById("roomNo");
+    var roomNoVal = null;
+    var welDesc = document.getElementById("welDesc");
+    var langEn = document.getElementById("langEn");
+    var langDe = document.getElementById("langDe");
+    var langSl = document.getElementById("langSl");
+
+    var portalData = new PortalData();
+    
+    
+  
+    portalData.welLogo = document.getElementById("welLogo");
+    portalData.portal = portalData.getPortalModule().public;
+   
+    if( portalData.portal ) {
+        portalData.welLogo.innerHTML = "<img src='../../"+ portalData.portal.top.logo +"'/>";
+    }
+	
+	// this.portal.public.toolbackground.logo
+	//if( portalData.portal.wel_pic.logo ) {
+	//	document.body.style.backgroundImage = "url('../../' + portalData.portal.wel_pic.logo)";
+	//} else
+
+    alert(portalData.portal.wel_pic.logo)
+   	document.body.style.backgroundImage = "url('" + portalData.portal.wel_pic.logo  + " ')";
+
+    function changeLan( langId ) {
+        TR("",langId);
+        roomNo.innerText = TR("to Araliya - Unawatuna");
+        welDesc.innerText = TR("we hope you will enjoy your stay at our hotel");
+        langEn.innerText = TR("english");
+        langDe.innerText = TR("deutsch");
+        langSl.innerText = TR("slovensky");
+    }
+
+    function GoLan( portalId, langName, indexPage ) {
+        var tR = new Lang();
+        var mainurl = "../main.html";
+        localStorage.setItem("MAIN_PORTAL", mainurl);
+        var mainurl = localStorage.getItem("MAIN_PORTAL");
+        location.href = mainurl;
+        return;
+    }
+
+    var devInfo = new DeviceInfo();
+    devInfo.onload = function( info ) {
+        if( !info ) return;
+
+        var _strInfo = JSON.stringify(info);
+        if(_strInfo == "{}") {
+            userNameVal  = "Guest";
+            roomNoVal = "Our Hotel";
+        } else {
+            userNameVal  = (info.customer1 && info.customer1!="")? info.customer1 : "Guest";
+            roomNoVal = (info.contacts && info.contacts!="") ? info.contacts : "Our Hotel";
+        }
+
+        localStorage.setItem("username",userNameVal);
+        localStorage.setItem("roomno",roomNoVal);
+
+        userName.innerText = userNameVal;
+        roomNo.innerText = "Welcome to Araliya - Unawatuna";//TR("to your hotel room") +" "+ roomNoVal;
+    }
+    devInfo.load();
+
+
+    function GotoNext() {
+        var plist = portalData.getPortalList();
+        var portal = plist[ myidx + 1];
+        if ( ! portal ) {
+            var mainurl = localStorage.getItem("MAIN_PORTAL");
+            location.replace(  mainurl );
+            return;
+        }
+        location.href = "../" + portal.app_index;
+    }
+
+    document.onkeydown = function( e ) {
+        // GotoNext();
+    }
+
+    document.onclick = function() {
+        // GotoNext();
+    }
+</script>
+<script type="text/javascript" src="../js/key.js"></script>
+

@@ -1,0 +1,152 @@
+body{
+	margin:0;padding:0;font-family:'微软雅黑';overflow:hidden;
+	background: black;
+}
+a{text-decoration:none; color: #ddd;}
+a:focus {outline: none;}
+
+
+.main{}
+
+.photo-main{
+	width:1920px;height:1080px;
+	overflow:hidden;
+	background-repeat: no-repeat;
+}
+
+.main-bar{
+	height: 260px;
+	margin-left: 70px;
+	width: 100%;
+	overflow: hidden;
+}
+.main-bar a {
+	width: 474px;
+	height: 266px;
+	line-height: 266px;
+	padding-top: 50px;
+	font-size : 50px;
+	display: inline-block;
+	text-align: center;
+	background-image: url(../image/bg_hotel_btn.png);
+	background-repeat: no-repeat;
+}
+.main-bar a:hover , .main-bar a.currentFocus{
+	background-image: url(../image/bg_hotel_btnh.png);
+}
+
+.main-listcont{
+	width: 2000px;
+}
+.main-listcont img{
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 240px;
+}
+.main-listcont div{
+	display: inline-block;
+	width: 1750px;
+	height: 570px;
+	overflow: hidden;
+}
+.main-list{
+	width: 8000px;
+	display: block;
+}
+.main-list a{
+	display: block;
+	float: left;
+	width: 330px;
+	height: 520px;
+	margin: 10px;
+	border-radius:15px; 
+	background-position: center;
+	background-size: 100% 100%;
+}
+.main-list a:hover, .main-list a.currentFocus{
+	box-shadow: 0px 0px 8px 8px yellow;
+}
+.main-list a div{
+	font-size: 46px;
+	line-height: 100px;
+	height: 120px;
+	width: 290px;
+	margin-top: 400px;
+	padding: 0 20px;
+	text-align: right;
+	color: white;
+	background: url(../image/bg_hotel_btn.png);
+	background-size: 100% 100%;
+	border-bottom-right-radius: 15px;
+	border-bottom-left-radius: 15px;
+}
+.photo-info {
+	width: 90%;
+	margin: 30px 270px;
+	height: 150px;
+	color: #ddd;
+}
+.photo-info span {
+	display: inline-block;
+	font-size: 45px;
+	line-height: 60px;
+	width: 350px;
+	margin-top: 10px;
+	margin-right: 30px;
+	text-align: right;
+	float: left;
+}
+.photo-info div {
+	display: inline-block;
+	font-size: 32px;
+	line-height: 40px;
+	width: 1200px;
+	margin-left: 50px;
+	margin-top: 0px;
+}
+.photo-info img {
+	vertical-align: top;
+}
+
+.op-intro {
+	position: fixed;
+	top: 760px;
+}
+
+.photo-view {
+	width:1920px;height:1080px;
+	background-repeat: no-repeat;
+	overflow:hidden;
+}
+.photo-view img {
+	display: inline-block;
+	margin-top: 450px;
+}
+.arrow_r {
+	float: right;
+}
+
+.photo-text {
+	position: fixed;
+	top: 150px;
+	left: 1000px;
+	width: 700px;
+	height: 800px;
+	background: black;
+	opacity: 0.6;
+	padding: 50px;
+}
+
+.photo-text #photo_title {
+	font-size: 50px;
+	line-height: 80px;
+	color: #ddd;
+	margin: 40px 0;
+}
+.photo-text #photo_cont {
+	font-size: 34px;
+	line-height: 50px;
+	color: #ddd;
+}
+
+

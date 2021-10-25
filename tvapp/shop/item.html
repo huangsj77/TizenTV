@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FOOD</title>
+    <meta name="viewport" content="width=1920" />
+    <link rel="stylesheet" href="../message/public.css"/>
+    <link rel="stylesheet" href="../shop/css/shop.css"/>
+    <style>
+        .itemcont div {
+            margin-left: 50px;
+            width: 500px;
+            overflow: hidden;
+            line-height: 80px;
+        }
+
+        #itemimage {
+            width: 880px;
+            display: inline-block;
+            overflow: hidden;
+            margin: 0px 0 0 300px;
+            position: relative;
+            top: 100px;
+            height: 800px;
+        }
+        #itemimage img{
+            height: 800px;
+        }
+
+        .remoterhotkeyhint a {
+            background-image: url(../image/btn_blue.png);
+            background-size: 180px 90px;
+            text-align:center;
+            width: 180px;
+            height:75px;
+            display: block;
+        }
+
+        .remoterhotkeyhint a:hover {
+            background-image: url(../image/btn_red.png);
+        }
+        .remoterhotkeyhint a.currentFocus {
+            background-image: url(../image/btn_red.png);
+        }
+        .remoterhotkeyhint span {
+            font-size: 30px;
+            position: relative;
+            top: 25px;
+        }
+    </style>
+</head>
+<body>
+<div class="tvmain">
+    <div class="tvcontent" style="background-image: url(image/bg_food.jpg)">
+        <div id="itemimage"></div>
+        <div class="itemcont">
+            <div id="itemtitle">Hello</div>
+            <div id="itemprice">$100</div>
+            <div id="iteminfo"></div>
+            <div class="">
+            <span class="itemnumcont">
+              <a href="javascript:addItem();"></a>
+              <span id="itemnum">1</span>
+              <a href="javascript:decItem();"></a>
+            </span>
+                <span id="itemnum2">份</span>
+                <span id="itemok">
+              <a href="javascript:saveItem();"></a>
+            </span>
+            </div>
+        </div>
+
+        <div class="paycont" style="display: none;"><a href="../shop/pay.html" id="checkout2">結賬</a></div>
+    </div>
+    <div class="remoterhint"></div>
+    <div class="remoterhotkeyhint" style="display: none;">
+        <a href="../shop/pay.html" style=""><span id="checkout1">結賬</span></a>
+        <!--<img src="../public/image/btn_blue.png" />-->
+        <!--<span id="checkout1">結賬</span>-->
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="../video/public/js/lang.js"></script>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../../js/cate.js"></script>
+</div>
+<script type="text/javascript" src="../js/querystring.js"></script>
+<script type="text/javascript" src="../video/public/js/sharedata.js"></script>
+<script type="text/javascript" src="player/js/key.js"></script>
+<script type="text/javascript">
+
+    document.getElementById("itemnum2").innerHTML = TR("Unit");
+    document.getElementById("checkout1").innerHTML = TR("CheckOut");
+    document.getElementById("checkout2").innerHTML = TR("CheckOut");
+
+
+    if ( ! Request.q("iid") ) {
+        location.href="sel.html";
+    }
+    function $(e) {
+        return document.getElementById(e);
+    }
+
+    var shopItem = new PhotoItem();
+    shopItem.itemInfo = null;
+    shopItem.onload = function( itemInfo ) {
+        this.itemInfo = itemInfo;
+        $("itemimage").innerHTML = "<img src='"+itemInfo.logo+"' />";
+        $("itemtitle").innerHTML = itemInfo.name;
+        $("iteminfo").innerHTML =  itemInfo.about;
+        $("itemprice").innerHTML = "$" + itemInfo.price;
+
+        var cartItem = new CartItem(this.iid) ;
+        $("itemnum").innerHTML = cartItem.getNum();
+    }
+
+    shopItem.load( Request.q("iid") );
+    shopItem.iid = Request.q("iid");
+
+    function addItem() {
+        var c = parseInt($("itemnum").innerHTML) + 1;
+        if ( isNaN(c) ||  c < 0 ) c = 0;
+        $("itemnum").innerHTML = c;
+    }
+    function decItem() {
+        var c = parseInt($("itemnum").innerHTML) - 1;
+        if ( isNaN(c) || c < 0 ) c = 0;
+        $("itemnum").innerHTML = c;
+    }
+    function saveItem() {
+        var c = parseInt($("itemnum").innerHTML);
+        if ( isNaN(c) || c<0 ) c = 0;
+
+        var cartItem = new CartItem( shopItem.iid ) ;
+        if ( ! shopItem.itemInfo ) {
+            alert("Data has not Loaded, Please wait and retry!")
+            return;
+        }
+
+        cartItem.add(shopItem.itemInfo.name, shopItem.itemInfo.price, c);
+
+        // alert("Added to Cart!")
+        location.href = "pay.html";
+    }
+
+
+    const KEY_W = 87
+    const KEY_S = 83;
+    const KEY_A = 65;
+    const KEY_D = 68;
+    const KEY_SPACE=32;
+    const KEY_F = 70;
+    const KEY_ENTER = 66;
+    const KEY_ENTER2 = 13;
+
+    document.onkeydown = function(e ) {
+        switch( e.keyCode ) {
+            case KEY_W:
+                addItem();
+                break;
+            case KEY_S:
+                decItem();
+                break;
+            case KEY_F:
+            case KEY_ENTER:
+            case KEY_ENTER2:
+                saveItem()
+                break;
+        }
+    }
+
+    const SYS_KEY_BACK = 4;
+    const SYS_KEY_BLUE = 115;
+
+    function hotKey() {
+    }
+
+    hotKey.init = function() {
+        var eventListener = wae.create("EventListener");
+        eventListener.addJs( SYS_KEY_BLUE,   "hotKey.blue();" );
+    }
+    hotKey.blue = function() {
+        location.href = "pay.html";
+    }
+
+    window.onWAEReady = function() {
+        hotKey.init();
+    }
+
+
+</script>

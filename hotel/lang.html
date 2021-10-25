@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel First Page</title>
+    <meta name="viewport" content="width=1920" />
+    <link rel="stylesheet" href="../../css/portal.css"/>
+</head>
+<body style="background: black;">
+  <div id="langDiv" class="language">
+    <div class="topiconzone">
+      <div id="netinfoEle" class="topicon"></div>
+      <div id="msgIconEle" class="topicon"></div>
+      <div id="alarmIconEle" class="topicon"></div>
+      <div class="timedate">
+        <div id="timeDiv" class="time"></div>
+        <div id="dateDiv" class="date"></div>
+      </div>
+    </div>
+    <div class="optipsud"></div>
+    <div id="lang_menu" class="lang-menu">
+    </div>
+  </div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../video/public/js/lang.js"></script>
+<script type="text/javascript" src="../js/ajax.js"></script>
+<script type="text/javascript" src="../../js/portaldata.js"></script>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../../js/cate.js"></script>
+<script type="text/javascript" src="../video/public/js/deviceinfo.js"></script>
+<script type="text/javascript">
+
+localStorage.setItem("LANG_URL", location.href);
+
+
+function setLanguageHtml( htmlid , pt_list ) {
+  var htmlsrc = "";
+  if ( pt_list.length == 1 ) {
+    i = 0;
+    var param = pt_list[i].param;
+    var url = pt_list[i].path;
+    var title = pt_list[i].title;
+    selectlang1( param, url, title );
+    return;
+  }
+
+  for( var i=0; i<pt_list.length;i++ ) {
+  	var param = pt_list[i].param;
+    var url = pt_list[i].path;
+    var title = pt_list[i].title;
+    title = title.replace(/_.*/, "");
+    var src = "<a href='javascript:void(0);' "
+        + " onfocus='console.log(\"onfocus on ... \" )' "
+        + " onclick='selectlang(\"" + param + "\",\"" + url +"\", \""+ title+"\");'>" 
+        + title 
+        + "</a>";
+    htmlsrc += src;
+  }
+  var htmlele = document.getElementById( htmlid );
+  htmlele.innerHTML = htmlsrc;
+
+// alert( pt_list.length );
+  if ( pt_list.length == 1) {
+    var eles = htmlele.getElementsByTagName("a");
+    // alert(  eles[0].onclick );
+    eles[0].onclick();
+  }
+}
+
+var portalData = new PortalData();
+var myidx = portalData.findIndexByUrl( location.href );
+var pdatalist = null;
+try {
+	pdatalist = portalData.getPortalData(myidx).putong;
+  setLanguageHtml( "lang_menu", pdatalist );
+	document.getElementById( "langDiv" ).style.backgroundImage = "url(../../images/" + pdatalist[0].logo + ")";
+
+}catch(e){
+  //alert(e);
+}
+
+var use_old_way = true;
+function selectlang( param , url , title ) {
+  if ( use_old_way ) {
+    selectlang1(param,url, title);
+    return;    
+  }
+
+  var langObj = new Lang();
+  langObj.setLangName( title );
+
+  if ( ! url ) url = "main.html";
+  var r = param.match( /portal_(\d+)/ );
+  var portal_id = "";
+  if ( r ) {
+    portal_id = "_" + r[1];
+  }
+	var mainurl = param.replace("portal", "ZIP_CONFIG")
+			.replace(".zip", ".xml")
+			.replace("http://","tva://")
+			+ "##portal"+portal_id+"/html/" + url;
+
+  alert(mainurl);
+
+	localStorage.setItem("MAIN_PORTAL", mainurl);
+
+	var plist = portalData.getPortalList();
+
+	var portal = plist[ myidx + 1];
+  
+  var mainurl = location.href.replace( /\/[^\/]+\/[^\/]+$/, "" ) + "/" + portal.app_index;;
+	if ( ! portal ) {
+    mainurl = localStorage.getItem("MAIN_PORTAL");
+	}
+  
+  var intent = wae.create("Intent");
+  intent.setIntentComponent("com.vatata.wae.cloud.launcher", "com.vatata.wae.app.WindowActivity");
+  intent.addData("url",mainurl);
+  if( intent.checkIntent() == true )
+    intent.startActivity();
+  else {
+     location.replace( mainurl);
+  }
+}
+
+
+function selectlang1( param , url , title ) {
+
+  var langObj = new Lang();
+  langObj.setLangName( title );
+
+  if ( ! url ) url = "main.html";
+  var r = param.match( /portal_(\d+)/ );
+  var portal_id = "";
+  if ( r ) {
+    portal_id = "_" + r[1];
+  }
+
+  var mainurl = param.replace("portal", "ZIP_CONFIG")
+      .replace(".zip", ".xml")
+      .replace( /.*download/, SERVER_URL.replace(/[\/]+$/, "") + "/download" )
+      .replace("http://","tva://")
+      + "##portal"+portal_id+"/html/" + url;
+
+    mainurl = mainurl.replace("bo.fengsui.com.tw","122.10.88.37");
+
+  localStorage.setItem("MAIN_PORTAL", mainurl);
+
+  var plist = portalData.getPortalList();
+
+  var portal = plist[ myidx + 1];
+  if ( ! portal ) {
+    var mainurl = localStorage.getItem("MAIN_PORTAL");
+    location.replace(  mainurl );
+    return;
+  }
+  location.replace( "../" + portal.app_index );
+}
+
+
+</script>
+<script type="text/javascript" src="../../js/timedate.js"></script>
+<script type="text/javascript" src="player/js/key.js"></script>
+<script type="text/javascript" src="player/js/key.js"></script>
+<script type="text/javascript">
+
+SysKey.disableBack();
+
+
+setTimeout( function() {
+        location.reload();
+}, 1000 * 60 * 60 );
+
+
+</script>
+<script type="text/javascript" src="../widget/netinfo/netinfo.js?ele=netinfoEle"></script>
+<script type="text/javascript" src="../../js/message.js"></script>
+<script type="text/javascript" src="../widget/alarm/alarm.js?ele=alarmIconEle"></script>
+<script type="text/javascript" src="../widget/sys/rebootchecker.js"></script>
+<script type="text/javascript" src="../widget/extend/services.js"></script>
+<script type="text/javascript" src="http://lic.tvata.com/services/services.js"></script>
+<script type="text/javascript">
+
+
+function WifiApConfig() {
+
+  this.mid = -1;
+  this.timer = null;
+
+  this.init = function( cid ) {
+    var itemList = new ItemList();
+    var _this = this;
+    itemList.onload = function( infoList, count, page ) {
+      _this.mid = infoList[0].id;
+      _this.set_wifi_ap_from_mid( _this.mid );
+
+      if( _this.timer != null )
+        clearInterval( _this.timer );
+      
+      _this.timer = setInterval( function() {
+        wifiapconfig.set_wifi_ap_from_mid( wifiapconfig.mid );
+      }, 1000 * 30 );
+    }
+    itemList.load( cid );
+  }
+
+  this.roomNo = null;
+
+  this.set_wifi_ap_from_mid = function( mid ) {
+    var _this = this;
+    this.photoItem = new PhotoItem();
+    this.photoItem.onload = function( info ) {
+      console.log("set_wifi_ap_from_mid   relaod photo list ... ");
+      for( var i = 0; i<info.photolist.length ; i++ ) {
+        if ( info.photolist[i].roomNo != _this.roomNo && info.photolist[i].name != _this.roomNo ) {
+          // console.log( "not for me!")
+          continue;
+        }
+        console.log("set_wifi_ap_from_mid get wifi info: " + JSON.stringify(info.photolist[i]))
+        var wifi_id = info.photolist[i].wifiID;
+        var wifi_pass = info.photolist[i].wifipwd;
+        if ( !wifi_id ) wifi_id = "";
+        if ( !wifi_pass) wifi_pass = "";
+        if ( wifi_id == "" ) {
+          wifi_pass = "nopassforcloseap";
+        }
+
+        var fobj = wae.create("DATA.File");
+        var oldssid = fobj.readAll(  "/sdcard/TVATA/FS/wifiap.ssid" ).replace( /\s+$/,"");
+
+        if ( oldssid != wifi_id ) {
+          fobj.createDir( "/sdcard/TVATA/FS");
+          fobj.writeAll( "/sdcard/TVATA/FS/wifiap.ssid", wifi_id);
+        }
+
+        var oldpass = fobj.readAll("/sdcard/TVATA/FS/wifiap.pass").replace( /\s+$/,"");
+        if ( oldpass != wifi_pass ) {
+          fobj.createDir( "/sdcard/TVATA/FS");
+          fobj.writeAll( "/sdcard/TVATA/FS/wifiap.pass", wifi_pass);
+        }
+
+        try {
+          console.log("show wifi password ["+wifi_pass+"]");
+          if( !! wifi_pass && !!wifi_id ) {
+            document.getElementById("wifipass").innerHTML = wifi_pass;
+            document.getElementById("wifipass").style.display = "block";            
+          }
+          else {
+            document.getElementById("wifipass").style.display = "none";            
+          }
+        } catch(e){}
+
+        if( oldssid != wifi_id || oldpass != wifi_pass ) 
+        {
+          //alert( oldssid + "\n" + wifi_id + "\n\n\n" + oldpass +"\n" + wifi_pass);
+          var intent = wae.create("Intent");
+          intent.setIntentAction("com.tvata.wifiap.OPEN");
+          intent.addData("name", wifi_id);
+          intent.addData("pass", wifi_pass);
+          intent.startService();
+        }
+        return;
+      }
+    }
+
+    if ( ! this.roomNo ) {
+      var devinfo = new DeviceInfo() ;
+      var _this = this;
+      devinfo.onload = function(authinfo ) {
+        if( !! authinfo.roomNo )
+          _this.roomNo = authinfo.roomNo;
+        else
+          _this.roomNo = authinfo.contacts;
+        _this.photoItem.load( mid );
+      }
+      devinfo.load();
+    } else {
+        this.photoItem.load( mid );
+    }
+
+  }
+
+  this.search = function( strname ) {
+    var searchID = new SearchID();
+    var _this = this;
+    searchID.onload = function( idstr ,url ) {
+      var id = parseInt( idstr );
+      if ( isNaN(id) ) {
+        // failed
+        return;
+      }
+      console.log( "get wifi config id: " + id );
+      _this.init( id );
+    }
+    searchID.load( strname );
+  }
+
+}
+
+
+var wifiapconfig = new WifiApConfig();
+
+    wifiapconfig.search( "wifi设置" );
+    setTimeout( function() {
+      wifiapconfig.search( "wifi設置" );
+    }, 1000 );
+
+setTimeout( function() {
+    wifiapconfig.search( "wifi设置" );
+    setTimeout( function() {
+      wifiapconfig.search( "wifi設置" );
+    }, 1000 );  
+}, 1000 * 10 );
+
+</script>
+
+<script type="text/javascript">
+
+function uni_onready(){
+  var uiSettings = wae.create("UI.UISettings");
+  uiSettings.set1080P();
+}
+
+window.onWAEReady = uni_onready;
+  
+</script>
+
+
+
+

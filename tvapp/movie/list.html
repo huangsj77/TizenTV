@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="../message/public.css"/>
+    <link rel="stylesheet" href="../video/css/movie.css"/>
+    <style type="text/css">
+        .tvright {
+            position: relative;
+        }
+        .subtitlelist {
+            position: absolute;
+            top: 30px;
+            left: 10px;
+        }
+        .subtitlelist img {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="tvmain">
+    <div class="tvcontent" style="background-image: url(image/bg_list.jpg)">
+        <div id="catelist" class="catelist tvleft" style="display: none;">
+            <a id="c{CATEID}" onfocus="fixCateFocus(this);itemList.loadList({CATEID} , this);"
+               onblur="fixCateBlur(this)"
+               href="javascript:void(0);">{CATENAME}</a>
+        </div>
+
+        <div id="movielist" class="movielist tvmid" style="display: none;">
+            <a href="javascript:;" onclick="mediaItem.clickItem({MID},{CID});"
+               onblur="fixItemBlur(this);"
+               onfocus="fixItemFocus(this);itemList.loadItem({MID},{IDX});">
+                <img src="{MIMG}" /><span>{MNAME}</span>
+            </a>
+        </div>
+
+        <div id="movieinfo" class="tvright" style="display: none;">
+            <img class="movie-img" src="{MIMG}"/>
+            <div class="movie-title">
+                <img  style="display: none;" class="movie-level" src="image/l_{MLEVEL}.png"/>
+                <span class="movie-title1">{MNAME}</span>
+                <span class="movie-title2">{MTITLE}</span>
+            </div>
+            <div class="movie-info">
+                <div>{DD}：<span>{MDIRECTOR}</span></div>
+                <div>{DL}：<span>{MLABLE}</span></div>
+                <div>{DA}：<span>{MACTOR}</span></div>
+                <div>{DI}：<span>{MINTRO}</span></div>
+            </div>
+            <div class="subtitlelist" id="subtitlelist">
+                {SUBTITLELIST}
+            </div>
+        </div>
+    </div>
+    <div id="pagenum" class="pagenum"></div>
+    <div class="remoterhint"></div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../video/public/js/lang.js"></script>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../../js/cate.js"></script>
+<script type="text/javascript" src="../public/js/bo.js"></script>
+<script type="text/javascript" src="../js/querystring.js"></script>
+<script type="text/javascript" src="player/js/key.js"></script>
+<script type="text/javascript">
+	var apiUrl = "http://119.62.215.191:16330/index.php/api?action=angel&cat_id=1";
+	document.addEventListener("tizenhwkey", function(e) {
+         if (e.keyName === "back") {
+             try {
+                 //tizen.application.getCurrentApplication().exit();
+             } catch (error) {
+                 console.error("getCurrentApplication(): " + error.message);
+             }
+         }
+     });
+     
+    function fixCateFocus( ele ) {
+        ele.style.backgroundImage = "url(image/cate_bg.png)";
+    }
+    function fixCateBlur( ele ) {
+        ele.style.backgroundImage = "";
+    }
+
+    function fixItemBlur(ele ) {
+        // console.log( "fixItemBlur " + ele.outerHTML );
+        var iele = ele.getElementsByTagName("img")[0];
+        // console.log( "fixItemBlur " + iele.outerHTML );
+        iele.style.boxShadow = "";
+
+    }
+    function fixItemFocus( ele ) {
+        // console.log( "fixItemFocus "  + ele.outerHTML );
+        var iele = ele.getElementsByTagName("img")[0];
+        iele.style.boxShadow = "0px 0px 15px 15px #09f";
+        // console.log( "fixItemFocus " + iele.outerHTML );
+    }
+
+    var cateList = new CateList();
+    cateList.ele = document.getElementById("catelist");
+    cateList.htmltemp = cateList.ele.innerHTML;
+    cateList.onload = function( category ) {
+        var mc_str = "";
+        for( var i = 0; i< category.length ; i++ ) {
+            if ( i >= 7 ) break;
+            var str = cateList.htmltemp
+                .replace("{CATENAME}", category[i].cat_name)
+                .replace(/{CATEID}/g, category[i].cat_id);
+            mc_str += str;
+        }
+        cateList.ele.innerHTML = mc_str;
+        cateList.ele.style.display = "block";
+
+        var catid = parseInt(sessionStorage.getItem('cate_id') ) ;
+        sessionStorage.removeItem('cate_id');
+
+        if ( isNaN( catid) )    catid = category[0].cat_id;
+        for( var i = 0; i< category.length ; i++ ) {
+            if ( catid == category[i].cat_id ) {
+                VatataKeyMove.initById( cateList.ele.getElementsByTagName("a")[i]);
+            }
+        }
+
+        itemList.skipcache = true;
+        itemList.load( catid, 1, 12 );
+    }
+    cateList.skipcache = true;
+
+	cateList.load( apiUrl );
+   
+    var itemList = new ItemList();
+    itemList.skipcache = true;
+    itemList.ele = document.getElementById("movielist");
+    itemList.htmltemp = itemList.ele.innerHTML;
+    itemList.selCateEle = null;
+    itemList.loadList = function( cid , ele) {
+        if ( itemList.cid == cid )
+            return;
+        var oele = itemList.selCateEle;
+        if ( oele != null ) {
+            oele.className = "";
+        }
+        itemList.selCateEle = ele;
+        ele.className = "catlistSel";
+
+        itemList.skipcache = true;
+        itemList.load( cid, 1, 12 );
+        // alert( itemList.apiurl );
+    }
+
+    itemList.getHtml = function( offset , listInfo ) {
+        TR("init");
+        var langID = TR.langObj.getLangID();
+        var ml_str = "";
+        for( var i = 0; i<listInfo.length; i++ ) {
+            var name = "";
+            if( langID == "cn") {
+                name = listInfo[i].title1;
+            } else if ( langID == "en") {
+                name = listInfo[i].title2;
+            } else if ( langID == "jp" ) {
+                name = listInfo[i].title3;
+            } else if ( langID == "kr" ) {
+                name = listInfo[i].title4;
+            }
+            if ( !name )
+                name = listInfo[i].name;
+
+            var idx = offset + i;
+            var str = itemList.htmltemp
+                .replace( "{IDX}", idx)
+                .replace( "{CID}", itemList.cid)
+                .replace(/{MID}/g, listInfo[i].id )
+                .replace("{MIMG}", listInfo[i].logo )
+                .replace("{MNAME}", name );
+            ml_str += str;
+        }
+        return ml_str;
+    }
+    itemList.setLeftEle = function() {
+        var eles = itemList.ele.getElementsByTagName("a");
+        for( var i = 0; i<eles.length; i++ ) {
+            if ( i % 4 != 0 )
+                continue;
+            eles[i].setAttribute("leftid", "c" + itemList.cid);
+        }
+        if ( eles.length > 8 )
+            return;
+        var lastnum = eles.length % 4;
+        if ( lastnum == 0 )
+            lastnum = 4;
+        for( var j = eles.length -1; j > eles.length - 1 - lastnum; j-- ) {
+            eles[j].setAttribute("downid", "noneele");
+        }
+    }
+
+
+    itemList.onload = function( listInfo, totalCount, totalPage ) {
+        this.startNo = (this.pageNo - 1)*12;
+        var ml_str = this.getHtml( this.startNo , listInfo );
+        itemList.ele.innerHTML = ml_str;
+        itemList.setLeftEle();
+        itemList.ele.style.display = "block";
+        document.getElementById("pagenum").innerHTML = itemList.pageNo + "/" + itemList.totalPage;
+
+        itemList.appender = new ItemList();
+        itemList.startNo = (itemList.pageNo - 1 ) * 12;
+        itemList.isChanging = false;
+        itemList.nextLine = function() {
+            if( itemList.startNo + 12 >= itemList.totalCount ) {
+                return;
+            }
+            itemList.isChanging = true;
+            itemList.appender.onload = function( linfo, tcount, tpage ) {
+
+                var count = 0;
+                for( var j=0; j<itemList.ele.childNodes.length ; j++ ) {
+                    var o = itemList.ele.childNodes[0];
+                    if ( typeof(o.tagName) == "string" && o.tagName == "A" ) {
+                        count ++;
+                    }
+                    itemList.ele.removeChild( o );
+                    if (count >= 4 ) break;
+                }
+
+                itemList.startNo = (itemList.appender.pageNo - 1 ) * 4 - 8;
+                var ml_str = itemList.getHtml( itemList.startNo + 8, linfo );
+                var sele = document.createElement("span");
+                sele.innerHTML = ml_str;
+                var eles = sele.getElementsByTagName("a");
+                while( eles.length > 0) {
+                    var o = eles[0];
+                    sele.removeChild( o );
+                    itemList.ele.appendChild(o);
+                }
+                itemList.setLeftEle();
+                itemList.isChanging = false;
+            }
+            var pageNo = Math.floor((itemList.startNo + 12) / 4) + 1;
+            itemList.appender.load( itemList.cid, pageNo, 4 );
+        }
+
+        itemList.prevLine = function() {
+            if( itemList.startNo <= 0 ) {
+                return;
+            }
+
+            itemList.isChanging = true;
+            itemList.appender.onload = function( linfo, tcount, tpage ) {
+                itemList.startNo = (itemList.appender.pageNo - 1 ) * 4 ;
+                var ml_str = itemList.getHtml( itemList.startNo + 8, linfo );
+                var sele = document.createElement("span");
+                sele.innerHTML = ml_str;
+                var eles = sele.getElementsByTagName("a");
+                for( var j = eles.length -1 ; j>=0 ; j-- ) {
+                    var o = eles[j];
+                    sele.removeChild( o );
+                    itemList.ele.insertBefore(o,itemList.ele.firstChild);
+                }
+                eles = itemList.ele.getElementsByTagName("a");
+                while( eles.length > 12 ) {
+                    itemList.ele.removeChild( eles[eles.length-1] );
+                    eles = itemList.ele.getElementsByTagName("a");
+                }
+                itemList.setLeftEle();
+                itemList.isChanging = false;
+            }
+            var pageNo = Math.floor((itemList.startNo - 4) / 4) + 1;
+            itemList.appender.load( itemList.cid, pageNo, 4 );
+        }
+
+        VatataKeyMove.initByIdIfChanged( itemList.ele.getElementsByTagName("a")[0]);
+    }
+
+    itemList.loadItem = function( mid , idx ) {
+        console.log("itemList.loadItem: " + mid + " : " + idx );
+        mediaItem.load( mid );
+        var pageNo = Math.floor( idx / 12 ) + 1;
+        document.getElementById("pagenum").innerHTML = pageNo + "/" + itemList.totalPage;
+    }
+
+
+
+    var mediaItem = new MediaItem();
+    mediaItem.boInfo = new BOInfo();
+    mediaItem.boInfo.load();
+    mediaItem.ele = document.getElementById("movieinfo");
+    mediaItem.htmltemp = mediaItem.ele.innerHTML;
+    mediaItem.onload = function( mediaInfo, sourceList ) {
+        var level = parseInt(mediaInfo.class);
+        if ( isNaN(level) || level < 1 || level > 5 )
+            level = 1;
+        var subtitleinfo = "";
+        if ( !!mediaInfo.subtitle ) {
+            var slist = mediaInfo.subtitle.split(',');
+            for( var i =0; i<slist.length; i++ ) {
+                var v = parseInt( slist[i]);
+                if ( isNaN(v) ) continue;
+                switch( v ) {
+                    case 1: subtitleinfo += '<img src="image/st_tw.png" />'; break;
+                    case 2: subtitleinfo += '<img src="image/st_zh.png" />'; break;
+                    case 3: subtitleinfo += '<img src="image/st_en.png" />'; break;
+                    case 4: subtitleinfo += '<img src="image/st_jp.png" />'; break;
+                    case 5: subtitleinfo += '<img src="image/st_kr.png" />'; break;
+                }
+            }
+        }
+        if ( subtitleinfo != "" ) {
+            subtitleinfo = '<img src="image/st_title.png" />' + subtitleinfo;
+        }
+
+        var str = mediaItem.htmltemp
+            .replace("{MIMG}", mediaInfo.imgAddress)
+            .replace("{MLEVEL}", level)
+            .replace("{MTITLE}", "")
+            .replace("{DD}", TR("Director"))
+            .replace("{DL}", TR("Label"))
+            .replace("{DA}", TR("Actor"))
+            .replace("{DI}", TR("Intro"))
+            .replace("{SUBTITLELIST}", subtitleinfo )
+        ;
+        TR("init");
+        var langID = TR.langObj.getLangID();
+        str = str
+            .replace("{MNAME}", mediaInfo.title)
+            .replace("{MLABLE}", mediaInfo.style)
+            .replace("{MDIRECTOR}", mediaInfo.director)
+            .replace("{MACTOR}", mediaInfo.actor)
+            .replace("{MINTRO}", mediaInfo.description)
+        ;
+        mediaItem.ele.innerHTML = str;
+        mediaItem.ele.style.display = "block";
+    }
+
+    mediaItem.play = function() {
+        var title = this.mediaInfo.title;
+        var murl = this.mediaInfo.urlAddress;
+
+        if ( murl.indexOf("file://") >= 0 ) {
+            murl = murl.substring( 7 );
+        }
+        mediaItem.callplay( murl, title );
+        return;
+    }
+
+    mediaItem.callplay = function( murl, title ) {
+        var intentobj  = wae.create("Intent");
+        intentobj.setIntentAction("com.vatata.player.hvod");
+        intentobj.addData("title", title );
+        intentobj.addData("URLS",  murl);
+        intentobj.startActivity();
+
+    }
+
+
+    mediaItem.clickItem = function( mid , cid ) {
+        mediaItem.play();
+    }
+
+    document.body['up'] =
+        VatataKeyMove.fallUp = function() {
+            console.log("up ....")
+            if ( itemList.isChanging == true ) {
+                console.log("can not move up on changing dom");
+                return;
+            }
+            if ( itemList.startNo <= 0 )
+                return;
+            itemList.prevLine();
+            setTimeout( function() {
+                VatataKeyMove.vttkeymove( {keyCode: KEY_W });
+            }, 400 );
+        }
+
+    document.body['down'] =
+        VatataKeyMove.fallDn = function() {
+            console.log("down ....")
+            if ( itemList.isChanging == true ) {
+                console.log("can not move down on changing dom");
+                return;
+            }
+            if ( itemList.startNo + 12 >= itemList.totalCount )
+                return;
+            itemList.nextLine();
+            setTimeout( function() {
+                VatataKeyMove.vttkeymove( {keyCode: KEY_S });
+            }, 400 );
+        }
+
+
+
+</script>
+

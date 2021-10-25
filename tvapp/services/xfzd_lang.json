@@ -1,0 +1,68 @@
+{
+  "tw" : {
+    "Room" : "房號",
+    "Name" : "姓名",
+    "Date" : "日期",
+    "Date" : "日期",
+    "Time" : "時間",
+    "Item" : "項目",
+    "Num" :  "数量",
+    "Sum" : "總計",
+    "Others" : "備註",
+    "Fast Checkout" : "快速退房",
+    "Fast Checkout, Press" : "快速退房，請按",
+    "Checkout Request Send" : "退房請求已通知服務人員",
+    "Bill" : "消費帳單"
+  },
+
+  "cn" : {
+    "Room" : "房号",
+    "Name" : "姓名",
+    "Date" : "日期",
+    "Time" : "时间",
+    "Item" : "项目",
+    "Num" :  "数量",
+    "Sum" : "总计",
+    "Others" : "备注",
+    "Fast Checkout" : "快速退房",
+    "Fast Checkout, Press" : "快速退房，请按",
+    "Checkout Request Send" : "退房请求已通知服务人员",
+    "Bill" : "消费账单"
+  },
+
+  "en" : {
+    "Room" : "Room",
+    "Name" : "Name",
+    "Date" : "Date",
+    "Time" : "Time",
+    "Item" : "Item",
+    "Num" :  "Num",
+    "Sum" : "Sum",
+    "Others" : "Other",
+    "Fast Checkout" : "快速退房",
+    "Fast Checkout, Press" : "快速退房，请按",
+    "Checkout Request Send" : "退房请求已通知服务人员",
+    "Bill" : "My Bill"
+  },
+
+  "jp" : {
+    "Room" : "部屋番号",
+    "Date" : "日付",
+    "Time" : "時間",
+    "Item" : "プロジェクト",
+    "Sum" : "合計",
+    "Bill" : "消費帳簿"
+  },
+
+
+  "kr" : {
+    "Date" : "날짜",
+    "Time" : "시간",
+    "Item" : "プロジェクト",
+    "Sum" : "프로젝트",
+    "Bill" : "소비를 줄이다"
+  }
+
+}
+
+

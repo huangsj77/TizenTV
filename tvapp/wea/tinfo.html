@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather</title>
+    <meta name="viewport" content="width=1920" />
+    <link rel="stylesheet" href="../message/public.css"/>
+    <link rel="stylesheet" href="../wea/css/weather.css"/>
+</head>
+<body>
+<div class="tvmain">
+  <div class="tvcontent" style="background-image: url(image/bg_weather2.jpg)">
+     <div class="main-title2" id="weatitle">Test</div>
+     <div class="citylist" id="citylist">
+     	 <span class="cityitem">
+     	 	<div class="cityitemh"></div>
+     	 	<div class="cityitemb" id="cityitem">
+     	 		<ul>
+     	 			<li class="itemday"></li>
+     	 			<li class="itemdate"></li>
+     	 			<li class="itempic">
+     	 				<img src="../../images/weaicon2/sunny.png" />
+     	 			</li>
+     	 			<li class="itemtitle">
+     	 				晴
+     	 			</li>
+     	 			<li class="itemhtem">24&#8451</li>
+     	 			<li class="itemltem">11&#8451</li>
+     	 		</ul>
+
+     	 	</div>
+     	 </span>
+     </div>
+     <div class="btnidx">
+     	<img  onclick="moveup();" id="idxup" src="../wea/image/up_g.png"/>
+     	<span id="idxnum"></span>
+     	<img  onclick="movedown();" id="idxdown" src="../wea/image/down_g.png"/>
+     </div>
+  </div>
+
+  <div class="remoterhint2"></div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../js/querystring.js"></script>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../video/public/js/lang.js"></script>
+
+<script type="text/javascript">
+function YahooWeather() {
+	this.onload = function( info ) {}
+
+	this.xml2json = function( ele ) {
+		var o = { 'tagName' : ele.tagName };
+		for( var i=0; i<ele.attributes.length; i++ ) {
+			var attr = ele.attributes.item(i);
+			o[ attr.nodeName ] = attr.nodeValue;
+		}
+		if ( ele.childNodes && ele.childNodes.length && ele.childNodes.length > 0 ) {
+			var children = [];
+			for( var j=0; j<ele.childNodes.length; j++ ) {
+				var node = ele.childNodes.item(j);
+				if ( ! node.tagName ) continue;
+				var child = this.xml2json( node );
+				children.push( child );
+			}
+			if ( children.length > 0 ) 
+				o.children = children;
+		}
+		return o;
+	}
+
+	this.getElementsByTagName = function( ele, tagName ) {
+		var eles = [];
+		if ( ele.childNodes && ele.childNodes.length && ele.childNodes.length > 0 ) {
+			for( var j=0; j<ele.childNodes.length; j++ ) {
+				var node = ele.childNodes.item(j);
+				if ( ! node.tagName ) continue;
+				if ( node.tagName == tagName ) {
+					eles.push( node );
+					continue;
+				}
+				var seles = this.getElementsByTagName( node, tagName );
+				if ( seles.length > 0 ) 
+					for( var i=0;i<seles.length; i++ )
+						eles.push( seles[i] );
+			}
+		}
+		return eles;
+	}
+
+	this.load = function( w, u ) {
+		if ( !u ) u = "c";
+		this.w = w;
+		this.u = u;
+//		this.url = "http://weather.yahooapis.com/forecastrss?w=" + w + "&u=" + u;
+		//this.url = "https://query.yahooapis.com/v1/public/yql?q=select+*+from+weather.forecast+where+woeid%3D"
+					//+ w + "&format=xml";
+        this.url = "http://bo.fengsui.com.tw:10248/wea.php?woeid=" + w + "&u=" +u ;
+		console.log("request yahoo url: " + this.url);
+		this.hobj = new EasyGet();
+
+		var _this = this;
+		this.hobj.onsuccess = function( u, d , skipcache ) {
+			if ( !d ) {
+				localStorage.removeItem( "wea_cache_"+w );
+				return;
+			}
+			if ( !skipcache ) {
+				var now = new Date();
+				var co = {};
+				co.t = now.getTime();
+				co.d = d;
+				localStorage.setItem( "wea_cache_"+w , JSON.stringify(co) );
+			}
+			var domParser = new DOMParser();
+			var xmlDoc = domParser.parseFromString(d, 'text/xml');
+			var elements = _this.getElementsByTagName(  xmlDoc.documentElement , "yweather:forecast");
+			var info = [];
+			for( var i = 0; i<elements.length; i++ ) {
+				if ( i >= 3 ) break;
+				var o = {};
+				for( var j=0; j<elements[i].attributes.length; j++) {
+					var attribute = elements[i].attributes.item(j);
+					o[ attribute.nodeName ] = attribute.nodeValue;
+				}
+				info.push( o );
+			}
+			_this.onload( info );
+		}
+
+		try {
+			eval( "var cache_data = " + localStorage.getItem("wea_cache_"+w) );
+			var now = new Date();
+			if (  (now.getTime() - parseInt(cache_data.t)) < 1000 * 3600 * 2 ) {
+				this.hobj.onsuccess( this.url, cache_data.d , false );
+				return;
+			}
+		}catch(e){}
+
+		this.hobj.open_with_cache( this.url, 10 );
+	}
+
+	this.delayload = function( time, w, u ) {
+		var _this = this;
+		setTimeout( function() {
+			_this.load( w, u );
+		}, time );
+	}
+}
+
+YahooWeather.weekdays = {
+			'Mon' : "星期一",
+			'Tus' : "星期二",
+			'Tue' : "星期二",
+			'Wed' : "星期三",
+			'Thu' : "星期四",
+			'Fri' : "星期五",
+			'Sat' : '星期六',
+			'Sun' : '星期日'
+		};
+YahooWeather.getCnWeekday = function( enname ) {
+		return YahooWeather.weekdays[enname];
+}
+
+
+YahooWeather.codeMeaning = [
+	5,5,5,5,5,3,3,3,
+	2,2,2,2,2,3,3,3,3,1,
+	2,0,0,0,0,4,4,4,0,0,
+	0,0,0,4,4,4,4,
+	1,4,5,5,5,5,3,3,
+	3,4,5,3 ,5];
+
+// YahooWeather.codeMeaning = [
+// "龍捲風", "熱帶風暴", "颶風", "強烈雷暴天氣", "雷暴天氣", "雨夾雪", "凍雨", "冰雹夾雪", 
+// 	"凍毛雨", "霧雨", "凍雨" , "陣雨", "陣雨",  "陣雪", "小陣雪", "高吹雪", "雪" ,"冰雹",
+// 	"凍雨", "灰塵天氣", "有霧" , "薄霧",  "煙霧天氣", "大風",  "有風","冷", "陰", "晚間多雲",
+// 	"白天多雲", "晚間局部多雲","白天局部多雲", "晚間天晴","晴朗", "晚間晴朗", "白天晴朗",
+// 	"雨夾雹", "熱", "局部風暴", "零星風暴", "零星風暴", "局部陣雨",  "大雪", "零星陣雪",
+// 	"大雪",  "少雲", "雷暴雨", "陣雪", "局部風暴" ];
+
+YahooWeather.getMeaning = function( code ) {
+	// if ( isNaN(code) ) return code;
+	// if ( code < 0 || code >= YahooWeather.codeMeaning.length )
+	// 	return code;
+	// return YahooWeather.codeMeaning[code];
+	if ( ! isNaN(code) && code >= 0 && code < YahooWeather.codeMeaning.length ) {
+		switch( YahooWeather.codeMeaning[code] ) {
+			case 0: return TR("cloudy"); 
+			case 1: return TR("hail"); 
+			case 2: return TR("rainy"); 
+			case 3: return TR("snowy"); 
+			case 4: return TR("sunny"); 
+			case 5: return TR("thunder"); 
+		}
+	}
+	return TR("cloudy");
+}
+
+YahooWeather.codePics = [
+	5,5,5,5,5,3,3,3,
+	2,2,2,2,2,3,3,3,3,1,
+	2,0,0,0,0,4,4,4,0,0,
+	0,0,0,4,4,4,4,
+	1,4,5,5,5,5,3,3,
+	3,4,5,3 ,5];
+YahooWeather.getPic = function( code ) {
+	if ( ! isNaN(code) && code >= 0 && code < YahooWeather.codePics.length ) {
+		switch( YahooWeather.codePics[code] ) {
+			case 0: return "image/wea_cloudy.png"; 
+			case 1: return "image/wea_hail.png"; 
+			case 2: return "image/wea_rainy.png"; 
+			case 3: return "image/wea_snowy.png"; 
+			case 4: return "image/wea_sunny.png"; 
+			case 5: return "image/wea_thunder.png"; 
+		}
+	}
+	return "image/wea_sunny.png";
+}
+YahooWeather.getDate = function( edate ) {
+		return edate.replace( /\d+$/, "");
+}
+</script>
+<script type="text/javascript">
+
+
+var CityInfo = null;
+
+function updateListFrame() {
+	CityListEle.innerHTML = "";
+
+	for( var i = 0; i<CityInfo.city.length; i++ ) {
+		var htmlsrc = '<span class="cityitem" id="city'+CityInfo.city[i][1]
+					+ '"><div class="cityitemh">'+ TR( CityInfo.city[i][0] ) +'</div>'
+					+ '<div class="cityitemb" id="item'+CityInfo.city[i][1]+'"></div></span>';
+		CityListEle.innerHTML  += htmlsrc;
+	}	
+}	
+
+function updateItem( cityinfo , itemid ) {
+		var yobj = new YahooWeather();
+		yobj.cityinfo = cityinfo;
+		// alert(JSON.stringify(yobj));
+		yobj.itemid = itemid;
+		yobj.onload = function( info ) {
+		        // alert(JSON.stringify(info));
+				var htmlsrc = "";
+				for( var j=0; j<3 && j<info.length;j++) {
+     	 			var str = '<ul><li class="itemday">'+ TR( YahooWeather.getCnWeekday(info[j].day) )+'</li>'
+     	 					+ '<li class="itemdate">'+ YahooWeather.getDate(info[j].date)+'</li>'
+     	 					+ '<li class="itempic"><img src="' + YahooWeather.getPic(info[j].code) + '"/></li>'
+     	 					+ '<li class="itemtitle">' + YahooWeather.getMeaning(info[j].code) + '</li>'
+                            + '<li class="itemhtem">' + info[j].high +'&#8451</li>'
+                            + '<li class="itemltem">' + info[j].low + '&#8451</li></ul>';
+     	 					// + '<li class="itemhtem">' + Math.floor((parseInt(info[j].high)-32)/0.18)/10 +'&#8451</li>'
+     	 					// + '<li class="itemltem">' + Math.floor((parseInt(info[j].low)-32)/0.18)/10 + '&#8451</li></ul>';
+     	 			htmlsrc += str;
+				}
+				var itemele = document.getElementById( this.itemid );
+				itemele.innerHTML = htmlsrc;			
+		}
+		var w = yobj.cityinfo[2];
+		if ( !w ) w = yobj.cityinfo[1];
+
+		yobj.load( w );
+}
+	try {
+		eval ( 'var CityInfo = ' + sessionStorage.getItem("location") );
+		// alert('var CityInfo = ' + sessionStorage.getItem("location"));
+	}catch(e){
+		alert("Unknown Location Infomation!");
+		location.href="mainsel.html";		
+	}
+
+	document.getElementById("weatitle").innerHTML = TR( CityInfo.title );
+</script>
+<script type="text/javascript">
+
+var idxNum = document.getElementById("idxnum");
+var idxUpImg = document.getElementById("idxup");
+var idxDnImg = document.getElementById("idxdown");
+
+
+const KEY_W = 87
+const KEY_S = 83;
+
+	document.onkeydown = function(e) {
+		switch( e.keyCode ) {
+			case KEY_W:
+			moveup();
+			break;
+			case KEY_S:
+			movedown();
+			break;
+		}
+	}
+
+
+	function moveup () {
+		var pageSize = 4;
+		var pageIdx = getPageIdx(pageSize) - 1;
+		if( pageIdx < 1 )
+			return;
+		showPage( pageIdx , pageSize, "");
+		showPageIdx( pageIdx, pageSize );
+	}
+
+	function movedown () {
+		var pageSize = 4;
+		var pageIdx = getPageIdx( pageSize ) + 1;
+		var maxPage = Math.floor( (CityInfo.city.length-1) / pageSize )+1;
+		if( pageIdx > maxPage ) return;
+
+		showPage( pageIdx, pageSize );
+		showPageIdx( pageIdx, pageSize );
+	}
+
+	var currentIdx = 1;
+	function getPageIdx(  ) {
+		return currentIdx ;
+	}
+
+	function showPage( pageIdx , pageSize ) {
+		currentIdx = pageIdx;
+		var startIdx =( pageIdx-1) * pageSize;
+		var CityListEle = document.getElementById("citylist");
+		CityListEle.innerHTML = "";
+
+		var htmlsrc = "";
+		// alert( startIdx + "\n" + JSON.stringify(CityInfo.city))
+
+		for( var i = startIdx; i<CityInfo.city.length && i<startIdx+pageSize; i++ ) {
+			htmlsrc += '<span class="cityitem" id="city'+CityInfo.city[i][1]
+					+  '"><div class="cityitemh">'+ TR( CityInfo.city[i][0] ) +'</div>'
+					+  '<div class="cityitemb" id="item'+CityInfo.city[i][1]+'"></div></span>';
+		}			
+		CityListEle.innerHTML  += htmlsrc;
+
+		for( var i = startIdx; i<CityInfo.city.length && i<startIdx+pageSize; i++ ) {
+			updateItem(CityInfo.city[i], "item"+CityInfo.city[i][1]) ;
+		}		
+	}
+
+	function showPageIdx(pageIdx, pageSize ) {
+		var maxPage = Math.floor( (CityInfo.city.length-1) / pageSize )+1;
+
+		idxNum.innerHTML = (pageIdx) + "/" + (maxPage);
+		if ( pageIdx <= 1 ) idxUpImg.src = "image/up_g.png";
+		else idxUpImg.src = "image/up_h.png";
+
+		if ( pageIdx >= maxPage ) idxDnImg.src = "image/down_g.png";
+		else idxDnImg.src = "image/down_h.png";
+	}
+
+	var cityid = parseInt(location.hash.replace( /\#city/, ""));
+	CityInfo.cityIdx = -1;
+	for( var i = 0; i<CityInfo.city.length; i++ ) {
+		if ( !!cityid && CityInfo.city[i][1] == cityid ) {
+			CityInfo.cityIdx = i;
+			break;
+		}
+	}
+	var pageSize = 4;
+
+	var cpage = Math.floor(CityInfo.cityIdx / pageSize )+1;
+	if ( cpage < 1 ) cpage = 1;
+
+	showPage( cpage, pageSize );
+	showPageIdx( cpage, pageSize);
+
+</script>

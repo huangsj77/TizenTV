@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie List</title>
+    <meta name="viewport" content="width=1920" />
+    <link rel="stylesheet" href="../message/public.css"/>
+    <link rel="stylesheet" href="../video/css/movie.css"/>
+    <style type="text/css">
+        .tvtitle {
+
+        }
+
+        .tvlist {
+            width: 1380px;
+            height: 350px;
+            overflow: hidden;
+        }
+
+        .movielist {
+            position: relative;
+            overflow: hidden;
+            height: 350px;
+            margin-left: 20px;
+        }
+        .movielist a {
+            float: left;
+            display: block;
+            text-align: center;
+            width: 240px;
+            height: 310px;
+            margin-left: 6px;
+            margin: 4px ;
+            border: 10px solid transparent;
+        }
+
+        .movielist a img {
+            display: block;
+            width: 240px;
+            height: 310px;
+            border-radius: 10px;
+        }
+        .movielist a:hover , .movielist a.currentFocus  {
+            border: 10px solid #355bc7;
+            box-shadow: 0 0 10px #355bc7;
+            border-radius: 10px;
+        }
+        .movie-duration{
+            height: 30px;
+            line-height: 30px;
+            font-size: 22px;
+            margin: 30px 0px 10px 0px;
+            width: 280px;
+            float: left;
+        }
+
+        .movie-duration img{
+            position: relative;
+            top: 3px;
+        }
+        .movie-duration span{
+            margin:0px 20px;
+        }
+
+        .movie-publish{
+            height: 30px;
+            line-height: 30px;
+            font-size: 22px;
+            margin: 30px 0px 10px 0px;
+            width: 100px;
+            float: left;
+        }
+
+        .message{background:url(image/popup_over.png) no-repeat;margin: 0 auto;width:1920px;height: 1080px;position: absolute;top:0px;left: 0px;z-index: 100;text-align: center;}
+        .message div{
+            width: 650px;
+            height: 300px;
+            background: #0b6cbc;
+            margin: 0 auto;
+            top: 30%;
+            padding-top: 80px;
+            position: relative;
+            background: url(./image/popup_bg.png) no-repeat;
+            color: white;
+        }
+
+        .message div p{
+            width: 400px;
+            height: 70px;
+            margin: 20px auto;
+            font-size: 20px;
+        }
+        .message div a{
+            display: inline-block;
+            width: 200px;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            border-radius: 10px;
+            background: #394481;
+            font-size: 20px;
+            margin: 0px 5px;
+        }
+        .message div a:hover, .message div a.currentFocus{
+            background: #355bc7;
+        }
+
+
+    </style>
+</head>
+<body>
+<!-- 最外层布局div -->
+<div class="tvmain" id="content">
+    <!-- 悬浮条美丽英语 -->
+    <div class="tvtitle" id="tvtitle"></div>
+    <!-- 设置背景的div -->
+    <div class="tvcontent" style="background-image: url(img/hs2.png)">
+        <div id="catelist" class="catelist tvleft" style="display: none;">
+            <a id="c{CATEID}"
+               onfocus="fixCateFocus(this);itemList.loadList({CATEID} , this);"
+               onclick="fixCateFocus(this);itemList.loadList({CATEID} , this);"
+               onblur="fixCateBlur(this)"
+               href="javascript:;">{CATENAME}</a>
+        </div>
+        <div class="timenow" style="width: 100%;height: 100px;">
+            <script>
+                setInterval("timenow.innerHTML=new Date().toLocaleString()+' 星期'+'日一二三四五六'.charAt(new Date().getDay());",1000);
+            </script>
+        </div>
+        <div class="tvtop" id="tvtop">
+
+            <div id="movieinfo" class="movieinfo" style="display: none;">
+                <div style="float: left;width: 760px; height:530px;display: inline-block;background: url(./image/img_bg.png) no-repeat;">
+                    <img class="movie-img" src="{MIMG}" onerror="fixImgError(this);"/>
+                </div>
+                <div style="float:left;height:420px;display:inline-block; width:520px;padding-left:30px;margin-top:50px;font-size: 42px;">
+                    <div class="movie-title">
+                        {MNAME}
+                        <div class="movie-price" id="movie-price">
+                            {MPRICE}
+                        </div>
+                    </div>
+                    <div class="movie-style">
+                        {MSTYLE}
+                    </div>
+                    <div class="movie-duration" id="movie-duration">
+                        <img src="../../icon.png" alt=""><span id="runtime">{MDURATION}min</span>
+                    </div>
+                    <div class="movie-publish" id="movie-publish">
+                        <img src="../../icon.png" alt=""><span style="padding-left: 10px;" id="runtime">{MPUBLISH}</span>
+                    </div>
+                    <div class="movie-info" id="movie-info">
+                        {MINTRO}
+                    </div>
+                    <div id="movie-button" class="movie-button">
+                        <a id="playbtn" href="javascript:;" onclick="mediaItem.mediaPlay();">Play</a>
+                        <a id="buybtn"  href="javascript:;" onclick="mediaItem.mediaBuy();">Buy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tvlist">
+            <div id="movielist" class="movielist" style="display:block; float: left;">
+                <a href="javascript:;"
+                   onfocus="itemList.loadItem({MID},{IDX});">
+                    <img src="{MIMG}" />
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="pagenum" class="pagenum" style="display: block;">1/1</div>
+</div>
+<div class="message" id="message" style="display: none;">
+    <div style="position: relative;" id="msgbtn">
+        <p>This will be added to your hospital bill,do you really want to purchase this movie? </p>
+        <a href="#" id="sendmsg" onclick="sendBill()">Buy</a>
+        <a href="#" id="closemsg" onclick="closeWin()">Cancel</a>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../video/public/js/lang.js"></script>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../../js/cate.js"></script>
+<script type="text/javascript" src="../public/js/bo.js"></script>
+<script type="text/javascript" src="../js/querystring.js"></script>
+<script type="text/javascript">
+    var file_obj = null;
+    function setTopLogo( do_update ) {
+        var logo_path = localStorage.getItem("logo_path");
+        if ( !! logo_path ) {
+            var ele = document.getElementById("toplogo");
+            //if( !!ele ) ele.src = "file://" + logo_path;
+        }
+
+        var bg_path = localStorage.getItem("bg_path");
+        if ( !! bg_path ) {
+            var ele = document.body;
+            if( !!ele ) ele.style.backgroundImage = "url(file://"+bg_path+")";
+        }
+
+        if ( do_update == false ) return;
+
+        if ( file_obj == null ) {
+            try {
+                file_obj = wae.create("DATA.File");
+            }catch(e) {
+                setTimeout( function() {setTopLogo( true );}, 1000  );
+                return;
+            }
+        }
+
+        // var path = file_obj.readAll( file_obj.getFilesDir() + "/logo.loc"  );
+        // if ( !!path )	localStorage.setItem( "logo_path", path );
+        // alert( path );
+        path = file_obj.readAll( file_obj.getFilesDir() + "/bg.loc"  );
+        if ( !!path )  localStorage.setItem( "bg_path", path );
+
+        setTopLogo( false );
+    }
+
+    setTopLogo( true );
+
+    function setUniClass( ele, classname ) {
+        var eles = document.getElementsByClassName( classname );
+        if ( !! eles && !! eles.length ) {
+            for( var i=0; i<eles.length; i++ ) {
+                var cele = eles[i];
+                cele.className = cele.className.replace( classname, " ").replace( /\s+/, " ");
+            }
+        }
+        ele.className = ele.className + " " + classname;
+    }
+
+    var msg = document.getElementById("msgbtn");
+    function sendBill(){
+        // alert(JSON.stringify(mediaItem.minfo))
+        var cartMessage = "";
+        var totalPrice = 0;
+        var s = mediaItem.minfo.autoid+","+mediaItem.minfo.title+",1," + mediaItem.minfo.price + ",,\n";
+        cartMessage += s;
+        totalPrice +=  parseFloat(mediaItem.minfo.price);
+        cartMessage += "\n,Total,," +  totalPrice + ",,\n";
+        // alert(cartMessage);
+        var msgItem = new MessageList();
+        msgItem.onload = function( msgInfo ) {
+            var res = JSON.parse(msgInfo);
+        }
+        msgItem.load( 999999, mediaItem.minfo.title, deviceInfo.info.contacts, cartMessage , deviceInfo.info.customer1);
+
+        document.getElementById("message").style.display = "none";
+        document.getElementById("playbtn").style.display = "block";
+        document.getElementById("buybtn").style.display = "none";
+        VatataKeyMove.initById(document.getElementById("playbtn"));
+    }
+    function closeWin() {
+        document.getElementById("message").style.display = "none";
+        VatataKeyMove.initById(document.getElementById("buybtn"));
+    }
+
+    msg['left'] = function () {
+        return null;
+    }
+    msg['right'] = function () {
+        return null;
+    }
+
+    function fixCateFocus( ele ) {
+        setUniClass( ele, "catlistSel");
+    }
+    function fixCateBlur( ele ) {
+    }
+
+    function fixImgError( ele ) {
+        ele.src = "image/def.png";
+    }
+
+    function fixItemBlur(ele ) {
+        // var iele = ele.getElementsByTagName("span")[0];
+        // iele.innerHTML =  ele.textstr ;
+    }
+
+    function fixItemFocus( ele ) {
+        if ( ! ele.textstr )
+            ele.textstr = iele.innerHTML.replace(/<[^>]+>/g, "");
+    }
+
+
+    var cateList = new CateList();
+    cateList.ele = document.getElementById("catelist");
+    cateList.htmltemp = cateList.ele.innerHTML;
+    cateList.onload = function( category, info ) {
+        alert(JSON.stringify(category));
+        alert(JSON.stringify(info));
+        var mc_str = "";
+        for( var i = 0; i< category.length ; i++ ) {
+            if ( i >= 9 ) break;
+            var str = cateList.htmltemp
+                .replace("{CATENAME}", category[i].cat_name)
+                .replace(/{CATEID}/g, category[i].cat_id);
+            mc_str += str;
+        }
+
+        cateList.ele.innerHTML = mc_str;
+        cateList.ele.style.display = "block";
+
+        var catid = parseInt(sessionStorage.getItem('cate_id') ) ;
+        sessionStorage.removeItem('cate_id');
+
+        var cele = null;
+        if ( isNaN( catid) )  {
+            catid = cateList.curid;
+        }
+
+        for( var i = 0; i< category.length ; i++ ) {
+            if ( catid == category[i].cat_id ) {
+                cele = cateList.ele.getElementsByTagName("a")[i];
+                break;
+            }
+        }
+
+        if ( cele == null ) {
+            cele = cateList.ele.getElementsByTagName("a")[0];
+        }
+
+        setTimeout( function() {
+            VatataKeyMove.initById( cele );
+        }, 500 );
+        // itemList.loadList( catid, cele );
+    }
+
+    window.onWAEReady = function() {
+        var uiSettings = wae.create("UI.UISettings");
+        uiSettings.set1080P();
+        var settingObj = wae.create("WAE.Setting");
+        settingObj.setUseLocalImageCache(true);
+
+        var param = wae.create("DATA.Parameters");
+        var title = param.get("title");
+        if(title.toLowerCase() == "vod")  title = "Video On Demand";
+        if(title)  document.getElementById("tvtitle").innerText = title;
+        var cid = param.get("DATA");
+
+        if ( ! cid )
+            cid = param.get("apiUrl");
+
+        var res = cid.match(new RegExp("cat_id=(\\d+)","i"));
+        if ( res )
+            cid = res[1];
+
+        if ( isNaN(parseInt(Request.q("cid",""))) == false ) {
+            cid = Request.q("cid","");
+        }
+
+        if( !cid ) {
+            alert("Fatal: no category!");
+            var app = wae.create("Application");
+            app.finishActivity();
+            return;
+        }
+
+        var subcid = "";
+        if ( isNaN(parseInt(Request.q("subcid",""))) == false ) {
+            subcid = Request.q("subcid","");
+            sessionStorage.setItem('cate_id', subcid );
+        }
+
+        cid = '2260';
+        cateList.load( cid );
+        cateList.curid = cid;
+    }
+
+
+    var itemList = new ItemList();
+    itemList.ele = document.getElementById("movielist");
+    itemList.listEle = document.getElementById("movielist");
+    itemList.htmltemp = itemList.ele.innerHTML;
+    itemList.selCateEle = null;
+    itemList.pageSize0 = 5;
+    itemList.pageIndex = 0;
+    itemList.listData = null;
+    itemList.loadList = function( cid , ele) {
+        console.log("loadList " + cid );
+        if ( itemList.cid == cid )
+            return;
+        itemList.selCateEle = ele;
+        itemList.load( cid, 1, 200 );
+    }
+
+    itemList.getHtml = function( offset , listInfo ) {
+        var ml_str = "";
+        for( var i = 0; i<listInfo.length; i++ ) {
+            var idx = offset + i;
+            var str = itemList.htmltemp
+                .replace( "{IDX}", idx)
+                .replace( "{CID}", itemList.cid)
+                .replace(/{MID}/g, listInfo[i].id )
+                .replace("{MIMG}", listInfo[i].logo )
+                .replace("{MNAME}", listInfo[i].name );
+            ml_str += str;
+        }
+        return ml_str;
+    }
+
+
+    itemList.onload = function( listInfo, totalCount, totalPage ) {
+        this.listData = listInfo;
+        this.showListHtml();
+
+        return;
+        this.startNo = (this.pageNo - 1)*5;
+        var ml_str = this.getHtml( this.startNo , listInfo );
+        itemList.ele.innerHTML = ml_str;
+        itemList.ele.style.display = "block";
+
+        document.getElementById("pagenum").innerHTML = "Page ：" + itemList.pageNo + "/" + itemList.totalPage;
+
+        itemList.appender = new ItemList();
+        itemList.startNo = (itemList.pageNo - 1 ) * 5;
+        itemList.isChanging = false;
+        itemList.nextLine = function() {
+            if( itemList.startNo + 5 >= itemList.totalCount ) {
+                return;
+            }
+            itemList.isChanging = true;
+            itemList.appender.onload = function( linfo, tcount, tpage ) {
+                var count = 0;
+                for( var j=0; j<itemList.ele.childNodes.length ; j++ ) {
+                    var o = itemList.ele.childNodes[0];
+                    if ( typeof(o.tagName) == "string" && o.tagName == "A" ) {
+                        count ++;
+                    }
+                    itemList.ele.removeChild( o );
+                    if (count >= 4 ) break;
+                }
+
+                itemList.startNo = (itemList.appender.pageNo - 1 ) * 4 - 8;
+                var ml_str = itemList.getHtml( itemList.startNo + 8, linfo );
+                var sele = document.createElement("span");
+                sele.innerHTML = ml_str;
+                var eles = sele.getElementsByTagName("a");
+                while( eles.length > 0) {
+                    var o = eles[0];
+                    sele.removeChild( o );
+                    itemList.ele.appendChild(o);
+                }
+                itemList.isChanging = false;
+            }
+            var pageNo = Math.floor((itemList.startNo + 12) / 4) + 1;
+            itemList.appender.load( itemList.cid, pageNo, 4 );
+        }
+        itemList.prevLine = function() {
+            if( itemList.startNo <= 0 ) {
+                return;
+            }
+
+            itemList.isChanging = true;
+            itemList.appender.onload = function( linfo, tcount, tpage ) {
+                itemList.startNo = (itemList.appender.pageNo - 1 ) * 4 ;
+                var ml_str = itemList.getHtml( itemList.startNo + 8, linfo );
+                var sele = document.createElement("span");
+                sele.innerHTML = ml_str;
+                var eles = sele.getElementsByTagName("a");
+                for( var j = eles.length -1 ; j>=0 ; j-- ) {
+                    var o = eles[j];
+                    sele.removeChild( o );
+                    itemList.ele.insertBefore(o,itemList.ele.firstChild);
+                }
+                eles = itemList.ele.getElementsByTagName("a");
+                while( eles.length > 5 ) {
+                    itemList.ele.removeChild( eles[eles.length-1] );
+                    eles = itemList.ele.getElementsByTagName("a");
+                }
+                itemList.isChanging = false;
+            }
+            var pageNo = Math.floor((itemList.startNo - 4) / 4) + 1;
+            itemList.appender.load( itemList.cid, pageNo, 4 );
+        }
+
+        itemList.ele['left'] = function() {
+            if( itemList.startNo <= 0 ) {
+                //VatataKeyMove.initById(itemList.selCateEle);
+                return itemList.selCateEle;
+            }
+
+            itemList.isChanging = true;
+            itemList.appender.onload = function( linfo, tcount, tpage ) {
+                itemList.startNo = (itemList.appender.pageNo - 1 ) * 4 ;
+                var ml_str = itemList.getHtml( itemList.startNo + 8, linfo );
+                var sele = document.createElement("span");
+                sele.innerHTML = ml_str;
+                var eles = sele.getElementsByTagName("a");
+                for( var j = eles.length -1 ; j>=0 ; j-- ) {
+                    var o = eles[j];
+                    sele.removeChild( o );
+                    itemList.ele.insertBefore(o,itemList.ele.firstChild);
+                }
+                eles = itemList.ele.getElementsByTagName("a");
+                while( eles.length > 5 ) {
+                    itemList.ele.removeChild( eles[eles.length-1] );
+                    eles = itemList.ele.getElementsByTagName("a");
+                }
+                itemList.isChanging = false;
+            }
+            var pageNo = Math.floor((itemList.startNo - 4) / 4) + 1;
+            itemList.appender.load( itemList.cid, pageNo, 5 );
+        }
+        itemList.ele['right'] = function() {
+            if( itemList.startNo + 5 >= itemList.totalCount ) {
+                return;
+            }
+            itemList.isChanging = true;
+            itemList.appender.onload = function( linfo, tcount, tpage ) {
+                var count = 0;
+                for( var j=0; j<itemList.ele.childNodes.length ; j++ ) {
+                    var o = itemList.ele.childNodes[0];
+                    if ( typeof(o.tagName) == "string" && o.tagName == "A" ) {
+                        count ++;
+                    }
+                    itemList.ele.removeChild( o );
+                    if (count >= 4 ) break;
+                }
+
+                itemList.startNo = (itemList.appender.pageNo - 1 ) * 4 - 8;
+                var ml_str = itemList.getHtml( itemList.startNo + 8, linfo );
+                var sele = document.createElement("span");
+                sele.innerHTML = ml_str;
+                var eles = sele.getElementsByTagName("a");
+                while( eles.length > 0) {
+                    var o = eles[0];
+                    sele.removeChild( o );
+                    itemList.ele.appendChild(o);
+                }
+                itemList.isChanging = false;
+            }
+            var pageNo = Math.floor((itemList.startNo + 12) / 4) + 1;
+            itemList.appender.load( itemList.cid, pageNo, 5 );
+        }
+        //VatataKeyMove.initById( itemList.ele.getElementsByTagName("a")[0]);
+        itemList.loadItem( listInfo[0].id, 0 );
+    }
+
+    itemList.showListHtml = function(){
+        var pstart = this.pageIndex * this.pageSize0;
+        var pend = (this.pageIndex + 1) * this.pageSize0;
+        if ( pend > this.listData.length ) pend = this.listData.length;
+        var _listHtml = "";
+        if( !!this.listData && !!this.listData.length && this.listData.length > 0 ) {
+            for(var i=pstart; i<pend; i++ ) {
+                _listHtml += "<a id='item_"+ i +"' href='javascript:void()'" +
+                    " onfocus='itemList.loadItem("+ this.listData[i].id +","+ itemList.cid +");'>" +
+                    "<img src='"+ this.listData[i].logo + "' alt=''></a>";
+            }
+            this.listEle.style.dislay = "block";
+            this.listEle.innerHTML = _listHtml;
+
+            document.getElementById("pagenum").innerHTML = "Page ：" + (this.pageIndex+1) + "/" +Math.ceil(this.listData.length / this.pageSize0 );
+            itemList.loadItem( this.listData[0].id, 0 );
+            // var _this = this;
+        }
+    }
+
+    itemList.listEle['left'] = function() {
+        if( itemList.pageIndex > 0 ) {
+            itemList.pageIndex -= 1;
+            itemList.showListHtml();
+            setTimeout(function () {
+                VatataKeyMove.initById(itemList.listEle.getElementsByTagName("a")[4]);
+            },100)
+
+        } else {
+            setTimeout(function () {
+                VatataKeyMove.initById(document.getElementsByClassName("activeFocus")[0]);
+            },100)
+        }
+        return null;
+    }
+    itemList.listEle['right'] = function() {
+        var totalPage = Math.ceil(itemList.listData.length / itemList.pageSize0 );
+        if( itemList.pageIndex < totalPage - 1) {
+            itemList.pageIndex += 1;
+            itemList.showListHtml();
+            setTimeout(function () {
+                VatataKeyMove.initById(itemList.listEle.getElementsByTagName("a")[0]);
+            },100);
+        }
+        return null;
+    }
+
+    itemList.loadItem = function( mid , idx ) {
+        mediaItem.load( mid );
+        var pageNo = Math.floor( idx / 5 ) + 1;
+        //document.getElementById("pagenum").innerHTML = "页码： " + pageNo + "/" + itemList.totalPage;
+    }
+
+    var mediaItem = new MediaItem();
+    mediaItem.boInfo = new BOInfo();
+    mediaItem.boInfo.load();
+    mediaItem.ele = document.getElementById("movieinfo");
+    mediaItem.htmltemp = mediaItem.ele.innerHTML;
+    mediaItem.minfo = null;
+    mediaItem.onload = function( mediaInfo, sourceList ) {
+        this.minfo = mediaInfo;
+        var level = parseInt(mediaInfo.class);
+        if ( isNaN(level) || level < 1 || level > 5 )
+            level = 1;
+        TR("init");
+        TR.langObj.setLangName('简体中文');
+        var str = mediaItem.htmltemp
+            .replace("{MLEVEL}", level)
+            .replace("{MTITLE}", "")
+            .replace("{DD}", TR("Director"))
+            .replace("{DL}", TR("Label"))
+            .replace("{DA}", TR("Actor"))
+            .replace("{DI}", TR("Intro"))
+        ;
+
+        var intro = "";
+        var langID = TR.langObj.getLangID();
+        if( langID == "cn" && !!mediaInfo.title1 ) {
+            str = str
+                .replace("{MNAME}", mediaInfo.title)
+                .replace("{MLABLE}", mediaInfo.style1)
+                .replace("{MDIRECTOR}", mediaInfo.director1)
+                .replace("{MACTOR}", mediaInfo.actor1)
+                .replace("{MINTRO}", mediaInfo.description1)
+            ;
+            intro = mediaInfo.description1;
+        } else if ( langID == "en" && !!mediaInfo.title2 ) {
+            str = str
+                .replace("{MNAME}", mediaInfo.title2)
+                .replace("{MLABLE}", mediaInfo.style2)
+                .replace("{MDIRECTOR}", mediaInfo.director2)
+                .replace("{MACTOR}", mediaInfo.actor2)
+                .replace("{MINTRO}", mediaInfo.description2)
+            ;
+            intro = mediaInfo.description2;
+        } else if ( langID == "jp" && !!mediaInfo.title3 ) {
+            str = str
+                .replace("{MNAME}", mediaInfo.title3 )
+                .replace("{MLABLE}", mediaInfo.style3 )
+                .replace("{MDIRECTOR}", mediaInfo.director3 )
+                .replace("{MACTOR}", mediaInfo.actor3 )
+                .replace("{MINTRO}", mediaInfo.description3 )
+            ;
+            intro = mediaInfo.description3;
+        } else if ( langID == "kr" && !!mediaInfo.title4 ) {
+            str = str
+                .replace("{MNAME}", mediaInfo.title4 )
+                .replace("{MLABLE}", mediaInfo.style4 )
+                .replace("{MDIRECTOR}", mediaInfo.director4 )
+                .replace("{MACTOR}", mediaInfo.actor4 )
+                .replace("{MINTRO}", mediaInfo.description4 )
+            ;
+            intro = mediaInfo.description4;
+        } else {
+            str = str
+                .replace("{MNAME}", mediaInfo.title)
+                .replace("{MIMG}", mediaInfo.logoa)
+                .replace("{MPRICE}", (mediaInfo.price)? "Rs."+mediaInfo.price : "")
+                .replace("{MSTYLE}", (mediaInfo.style)? mediaInfo.style:"")
+                .replace("{MDIRECTOR}", mediaInfo.director)
+                .replace("{MACTOR}", mediaInfo.actor)
+                .replace("{MDURATION}",mediaInfo.duration)
+                .replace("{MPUBLISH}", mediaInfo.playtime)
+                .replace("{MINTRO}", mediaInfo.description)
+            ;
+            intro = mediaInfo.description;
+        }
+        if ( !intro || intro == ""  ) {
+            str = str.replace( "{DISHOW}", "none");
+        } else {
+            str = str.replace( "{DISHOW}", "");
+        }
+
+        mediaItem.ele.innerHTML = str;
+        mediaItem.ele.style.display = "block";
+        if(!mediaInfo.price || mediaInfo.price == 0  ) {
+            document.getElementById("movie-duration").style.display = "none";
+            document.getElementById("movie-publish").style.display = "none";
+            document.getElementById("movie-price").style.display = "none";
+        }  else {
+            document.getElementById("movie-duration").style.display = "block";
+            document.getElementById("movie-duration").style.display = "block";
+            document.getElementById("movie-publish").style.display = "block";
+            document.getElementById("movie-price").style.display = "block";
+        }
+        if(parseFloat(mediaInfo.price) > 0 && !isNaN(parseFloat(mediaInfo.price))) {
+            document.getElementById("playbtn").style.display = "none";
+            document.getElementById("buybtn").style.display = "block";
+        } else {
+            document.getElementById("playbtn").style.display = "block";
+            document.getElementById("buybtn").style.display = "none";
+        }
+
+        if( mediaInfo.urlAddress == "") {
+            document.getElementById("movie-button").style.display = "none";
+        } else document.getElementById("movie-button").style.display = "block";
+
+    }
+
+    mediaItem.mediaPlay = function() {
+        var title = this.mediaInfo.title;
+        var murl = this.mediaInfo.urlAddress;
+        if ( ! this.tvappobj ) this.tvappobj = wae.create("TvApp");
+        this.tvappobj.putExtra("URLS", murl);
+        this.tvappobj.putExtra("title", title );
+        this.tvappobj.putExtra("vindex", -1 );
+        this.tvappobj.start( "player/player.html");
+    }
+    mediaItem.mediaBuy = function() {
+        document.getElementById("message").style.display = "block";
+        VatataKeyMove.initById(document.getElementById("sendmsg"));
+    }
+    mediaItem.clickItem = function( mid , cid ) {
+        if ( ! this.mediaInfo || mid != mediaItem.mid ) {
+            setTimeout( function() {
+                mediaItem.clickItem( mid, cid );
+            }, 1000 );
+            mediaItem.load( mid );
+            return;
+        }
+
+        var catename = "";
+        if ( !!itemList.selCateEle ) catename = itemList.selCateEle.innerHTML;
+
+        var iurl = "info.html?cid="+cid+"&mid="+mid + "&catename=" + encodeURIComponent(catename);
+        if ( ! mediaItem.tvappobj )  mediaItem.tvappobj = wae.create("TvApp");
+        mediaItem.tvappobj.open( iurl );
+        return;
+    }
+
+
+    // itemList.ele
+    const KEY_W = 87
+    const KEY_S = 83;
+
+    itemList.ele['up'] = function() {
+        if(document.getElementById("playbtn").style.display == "none") {
+            return document.getElementById("movie-button").getElementsByTagName("a")[1];
+        }
+        return document.getElementById("movie-button").getElementsByTagName("a")[0];
+    }
+
+
+    itemList.ele['down'] = function() {
+        return itemList.ele.getElementsByTagName("a")[0];
+    }
+
+    cateList.ele['right'] = function() {
+
+        return itemList.ele.getElementsByTagName("a")[0];
+    }
+
+</script>
+<script type="text/javascript" src="../video/public/js/deviceinfo.js"></script>
+<script type="text/javascript">
+    var deviceInfo = new DeviceInfo();
+    deviceInfo.onload = function( dinfo ) {
+    }
+    deviceInfo.load();
+
+</script>
+<script type="text/javascript" src="player/js/key.js"></script>

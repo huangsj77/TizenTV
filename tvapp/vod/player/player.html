@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Player</title>
+
+    <style type="text/css">
+
+        body{margin:0;padding:0;font-family:'微软雅黑';background: black;}
+        a{text-decoration:none; color: #ddd;}
+        a:focus {outline: none;}
+
+
+    </style>
+
+</head>
+<body style="">
+</body>
+</html>
+<script type="text/javascript" src="player/js/md5.js"></script>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript">
+    var vodTitle = '';
+    function VodPlayer(  ) {
+        this.oninit = function(){}
+
+        this.onError = function(){}
+        this.onCompletion = function() {}
+
+        this.player = null;
+        this.isPaused = false;
+
+        this.init = function() {
+            if( this.player != null )  {
+                return this.oninit();
+            }
+            if ( typeof(wae) == "undefined" ) {
+                return ! setTimeout( this.init.bind(this) , 1000 );
+            }
+
+            this.player = wae.create("Media.VideoPlayer");
+            this.player.setOnErrorListener();
+            this.player.BufferSwitch(2);
+
+            this.player.onError = (function(e) {
+                console.log( "play error  "  );
+                this.stopCheckTimer();
+                this.onError();
+            }).bind(this);
+
+            this.player.onCompletion = (function(e) {
+                console.log( "play onCompletion  "  );
+                // this.hide_controler();
+                // this.stopCheckTimer();
+                this.sendMessage("Completion","");
+                var u = this.murl;
+                localStorage.removeItem("player_" + encodeURIComponent(u) );
+                // this.onCompletion();
+            }).bind(this);
+
+            this.player.onSeekCompletion = (function(e){
+                this.player.start();
+                this.isPaused = false;
+            }).bind(this);
+
+            this.player.onBufferingUpdate = this.onBufferingUpdate.bind(this);
+
+            this.player.onPrepared = (function() {
+                // console.log("onPrepared, open the controller page ");
+                this.player.start();
+                this.isPaused = false;
+
+                this.show_controller();
+
+                this.updateTitle();
+
+                var u = this.murl;
+                var ptime = parseInt( localStorage.getItem("player_" + encodeURIComponent(u) ) );
+
+                if ( isNaN(ptime) || ptime < 10 ) {
+                    return;
+                }
+                var r = confirm( TR("Do need to resume last play?") );
+                if ( ! this.uiobj ) {
+                    this.uiobj = wae.create("UI.UISettings");
+                }
+                this.uiobj.hideSystembar();
+
+                if ( ! r ) { return; }
+
+                // console.log("seek to playtime: " + ptime );
+                this.player.seekTo( ptime );
+            }).bind(this);
+
+            this.oninit();
+        }
+
+        this.updateTitle = function() {
+            // console.log("set title very quickly");
+            this.sendMessage( "SetTitle", this.title );
+            if ( !! this.volumeInfo ) {
+                this.sendMessage("SetVolumeInfo", JSON.stringify(this.volumeInfo) );
+            }
+        }
+
+        this.onBufferingUpdate = function( e ) {
+            console.log( "onBufferingUpdate : " + JSON.stringify(e));
+            var status = e.arguments[2];
+            var rate =  parseInt(e.arguments[1] );
+
+            console.log( "onBufferingUpdate : " + status + " : " + rate );
+
+            if ( status == "MEDIA_INFO_BUFFERING_END" || rate == 100 ) {
+                this.sendMessage( "Buffer", 100 );
+            }
+            else if ( status == "MEDIA_INFO_BUFFERING_START") {
+                this.sendMessage( "Buffer", rate );
+            }else {
+                this.sendMessage("Buffer", rate );
+            }
+        }
+
+        this.messgerObj = null;
+        this.sendMessage = function( eventname, arg1  ) {
+            if( ! this.messgerObj ) {
+                this.messgerObj = wae.create("WAE.WindowMessager");
+                this.messgerObj.setName( "main" );
+                console.log("init message obj!");
+
+                this.lasttime = 0;
+                this.messgerObj.onplaypause = (function() {
+                    console.log("get playpause message!");
+                    var dateobj = new Date();
+                    var t = dateobj.getTime() - this.lasttime;
+                    this.lasttime = dateobj.getTime();
+                    if ( t < 100 ) {
+                        console.log("found repeat message: " + t);
+                        return;
+                    }
+                    if( this.isPaused == false )
+                        this.player.pause();
+                    else
+                        this.player.start();
+                    this.isPaused = ! this.isPaused;
+                }).bind(this);
+
+                this.messgerObj.onpause = (function() {
+                    this.player.pause();
+                    this.isPaused = true;
+                }).bind(this);
+
+                this.messgerObj.onplay = (function() {
+                    this.player.start();
+                    this.isPaused = false;
+                }).bind(this);
+
+                this.messgerObj.onseek = (function(e) {
+                    var npos = parseInt(e.arguments[0]);
+                    console.log("recv seek ..." + npos);
+
+                    this.player.seekTo( npos );
+                }).bind(this);
+
+                this.messgerObj.onhide = (function() {
+                    console.log("get hide commond!");
+                    this.hide_controler();
+                }).bind(this);
+
+                this.messgerObj.onstop = (function() {
+                    this.hide_controler();
+                    this.onControllerClosed();
+
+                    this.player.stop();
+                    // history.back();
+                    var app = wae.create("Application");
+                    app.finishActivity();
+                }).bind(this);
+
+
+                this.messgerObj.onPlayEpsiode = (function(e){
+                    console.log("get Epsiode message " + e.arguments[0]);
+                    var idx = parseInt( e.arguments[0] );
+
+                    this.playEpsiode( idx );
+                }).bind(this);
+
+                this.messgerObj.onupdatetitle = (function() {
+                    this.updateTitle();
+                }).bind(this);
+
+                setTimeout( (function() {
+                    this.sendMessage(eventname, arg1  );
+                }).bind(this), 1000 );
+
+                return;
+            }
+            this.messgerObj.sendMessage("controller", eventname, arg1 );
+        }
+
+
+        this.playEpsiode = function( idx ) {
+            // alert(JSON.stringify(this.volumeInfo.volumes))
+            console.log("playEpsiode : " + idx );
+            if ( ! this.volumeInfo ) return;
+            var url = this.volumeInfo.volumes[idx].urla;
+            var title =  vodTitle + ": "+this.volumeInfo.volumes[idx].name;
+            var pid = this.volumeInfo.volumes[idx].id;
+            this.volumeInfo.index = idx;
+            this.start( url, title, pid);
+        }
+
+        this.onControllerClosed = function() {}
+        this.controller = null;
+        this.show_controller = (function() {
+            // console.log("show_controller ... ");
+            if ( ! this.controller ) {
+                console.log("show_controller ... create controller ");
+                var fwin = wae.create("UI.WaePopupWebView");
+                fwin.createWebView("controller", "vodcontroller.html", 0, 0, 1920, 1080 );
+                fwin.onDestory = (function() {
+                    this.hide_controler();
+                    this.onControllerClosed();
+
+                    this.player.stop();
+                    // history.back();
+                    var app = wae.create("Application");
+                    app.finishActivity();
+                    // todo
+                }).bind(this);
+
+                fwin.onCreated = function() {
+                    this.showWebView( "controller", true);
+                }
+                fwin.loadUrl("controller", "vodcontroller.html" );
+                this.controller = fwin;
+            }
+
+            var fwin = this.controller ;
+            //console.log("show_controller ... show it ");
+            fwin.showWebView( "controller", true);
+
+            this.startCheckTimer();
+        }).bind(this);
+
+
+        this._check_timer = null;
+        this.stopCheckTimer = function( ) {
+            console.log("stopCheckTimer ... ");
+            if ( this._check_timer != null )
+                clearInterval( this._check_timer );
+            this._check_timer = null;
+        }
+        this.startCheckTimer = function() {
+            this.stopCheckTimer();
+            // console.log("startCheckTimer ... ");
+            this._chkfunc = function() {
+                if ( this._check_timer == null ) return;
+                var info = {};
+                var duration = this.player.getDuration();
+                var playtime = this.player.getCurrentPosition();
+                info.duration = duration;
+                info.playtime = playtime;
+
+                this.playtime = playtime;
+                // console.log("startCheckTimer ... update playtime: " + playtime );
+                this.sendMessage( "Update", JSON.stringify(info) );
+            }
+            this._check_timer = setInterval( this._chkfunc.bind(this) , 1000);
+            this._chkfunc();
+        }
+
+        this.hide_controler = function() {
+            this.stopCheckTimer();
+
+            var fwin = this.controller;
+            if( !! fwin ) {
+                fwin.hideWebView("controller");
+            }
+        }
+
+        this.start = function( url, title, pid ) {
+            var  _sess = wae.create("DATA.Session");
+            var _configInfo = _sess.get("configInfo");
+            var device_obj = wae.create("Devices");
+            var mid = device_obj.getDeviceID();
+            var _sess = md5(title+""+new Date().getTime()).substr(0,20);
+            var _hisUrl = SERVER_URL + "index.php/mbt/api/setHistory?mac="+ mid+ "&pid="+pid+"&title="+encodeURI(title)+"&type=vod&session="+ _sess;
+            var _interVal = null;
+            var configInfo = JSON.parse(_configInfo);
+            if( _configInfo && configInfo) {
+                if( configInfo.his_record == '1') {
+                    var uget = new EasyGet();
+                    uget.onsuccess = function(u,d) {
+                        console.log("setHistory" +d);
+                    }
+
+                    uget.open(_hisUrl,true);
+
+                     _interVal = setInterval(function () {
+                        var uget = new EasyGet();
+                        uget.onsuccess = function(u,d) {
+                            console.log("setHistory" +d);
+                        }
+                        uget.open(_hisUrl,true);
+                    }, configInfo.his_freq * 1000 * 60 );
+                } else {
+                    clearInterval(_interVal);
+                }
+            } else clearInterval(_interVal);
+
+            if ( !url ) url = this.murl;
+            else this.murl = url;
+
+            if( this.player == null ) {
+                setTimeout( this.start.bind(this), 1000 );
+                return false;
+            }
+            this.player.setFullScreen();
+            this.player.setDataSource( url );
+            // this.player.setDataSource( this.getSecUrl(  url ) );
+
+            this.title = title;
+            // if ( !! title ) {
+            //   setTimeout( (function(){
+            //     this.sendMessage( "SetTitle", title );
+            //   }).bind(this), 1000 * 3 );
+            // }
+        }
+
+        this.init();
+    }
+
+
+</script>
+<script type="text/javascript">
+
+    var close_player = false;
+    function closePlayer() {
+        close_player = true;
+        var app = wae.create("Application");
+        app.finishActivity();
+    }
+
+    var drmobj = null;
+    var vodPlayer = new VodPlayer();
+    vodPlayer.oninit = function() {
+
+        drmobj = wae.create("UnitedDRM");
+        if ( !! drmobj ) {
+            if ( drmobj.hasInit() && drmobj.hasLogin() ) {
+                // logined
+            } else {
+                location.href = "drmlogin.html";
+                return;
+            }
+        }
+
+        var param = wae.create("DATA.Parameters");
+
+        var title = param.get("title");
+        vodTitle = title;
+        var pid = param.get("pid");
+
+        var path  = param.get("URLS");
+        if ( !path ) path = param.get("urls");
+        if ( !path ) path = param.get("path");
+
+        if ( !path ) {
+            try {
+                path = param.getData();
+            }catch(e){}
+        }
+
+        if ( ! path ) {
+            alert("Fatal: no media!");
+            var app = wae.create("Application");
+            app.finishActivity();
+            return;
+        }
+
+        var vindex = -1;
+        var volumes = null;
+        try {
+            vindex =  parseInt( param.get("vindex") ) ;
+            volumes =  JSON.parse(  param.get("volumes") );
+        }catch(e){}
+
+        if ( !isNaN(vindex) && vindex >= 0 && !!volumes && volumes.length > 0 ) {
+            this.volumeInfo = {};
+            this.volumeInfo.index = vindex;
+            this.volumeInfo.volumes = volumes;
+        }
+
+        if ( !! drmobj )
+            path = drmobj.getUrl( path );
+
+        // path = "/sdcard/x.flv";
+        console.log("play url : " + path );
+        this.show_controller();
+        if( !isNaN(vindex) && vindex >= 0 ) {
+            var _title = title + ": " + volumes[vindex].name;
+        } else var _title = title;
+
+        this.start( path, _title, pid );
+    }
+
+    vodPlayer.onError = function() {
+        closePlayer();
+    }
+    vodPlayer.onCompletion = function() {
+        // closePlayer();
+    }
+
+</script>
+
+<script type="text/javascript">
+    setTimeout( function() {
+        wae.onPause = function() {
+            if ( close_player == true ) {
+                console.log("playing over");
+                return;
+            }
+            var u  = vodPlayer.murl ;
+            if ( ! u ) {
+                console.log("no url , playing not started!" );
+                return;
+            }
+
+            var ptime = vodPlayer.playtime;
+            // console.log("save play position " + ptime + " for " + u );
+            localStorage.setItem("player_" + encodeURIComponent(u) , ptime );
+        }
+    }, 1000 * 3 );
+
+</script>
+
+<script type="text/javascript">
+
+    window.onWAEReady = function() {
+        setlang();
+    }
+
+
+    var langres = {};
+    var clangres = {};
+    langres['zh_tw'] = {
+        'Do need to resume last play?' : '從上次停止的位置繼續播放嗎?'
+    };
+
+
+    function setlang() {
+
+        var langobj = wae.create("Locale");
+        var lang = langobj.get();
+
+        if ( !! langres[lang] ) {
+            clangres = langres[lang];
+        }
+    }
+
+    function TR( o ) {
+        var t = clangres[o];
+        if ( !t ) return o;
+        return t;
+    }
+
+</script>

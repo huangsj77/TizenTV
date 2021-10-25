@@ -1,0 +1,50 @@
+body{
+	margin:0;padding:0;font-family:'微软雅黑';overflow:hidden;
+	background: black;
+}
+a{text-decoration:none; color: #ddd;}
+a:focus {outline: none;}
+.main{}
+
+.livecont{
+	width:1920px;height:1080px;
+	background: url(../image/bg_live.jpg) no-repeat;
+	background-repeat: no-repeat;
+	overflow:hidden;
+}
+
+.op-intro {
+	position: fixed;
+	top: 760px;
+}
+
+.main-title {
+	font-size: 48px;
+	color: white;
+	padding: 50px 100px 0 100px;
+	line-height: 100px;
+}
+
+.live-list {
+	width: 1600px;
+	height: 900px;
+	margin-left: 200px;
+	border: solid red 1px;
+}
+
+.live-list a {
+	display: inline-block;
+	width: 200px;
+	height: 80px;
+	font-size: 40px;
+	line-height: 80px;
+	text-align: center;
+	overflow: hidden;
+}
+
+.dvb-msg {
+	font-size: 40px;
+	line-height: 80px;
+	text-align: center;
+	color: white;
+}

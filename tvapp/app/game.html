@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GAME</title>
+    <meta name="viewport" content="width=1920" />
+    <link rel="stylesheet" href="../message/public.css"/>
+    <link rel="stylesheet" href="../misc/game.css"/>
+    <script type="text/javascript" src="../video/public/js/config.js"></script>
+    <script type="text/javascript" src="../video/public/js/jsget.js"></script>
+    <script type="text/javascript" src="../js/querystring.js"></script>
+    <script type="text/javascript" src="../../js/cate.js"></script>    
+</head>
+<body>
+<div class="main">
+  <div class="maincont gamecont">
+  	<div id="applistdiv" class="applistdiv">
+  		<a href="javascript:clickApp(APPID);">
+  			<img src="" />
+  			<span>NAME</span>
+  		</a>
+  		<a href="javascript:void(0);">
+  			<img src="" />
+  			<span>NAME</span>
+  		</a>
+  		<a href="javascript:void(0);">
+  			<img src="" />
+  			<span>NAME</span>
+  		</a>
+  		<a href="javascript:void(0);">
+  			<img src="" />
+  			<span>NAME</span>
+  		</a>
+  		<a href="javascript:void(0);">
+  			<img src="" />
+  			<span>NAME</span>
+  		</a>
+  		<a href="javascript:void(0);">
+  			<img src="" />
+  			<span>NAME</span>
+  		</a>
+  		<a href="javascript:void(0);">
+  			<img src="" />
+  			<span>NAME</span>
+  		</a>
+  		<a href="javascript:void(0);">
+  			<img src="" />
+  			<span>NAME</span>
+  		</a>
+  		<a href="javascript:void(0);">
+  			<img src="" />
+  			<span>NAME</span>
+  		</a>
+  		<a href="javascript:void(0);">
+  			<img src="" />
+  			<span>NAME</span>
+  		</a>
+
+  	</div>
+  </div>
+
+  <div class="maintitle" id="maintitle">GAME</div>
+  <img src="../image/op_intro.png" class="remoter-tips"/>
+
+</div>
+</body>
+</html>
+<script type="text/javascript" src="player/js/key.js"></script>
+
+<script type="text/javascript">
+	
+
+	var itemList = new ItemList();
+	itemList.onload = function( listInfo, totalCount, totalPage ) {
+		var htmlsrc = "";
+		var lele = document.getElementById("applistdiv");
+		var tsrc = lele.getElementsByTagName("a")[0].outerHTML;
+		for( var i = 0; i<listInfo.length; i++ ) {
+			var hsrc = tsrc.replace( "NAME", listInfo[i].name)
+							.replace("APPID", listInfo[i].id)
+							.replace("src=\"\"", "src=\"" + listInfo[i].logo + "\"" );
+			htmlsrc += hsrc;
+		}
+		lele.innerHTML = htmlsrc;
+		VatataKeyMove.initById(lele.getElementsByTagName("a")[0]);
+	}
+
+
+	var intent_obj = null;
+	var appItem = new AppItem();
+	appItem.onload = function( itemInfo ) {
+		var pkgname = itemInfo.update.bao;
+	    if ( intent_obj == null ) intent_obj = wae.create("Intent");
+	    intent_obj.startActivity( pkgname ); 
+	}
+
+	function clickApp( appid ) {
+		appItem.load( appid );
+	}
+
+  //window.onWAEReady = function() {
+    //var param = wae.create("DATA.Parameters");
+    //var title = param.get("name");
+    ////var apiUrl = param.get("apiUrl");
+    //var dataUrl = param.get("dataUrl");
+
+    document.getElementById("maintitle").innerHTML = title;
+
+    var res = apiUrl.match(new RegExp("cat_id=(\\d+)","i"));
+    var cid = apiUrl;
+    if ( res )
+      cid = res[1];
+
+    itemList.load( cid, 1 , 10 );
+  //}  
+
+</script>

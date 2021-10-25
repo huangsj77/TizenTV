@@ -1,0 +1,181 @@
+
+body{
+	margin:0;padding:0;
+	font-family:'微软雅黑';overflow:hidden;
+	color: #ddd;
+}
+a{text-decoration:none; color: #ddd;}
+a:focus {outline: none;}
+
+.dr { border: solid red 1px;}
+
+
+.adtext {
+	position: absolute;
+	left: 420px;
+	top: 50px;
+	font-size: 50px;
+	width: 800px;
+	white-space: nowrap;
+	overflow: hidden;
+	color: white;
+}
+.locweather {
+	position: absolute;
+	right: 150px;
+	top: 50px;
+	color: white;
+	font-size: 40px;
+	vertical-align: top;
+}
+
+.locweather span {
+	margin: 10px;
+	vertical-align: top;
+}
+.locweather img {
+	vertical-align: top;
+}
+
+.locweather span img {
+	margin-top: -30px;
+	width: 150px;
+	height: 150px;
+}
+
+#locDiv {
+}
+
+.timedate {
+	position: absolute;
+	right: 150px;
+	top: 100px;
+	font-size: 50px;
+	color: white;
+}
+
+.portalmain{
+	position: absolute;
+	width:1920px;
+	height:1080px;
+	overflow:hidden;
+}
+
+.portallogo {
+	position: absolute;
+	width: 360px;
+	height: 90px;
+	top: 50px;
+	left: 50px;
+}
+
+.portalnav {
+	position: fixed;
+	width: 1920px;
+	height: 200px;
+	top: 850px;
+}
+
+.portalnavlist {
+	text-align: center;
+}
+
+.portalnavlist a{
+	display: inline-block;
+	text-align: center;
+	width: 160px;
+	height: 40px;
+	margin: 0 40px;
+	overflow: hidden;
+	background-size: 120px;
+	background-position: 50% 20px;
+	background-repeat: no-repeat;
+	font-size: 30px;
+	line-height: 40px;
+	padding-top: 150px;
+	color: gray;
+}
+
+.portalnavlist a:hover, .portalnavlist a.currentFocus{
+	color: white;
+	/*font-weight: bold;*/
+}
+
+.deviceinfo {
+	position: absolute;
+	top: 760px;
+	right: 150px;
+	height: 75px;
+}
+.deviceinfo2 {
+	position: absolute;
+	top: 800px;
+	right: 150px;
+	height: 75px;
+}
+
+.deviceinfo img {
+	vertical-align: bottom;
+	margin: 0 5px;	
+	padding-bottom: 5px;
+	height: 33px;
+}
+.deviceinfo span , .deviceinfo2 span{
+	font-size: 30px;
+	vertical-align: bottom;
+}
+.deviceinfo div {
+	display: inline-block;
+	vertical-align: bottom;
+	width: 30px;
+	height: 65px;
+	color: red;
+	font-size: 15px;
+	padding-left: 70px;
+	padding-top: 5px;
+	background: url("../image/message.png") no-repeat;
+	background-position: 0 0;
+}
+
+
+.portalframe {
+	position: fixed;
+	margin: 0;
+	width: 1920px;
+	height: 900px;
+	top: 0px;
+	overflow: hidden;	
+}
+
+.portalframe span {
+	display: inline-block;
+	width: 1860px;
+	height: 880px;
+	overflow: hidden;
+}
+
+.portalframe a {
+	display: inline-block;
+	position: absolute;
+	margin: 0px;
+	/*border-radius: 8px;*/
+}
+
+.portalframe a.currentFocus, .portalframe a:hover {
+	/*box-shadow:0 0 8px 8px #09f;*/
+}
+
+.portalframe a img {
+	display: block;
+	border-radius: 8px;
+}
+.portalframe a div {
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	font-size: 24px;
+	background-color: rgba(0,0,0,0.2);
+	text-align: center;
+}
+
+.list-controls-hide{display: none;}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+<script type="text/javascript">
+    window.onWAEReady = function () {
+        var uiSettings = wae.create("UI.UISettings");
+        uiSettings.set1080P();
+
+        var param = wae.create("DATA.Parameters");
+        var title = param.get("title");
+
+        alert(title);
+        var apiUrl = param.get("apiUrl");
+        if( ! apiUrl ) {
+            alert("DATA")
+            apiUrl = param.get("DATA");
+        }
+        alert(apiUrl);
+
+        var dataUrl = param.get("dataUrl");
+        alert(dataUrl);
+    }
+
+</script>

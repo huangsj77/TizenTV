@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WELCOME</title>
+    <link rel="stylesheet" href="../../css/portal.css"/>
+</head>
+<body style="background: black;">
+<div class="main">
+  <div id="welcomeDiv" class="welcome">
+    <div class="topiconzone">
+      <div id="netinfoEle" class="topicon"></div>
+      <div id="msgIconEle" class="topicon"></div>
+      <div id="alarmIconEle" class="topicon"></div>
+      <div class="timedate">
+        <div id="timeDiv" class="time"></div>
+        <div id="dateDiv" class="date"></div>
+      </div>
+    </div>
+
+  	<div style="" class="welcome-msg">
+  		<img id="logoImg" src="" style="display: none;"/>
+  		<span id="welcomeText" class="" style="display: none;"></span>
+  	</div>
+  	<div class="op-msg" id="opmsg"></div>
+  </div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../video/public/js/lang.js"></script>
+<script type="text/javascript" src="../js/ajax.js"></script>
+<script type="text/javascript" src="../../js/portaldata.js"></script>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../../js/cate.js"></script>
+<script type="text/javascript" src="../video/public/js/deviceinfo.js"></script>
+<script type="text/javascript">
+var fileobj = null;
+var debugtime = (new Date()).getTime();
+// console.log("debug time : 1 :" + ( ((new Date()).getTime() - debugtime) /1000 ) );
+
+var portalData = new PortalData();
+var myidx = portalData.findIndexByUrl( location.href );
+var pdata = null;
+
+function d(msg ) {
+}
+
+function SetWelcome( photoID, devName ) {	
+	document.getElementById("opmsg").innerHTML = TR("Press Any Key to Next")
+	var welcome_msg = TR("Dear Guest") + "<br /><br />" +
+					TR("Welcome To") + "&nbsp;" + 
+					TR("Our Hotel") + "<br />" +
+					TR("Good Holiday To You");
+
+    var photoItem = new PhotoItem();
+
+    photoItem.onload = function( photoList ) {
+		var plist = photoList.photolist;
+		for( var i = 0; i< plist.length; i++ ) {
+			console.log("check room : " +  plist[i].name + " : " + devName )
+			if( plist[i].name == devName || plist[i].name == "default" ) {				
+				var msg =  plist[i].about;
+				if ( ! msg ) continue;
+				if ( msg.indexOf("[") == 0 ) {
+					msg = msg.substring( 1, msg.length - 1 );
+					var msglist = msg.split("||");
+
+					var langid = TR.langObj.getLangID();
+					if ( langid == "tw" ) msg = msglist[0];
+					else if ( langid == "cn") msg = msglist[1] || msg;
+					else if ( langid == "jp") msg = msglist[2] || msg;
+					else if ( langid == "kr") msg = msglist[4] || msg;
+					else msg = msglist[3] || msg;
+				}
+
+				if ( msg.length < 10 ) {
+					msg = TR("Dear Guest")  + msg + "<br /><br />" +
+					TR("Welcome To") + "&nbsp;" + TR("Our Hotel")  + "<br />" + 
+					TR("Good Holiday To You");
+				} else {
+					msg = msg.replace( /\n/g, "<br />");
+				}
+				welcome_msg = msg;
+
+				// try {
+				// 	alert( plist[i].logo  );
+				//     var wele = document.getElementById("welcomeDiv");
+				//     wele.style.backgroundImage = "url(" + plist[i].logo  + ")";   
+				//     // alert( pdata.logo )
+				// }catch(e){}
+
+
+				var orderno = plist[i].end;
+				
+				if( fileobj == null ) fileobj = wae.create("DATA.File");
+		        fileobj.createDir( "/sdcard/TVATA/FS");
+				fileobj.writeAll( "/sdcard/TVATA/FS/orderno", orderno );
+
+				if ( plist[i].name == devName ) break;
+	        }
+		}
+
+		var wele = document.getElementById("welcomeText");
+		wele.innerHTML = welcome_msg; 
+		wele.style.display= "inline-block";  
+
+	    var imgele = document.getElementById("logoImg");
+	    imgele.src = photoList.logo;
+	    imgele.style.display = "inline-block";
+    }
+
+//    console.log("check welcome photoItem.skipcache:" );
+    photoItem.skipcache = true;
+    alert(photoID);
+    photoItem.load( photoID );
+}
+
+try {
+	pdata = portalData.getPortalData(myidx).putong[0];
+	// alert( JSON.stringify(pdata) )
+    var wele = document.getElementById("welcomeDiv");
+    wele.style.backgroundImage = "url(../../images/" + pdata.logo  + ")";   
+    // console.log( pdata.logo )
+    // alert( pdata.logo )
+    
+}catch(e){
+}
+
+try {
+	var hasSetWelcome = false;
+    var devName = "default";
+    var timer = null;
+    var t = localStorage.getItem("welcome_devname");
+    d( "1: " + t );
+    if ( !! t ) {
+    	devName = t;
+    	SetWelcome( pdata.param, devName );
+    	hasSetWelcome = true;
+    } else {
+		timer = setTimeout( function() {SetWelcome( pdata.param, devName );}, 1000 * 20 );
+    }
+
+	var devInfo = new DeviceInfo();
+	devInfo.onload = function( info ) {
+		if ( !!timer ) clearTimeout(timer);
+		if ( info != null && !! info.contacts )
+			devName = info.contacts;
+		d( "2: " + devName );
+
+		localStorage.setItem("welcome_devname", devName);
+		if ( hasSetWelcome == true ) 
+			return;
+		SetWelcome( pdata.param, devName );
+	}
+	devInfo.load();
+}catch(e){}
+
+
+function GotoNext() {
+	var plist = portalData.getPortalList();
+	var portal = plist[ myidx + 1];
+	if ( ! portal ) {
+	    var mainurl = localStorage.getItem("MAIN_PORTAL");
+	    location.replace(  mainurl );
+		return;
+	}
+	location.href = "../" + portal.app_index;
+}
+
+document.onkeydown = function( e ) {
+	GotoNext();
+}
+
+document.onclick = function() {
+	GotoNext();
+}
+
+window.onWAEReady = function() {
+	fileobj = wae.create("DATA.File");
+	fileobj.remove( "/sdcard/TVATA/FS/orderno" );	
+}
+
+</script>
+<script type="text/javascript" src="../../js/timedate.js"></script>
+<script type="text/javascript" src="player/js/key.js"></script>
+<script type="text/javascript">
+  SysKey.disableBack();
+</script>
+<script type="text/javascript" src="../widget/netinfo/netinfo.js?ele=netinfoEle"></script>
+<script type="text/javascript" src="../../js/message.js"></script>
+<script type="text/javascript" src="../widget/alarm/alarm.js?ele=alarmIconEle"></script>
+<script type="text/javascript" src="../widget/sys/rebootchecker.js"></script>
+

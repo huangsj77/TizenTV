@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Op Help Page</title>
+    <link rel="stylesheet" href="../../css/portal.css"/>
+</head>
+<body style="background: black;">
+<div class="main">
+  <div id="remoterhelp" class="welcome"></div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../js/ajax.js"></script>
+<script type="text/javascript" src="../../js/portaldata.js"></script>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../../js/cate.js"></script>
+<script type="text/javascript">
+
+
+
+function GotoNext() {
+	var plist = portalData.getPortalList();
+	var portal = plist[ myidx + 1];
+	if ( ! portal ) {
+		alert("fatal error!");
+		return;
+	}
+	location.replace( "../" + portal.app_index );
+}
+
+document.onkeydown = function( e ) {
+	GotoNext();
+}
+
+document.onclick = function() {
+	GotoNext();
+}
+
+
+var portalData = new PortalData();
+var myidx = portalData.findIndexByUrl( location.href );
+var pdata = null;
+try {
+	pdata = portalData.getPortalData(myidx).putong[0];
+    var wele = document.getElementById("remoterhelp");
+    wele.style.backgroundImage = "url(../../images/" + pdata.logo  + ")";    
+}catch(e){
+	GotoNext();
+}
+
+
+
+</script>
+<script type="text/javascript" src="player/js/key.js"></script>
+<script type="text/javascript">
+  SysKey.disableBack();
+</script>

@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MUSIC</title>
+    <meta name="viewport" content="width=1920" />
+    <link rel="stylesheet" href="../message/public.css"/>
+    <link rel="stylesheet" href="../audio/css/music.css"/>
+    <style type="text/css">
+
+        .msgbar {
+            position: absolute;
+            top: 1000px;
+            width: 1000px;
+            left: 400px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 30px;
+            color: white;
+        }
+
+        .music-panel {
+            width: 1380px;
+            height: 200px;
+            margin: 20px auto 20px 300px;
+            overflow: hidden;
+            padding-top: 30px;
+            /* padding-right: 20px; */
+            /*text-align: center;*/
+            padding-left: 250px;
+        }
+    </style>
+</head>
+<body>
+<div class="tvmain">
+    <div class="tvcontent" style="background-image: url(image/bg_music.jpg)">
+        <div class="music-title" id="maintitle">Music</div>
+        <div class="music-list-cont">
+        <span class="music-list" id="music_list" style="display:none;">
+            <span>
+              <a href='javascript:musicItem.loadList({MID})'
+                 onfocus='itemList.doFocus({IDX})'
+                 style='background-image:url({IMG});background-size:340px 220px; '>
+              </a>
+              <div>{NAME}</div>
+            </span>          
+        </span>
+        </div>
+        <div class="music-panel">
+            <span id="music_ok">開始播放</span>
+            <span id="music_pp">暫停/播放</span>
+            <!--<span id="music_y">上一首</span>-->
+            <!--<span id="screen_up">螢幕調亮</span>-->
+            <span id="music_stop">停止</span>
+            <!--<span id="music_g">下一首</span>-->
+            <!--<span id="screen_dn">螢幕調暗</span>-->
+        </div>
+
+    </div>
+    <div class="remoterhint"></div>
+    <div id="tvmask" class="tvmask">
+    </div>
+    <marquee id="msgbar" class="msgbar"></marquee>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../video/public/js/lang.js"></script>
+<script type="text/javascript">
+    function $(name) {
+        return document.getElementById(name);
+    }
+
+    $("music_ok").innerHTML = TR("Start");
+    $("music_pp").innerHTML = TR("PlayPause");
+    $("music_stop").innerHTML = TR("Stop Playing");
+
+    var msgbar = $("msgbar");
+</script>
+
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../../js/cate.js"></script>
+<script type="text/javascript" src="player/js/key.js"></script>
+<script type="text/javascript">
+    var musicItem = new MediaItem();
+    musicItem.onload = function( musicInfo,sourceList ) {
+        musicInfo = sourceList[0];
+        if( ! this.player ) {
+            if ( ! wae ) {
+                setTimeout( function() {musicItem.onload(musicInfo);} , 2000 );
+                return;
+            }
+            this.player = wae.create("Media.MusicPlayer");
+            this.toast  = wae.create("Toast");
+        }
+
+        if ( isNaN(this.next) )  this.next = 0;
+        if ( ! musicInfo.volumes.length )
+            return;
+        var _this = this;
+        this.player.onCompletion = function() {
+            _this.playnext();
+        }
+
+        this.playnext = function() {
+            this.next++;
+            var idx = Math.floor( this.next % musicInfo.volumes.length );
+            msgbar.innerHTML = ( TR("Start Playing") + ":" + musicInfo.volumes[idx].name );
+            this.toast.showMessage( TR("Start Playing") + ":" + musicInfo.volumes[idx].name );
+            this.player.play( musicInfo.volumes[idx].urla );
+        }
+        this.playprev = function() {
+            this.next +=  musicInfo.volumes.length - 1;
+            var idx = Math.floor( this.next % musicInfo.volumes.length );
+            msgbar.innerHTML =  ( TR("Start Playing") + ":" + musicInfo.volumes[idx].name );
+            this.toast.showMessage( TR("Start Playing") + ":" + musicInfo.volumes[idx].name );
+            this.player.play( musicInfo.volumes[idx].urla );
+        }
+
+        this.stop = function() {
+            this.toast.showMessage("Stop Playing" );
+            this.player.stop();
+            msgbar.innerHTML = "";
+            msgbar.stop();
+        }
+        this.playpause = function() {
+            if ( this.player.isPlaying() ) {
+                this.toast.showMessage( TR("Paused") );
+                this.player.pause();
+                msgbar.innerHTML = "";
+                msgbar.stop();
+            } else {
+                msgbar.innerHTML = ( TR("Start Playing") );
+                this.toast.showMessage( TR("Start Playing") );
+                this.player.start();
+            }
+        }
+        this.toast.showMessage( TR("List Loaded, Start Playing") );
+        this.playnext();
+    }
+    musicItem.loadList = function(mid ) {
+        this.load(mid);
+        this.toast.showMessage( TR("List Loading") );
+    }
+
+    var itemList = new ItemList();
+    itemList.ele = document.getElementById("music_list");
+    itemList.htmltemp = itemList.ele.innerHTML;
+    itemList.onload = function( ilist ) {
+        var str = "";
+        for( i=0; i<ilist.length; i++ ) {
+            var s = itemList.htmltemp.replace( "{IDX}", i)
+                .replace("{MID}", ilist[i].id )
+                .replace("{IMG}", ilist[i].logo )
+                .replace("{NAME}", ilist[i].name );
+            str += s;
+        }
+        itemList.ele.innerHTML = str;
+        itemList.ele.style.display = "";
+    }
+    itemList.doFocus = function( idx ) {
+        return;
+        var h = Math.floor(idx / 4) * 320;
+        console.log("do focus " + idx  + " : " + h );
+        itemList.ele.scrollTo( 0, h);
+    }
+
+
+    var debug_timer = setTimeout( function() {
+        itemList.load( 1840, 1, 8 );
+    } , 2000 );
+
+    const SYS_KEY_PLAYPAUSE = 85;
+    const SYS_KEY_STOP = 86;
+    const SYS_KEY_RED = 183;
+    const SYS_KEY_YELLOW = 185;
+    const SYS_KEY_GREEN = 184;
+    const SYS_KEY_NEXT = 90;
+    const SYS_KEY_PREV = 89;
+    const SYS_KEY_BACK = 4;
+
+    function hotKey() {
+    }
+
+    hotKey.init = function() {
+        var eventListener = wae.create("EventListener");
+        eventListener.addJs( SYS_KEY_PLAYPAUSE,   "hotKey.playpause();" );
+        eventListener.addJs( SYS_KEY_STOP ,       "hotKey.stop();");
+        eventListener.addJs( SYS_KEY_GREEN,       "hotKey.next();" );
+        eventListener.addJs( SYS_KEY_RED,      "hotKey.prev();" );
+        eventListener.addJs( SYS_KEY_NEXT,        "hotKey.screenup()" );
+        eventListener.addJs( SYS_KEY_PREV,        "hotKey.screendn()" );
+        eventListener.addJs( SYS_KEY_BACK,        "hotKey.exit()" );
+    }
+
+    hotKey.exit = function() {
+        musicItem.stop();
+        var app = wae.create("Application");
+        app.finishActivity();
+    }
+    hotKey.playpause = function() {
+        musicItem.playpause();
+    }
+    hotKey.stop = function() {
+        musicItem.stop();
+    }
+    hotKey.next = function() {
+        musicItem.playnext();
+    }
+    hotKey.prev = function() {
+        musicItem.playprev();
+    }
+    hotKey.screenup = function() {
+        var tvmask = document.getElementById("tvmask");
+        var rate = parseFloat(tvmask.style.opacity) - 0.1;
+        if ( isNaN(rate) || rate < 0 ) rate = 0;
+        tvmask.style.opacity = rate;
+    }
+    hotKey.screendn = function() {
+        var tvmask = document.getElementById("tvmask");
+        var rate = parseFloat(tvmask.style.opacity) + 0.1;
+        if ( isNaN(rate) || rate > 0.9) rate = 0.9;
+        tvmask.style.opacity = rate;
+    }
+
+    //window.onWAEReady = function() {
+        //var param = wae.create("DATA.Parameters");
+        //var title = param.get("name");
+        //var apiUrl = param.get("apiUrl");
+
+        if(!apiUrl) {
+            apiUrl = param.get("DATA");
+        }
+
+        if( !! title)
+            document.getElementById("maintitle").innerHTML = title;
+
+        musicItem.player = wae.create("Media.MusicPlayer");
+        musicItem.toast  = wae.create("Toast");
+
+        hotKey.init();
+
+        var sv = apiUrl.match( /cat_id=(\d+)/ );
+        var cid = sv ? sv[1] : 0;
+
+        // if( cid == 0 ) cid = 1840;
+        //   alert(cid);
+        itemList.load( cid, 1, 8 );
+        clearTimeout( debug_timer );
+    //}
+</script>
+
+

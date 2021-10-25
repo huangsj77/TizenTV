@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel First Page</title>
+</head>
+<body style="background: black;">
+</body>
+</html>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../js/ajax.js"></script>
+<script type="text/javascript" src="../../js/portaldata.js"></script>
+<script type="text/javascript">
+
+function checkLangUrl() {
+  try {
+    var nurl = localStorage.getItem("LANG_URL");
+    if ( !! nurl ) {
+        console.log("found lang url " + nurl);
+        var appstatus = wae.create("AppStatus");
+        if ( ! appstatus.isFirstLoadAfterBoot() ) {
+          appstatus.hideLoading();
+          nurl = nurl.replace( /.*\// , "");
+          location.replace( nurl );
+          return true;
+        } 
+    }
+  }catch(e) {  }
+  return false;
+}
+
+function gotoNext() {
+	var pdata = new PortalData();
+	var defmod = pdata.getDefaultPortal();
+	var appurl = defmod.app_index.replace("hotel/", "");
+
+  if( appurl.indexOf("index.html") >= 0 ) {
+    var myidx = pdata.findIndexByUrl( location.href );
+    var plist = pdata.getPortalList();
+    var portal = plist[ myidx + 1];
+    if ( ! portal ) {
+      alert("fatal error!");
+      return;
+    }
+    location.replace( "../" + portal.app_index ) ;
+  }else {
+    location.replace( appurl ); 
+  }
+}
+
+function checkgotoMovie() {
+
+  var pdata = new PortalData();
+  var defmod = pdata.getDefaultPortal();
+  //alert( JSON.stringify(defmod))
+  if( defmod.app_index == ""  || defmod.app_index.indexOf("index.html") >= 0 ) {
+
+      var action_name = defmod.bao;
+
+      waeparams.addContentProviderPersistenceWithAutoCommit(
+        "DATA", defmod.apiUrl );
+      waeparams.addContentProviderPersistenceWithAutoCommit(
+        "TITLE", defmod.name );
+
+      waeparams.addContentProviderPersistenceWithAutoCommit(
+        "SERVERURL", ServerConfig.DEF_SERVER_URL );
+
+      var intent_obj = wae.create("Intent");
+  console.log("check goto movie directly " + action_name );
+
+      intent_obj.create(action_name);
+      intent_obj.addData("name", defmod.name );
+      intent_obj.addData("apiUrl", defmod.apiUrl );
+      intent_obj.addData("dataUrl", defmod.dataUrl );
+      intent_obj.startActivity();
+  console.log("check goto movie directly, has back! "  );
+      return true; 
+  }  
+  return false;
+}
+
+window.onWAEReady = function() {
+  if ( checkgotoMovie() == true ) {
+
+  }
+
+console.log("check goto movie directly, before goto next! "  );
+	//if ( checkLangUrl() == false ) 
+  {
+console.log("check goto movie directly,  goto next! "  );
+		gotoNext();
+	}
+}
+
+</script>
+

@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AirLine</title>
+  <meta name="viewport" content="width=1920" />
+  <link rel="stylesheet" href="../message/public.css"/>
+  <link rel="stylesheet" href="../train/flight.css"/>
+  <style type="text/css">
+    .choicebtn1 {}
+    .choicebtn1 a {
+      display: block;
+      float: right;
+      width: 184px;
+      height: 83px;
+      margin-top: 40px;
+      margin-right: 50px;
+      text-align: center;
+      font-size: 30px;
+      line-height: 70px;
+      color: white;
+      background: url(btnbg.png) no-repeat transparent;
+    }
+
+    .choicebtn1 a.currentFocus {
+      background: url(btnbgh.png) no-repeat transparent;
+    }
+
+    .enlh {
+      font-size: 15px;
+      line-height: 15px;
+    }
+
+  </style>
+</head>
+<body>
+<div class="tvmain">
+  <div class="flightcont">
+    <div class="leftmenu">
+      <div class="selectmenu" style="display: none;">
+        <label>Airport</label>
+        <a href="javascript:;" id="m_airport"
+           values="TPE:桃園國際機場,TSA:高雄國際機場,KHH"
+           onclick="selectop(this)">TPE</a>
+      </div>
+
+      <div class="selectmenu">
+        <label>Take off/Landin</label>
+        <a href="javascript:;" id="m_type1"
+           values="Arrivals:Departures"
+           onclick="selectop(this)">Take off</a>
+      </div>
+
+      <div class="selectmenu" style="display:none;">
+        <label>Airline</label>
+        <a href="javascript:;" id="m_type2"
+           values="國際,International:國內,Domestic"
+           onclick="selectop(this)">International</a>
+      </div>
+
+      <div class="selectmenu">
+        <label>Time</label>
+        <a href="javascript:;" id="m_time"
+           values="Monday:Tuesday:Wednesday:Thursday:Friday:Saturday:Sunday"
+           onclick="selectop(this)">All</a>
+      </div>
+
+      <div class="choicebtn1">
+        <a href="javascript:choice()">Search</a>
+      </div>
+    </div>
+
+    <div class="airlist">
+      <table >
+        <thead>
+        <tr>
+          <td>Flight<div class="enlh"></div></td>
+          <!--<td>Scheduled time<div class="enlh"></div></td>-->
+          <td>Estimated time<div class="enlh"></div></td>
+          <td>Airline<div class="enlh"></div></td>
+          <td>Aircraft type<div class="enlh"></div></td>
+          <td>Terminal<div class="enlh"></div></td>
+          <!--
+                    <td>機型<div class="enlh"></div></td>
+           -->
+          <td>Status<div class="enlh"></div></td>
+        </tr>
+        <tr>
+          <td colspan="8" id="timeEle"></td>
+        </tr>
+        </thead>
+        <tbody id="flighlist">
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="prevbtn"><a href="javascript:prev();"></a></div>
+  <div class="nextbtn"><a href="javascript:next();"></a></div>
+
+  <div class="remoterhint"></div>
+
+</div>
+</body>
+</html>
+
+
+<script type="text/javascript">
+    function selectop( ele ) {
+        var values = ele.getAttribute("values").split(/:/);
+        var cvalue = ele.innerHTML;
+        var idx = 0;
+        for(var i=0; i<values.length; i++ ) {
+            if( cvalue == values[i] ) {
+                idx = i;
+                break;
+            }
+        }
+        var next = (idx+1) % values.length;
+        ele.innerHTML = values[next];
+    }
+
+    function choice() {
+        //var m_airport = document.getElementById("m_airport").innerHTML;
+        var m_airport = "sri";
+
+        if( m_airport.indexOf("桃園國際機場") >=0 ) {
+            taoyuan.load();
+        }
+        else if ( m_airport.indexOf("臺北松山機場") >= 0 ) {
+            songshan.load();
+        }
+        else if ( m_airport.indexOf("高雄國際機場") >= 0 ) {
+            gaoxiong.load();
+        } else {
+            sri.load();
+        }
+    }
+
+    function prev() {
+        var m_airport = document.getElementById("m_airport").innerHTML;
+        if( m_airport.indexOf("桃園國際機場") >=0 ) {
+            taoyuan.prevPage();
+        }
+        else if ( m_airport.indexOf("臺北松山機場") >= 0 ) {
+            songshan.prevPage();
+        }
+        else if ( m_airport.indexOf("高雄國際機場") >= 0 ) {
+            gaoxiong.prevPage();
+        }else  {
+            sri.prevPage()
+        }
+    }
+    function next() {
+        var m_airport = document.getElementById("m_airport").innerHTML;
+        if( m_airport.indexOf("桃園國際機場") >=0 ) {
+            taoyuan.nextPage();
+        }
+        else if ( m_airport.indexOf("臺北松山機場") >= 0 ) {
+            songshan.nextPage();
+        }
+        else if ( m_airport.indexOf("高雄國際機場") >= 0 ) {
+            gaoxiong.nextPage();
+        } else  {
+            sri.nextPage()
+        }
+    }
+
+</script>
+
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript">
+    // alert(SERVER_URL);
+    function SriAirport() {
+        this.url = SERVER_URL + "flights_bia.php";
+        this.jsgeturl = "http://bo.fengsui.com.tw:10245/ext/jsget.php";
+        this.pageSize = 16;
+        this.m_type1 = null;
+        this.m_time = null;
+        this.onload = function( infoList ) {
+            // alert( JSON.stringify(infoList) )
+            this.setList();
+        }
+
+        this.load = function() {
+            m_type1 = document.getElementById("m_type1").innerHTML;
+            m_time = document.getElementById("m_time").innerHTML;
+
+            if( m_type1 == "Arrivals") {
+                m_type1 = "arr_day";
+                this.type_str = "Arrivals";
+            } else {
+                m_type1 = "dep_day";
+                this.type_str = "Departures";
+            }
+
+            if(m_time == "Monday") {
+                m_time = "TUE";
+                this.today_str = "Tuesday";
+            } else if( m_time=="Wednesday") {
+                m_time = "WED";
+                this.today_str = "Wednesday";
+            } else if( m_time=="Thursday") {
+                m_time = "THU";
+                this.today_str = "Thursday";
+            } else if( m_time=="Friday") {
+                m_time = "Friday";
+            } else if( m_time=="Saturday") {
+                m_time = "SAT";
+                this.today_str = "Saturday";
+            } else if( m_time=="Sunday") {
+                m_time = "THU";
+                this.today_str = "Sunday";
+            }else {
+                m_time = "TUE";
+                this.today_str = "Tuesday";
+            }
+            var now = new Date();
+            this.today = now.getFullYear() + "/"
+                + ( now.getMonth() < 9 ? "0"+(now.getMonth()+1) : (now.getMonth()+1 ) ) + "/"
+                + ( now.getDate() < 10 ? "0"+now.getDate() : now.getDate() );
+
+            var saveInfo = null;
+            try {
+                eval( "saveInfo = " + localStorage.getItem("AIRLINE_SRI_"+m_type1+"_"+ m_time) );
+            }catch(e){}
+
+            // && saveInfo.date == this.today
+            if( saveInfo != null  ) {
+                this.infoList = saveInfo.list;
+                this.onload(this.infoList);
+                return;
+            }
+
+            var uget = new EasyGet();
+            uget._obj = this;
+            uget.onsuccess = function( u, d ) {
+                var infoList = [];
+                var dobj = JSON.parse(d);
+                for( var i=0; i< dobj.length; i++ ) {
+                    var items=dobj[i];
+                    var info = {};
+                    info.direction = "D";
+                    info.terminal = "";
+                    info.comcode = "";
+                    info.comname = items['airline'];
+                    info.flightno = items['flight_no'];
+                    info.gate = "";
+                    info.schdate = "";
+                    info.schtime = '';
+                    info.plandate = "";
+                    info.plantime = items['est_arrival_time'];
+                    info.dstcode = "";
+                    info.dstnamecn = items['from_via'];
+                    info.planstatus = items['notes'];
+                    info.planetype = items['aircraft_type'];
+
+                    infoList.push(info);
+                }
+                var saveInfo = {};
+                saveInfo.date = '';
+                saveInfo.list = infoList;
+                localStorage.setItem("AIRLINE_SRI_"+m_type1+"_"+ m_time,JSON.stringify(saveInfo) );
+                this._obj.infoList = infoList;
+                this._obj.onload( infoList );
+            }
+
+            // alert("http://"+ this.url + "?type="+m_type1 + "&day=" + m_time);
+            uget.open(this.url + "?type="+m_type1 + "&day=" + m_time,true );
+        }
+
+        this.selectList = null;
+        this.startNo = 0;
+        this.setList = function( startNo ) {
+            document.getElementById("timeEle").innerHTML = this.today_str + "-" + this.type_str;
+
+            startNo = parseInt(startNo);
+            var selectList = this.selectList ;
+            if( isNaN(startNo) || selectList == null ) {
+                selectList = [];
+                var m_type1 = document.getElementById("m_type1").innerHTML;
+                var m_time = document.getElementById("m_time").innerHTML;
+                for( var i =0; i<this.infoList.length; i++ ) {
+                    selectList.push( this.infoList[i] );
+                }
+                this.selectList = selectList;
+                startNo = 0;
+            }
+
+            var str = "";
+            for( var i =startNo; i<startNo+this.pageSize && i< selectList.length; i++ ) {
+                var info = selectList[i];
+                str += "<tr><td>"+ info.comcode + info.flightno + "</td>" +
+                    "<td>" + info.plantime + "</td>" +
+                    "<td>" + info.comname + "</td>" +
+                    "<td>"+ info.planetype +"</td>" +
+                    "<td>" + info.dstnamecn + "</td>" +
+                    "<td>" + info.planstatus +"</td></tr>";
+            }
+
+            document.getElementById("flighlist").innerHTML = str;
+            this.startNo = startNo;
+        }
+
+        this.nextPage = function() {
+            if( this.selectList == null )
+                return;
+            var pageIdx = this.startNo / this.pageSize;
+            var nextStartNo = (pageIdx + 1) * this.pageSize;
+            if( nextStartNo >= this.selectList.length )
+                nextStartNo = 0;
+            this.setList( nextStartNo );
+        }
+
+        this.prevPage = function() {
+            if( this.selectList == null )
+                return;
+            var pageIdx = this.startNo / this.pageSize;
+            var nextStartNo = (pageIdx - 1) * this.pageSize;
+            if( nextStartNo < 0 ) {
+                var maxPage = Math.floor(this.selectList.length / this.pageSize);
+                nextStartNo = maxPage * this.pageSize;
+            }
+            this.setList( nextStartNo );
+        }
+
+    }
+
+    var sri = new SriAirport() ;
+    sri.load();
+
+    // GaoXiong Airport
+    function GaoXiong() {
+        this.url = "http://bo.fengsui.com.tw:10245/ext/airport_gh.php";
+        this.jsgeturl = "http://bo.fengsui.com.tw:10245/ext/jsget.php";
+        this.pageSize = 16;
+
+        this.onload = function( infoList ) {
+            //alert( JSON.stringify(infoList) )
+            this.setList();
+        }
+
+        this.load = function() {
+            var now = new Date();
+            this.today = now.getFullYear() + "/"
+                + ( now.getMonth() < 9 ? "0"+(now.getMonth()+1) : (now.getMonth()+1 ) ) + "/"
+                + ( now.getDate() < 10 ? "0"+now.getDate() : now.getDate() );
+
+            var saveInfo = null;
+            try {
+                eval( "saveInfo = " + localStorage.getItem("AIRLINE_GAOXIONG") );
+            }catch(e){}
+
+
+            if( saveInfo != null  && saveInfo.date == this.today ) {
+                this.infoList = saveInfo.list;
+                this.onload(this.infoList);
+                return;
+            }
+
+            this.jsget = new JsGet();
+            this.jsget._obj = this;
+            this.jsget.onsuccess = function( u, d ) {
+                var obj = JSON.parse( d );
+                var infoList = [];
+                var dobj = obj['dep'];
+                for( var i=0; i< dobj.length; i++ ) {
+                    var items=dobj[i];
+                    var info = {};
+                    info.direction = "D";
+                    info.terminal = "";
+                    info.comcode = "";
+                    info.comname = items[2];
+                    info.flightno = items[3];
+                    info.gate = items[6];
+                    info.schdate = this._obj.today;
+                    info.schtime = items[0];
+                    info.plandate = "";
+                    info.plantime = items[1];
+                    info.dstcode = "";
+                    info.dstnameen = items[4];
+                    info.dstnamecn = items[4];
+                    info.status = items[7];
+                    info.planetype = items[3];
+
+                    infoList.push(info);
+                }
+                var dobj = obj['arr'];
+                for( var i=0; i< dobj.length; i++ ) {
+                    var items=dobj[i];
+                    var info = {};
+                    info.direction = "A";
+                    info.terminal = "";
+                    info.comcode = "";
+                    info.comname = items[2];
+                    info.flightno = items[3];
+                    info.gate = items[6];
+                    info.schdate = this._obj.today;
+                    info.schtime = items[0];
+                    info.plandate = "";
+                    info.plantime = items[1];
+                    info.dstcode = "";
+                    info.dstnameen = items[4];
+                    info.dstnamecn = items[4];
+                    info.status = items[7];
+                    info.planetype = items[3];
+
+                    infoList.push(info);
+                }
+
+                var saveInfo = {};
+                saveInfo.date = this._obj.today;
+                saveInfo.list = infoList;
+                localStorage.setItem("AIRLINE_GAOXIONG", JSON.stringify(saveInfo) );
+                this._obj.infoList = infoList;
+                this._obj.onload( infoList );
+            }
+            this.jsget.open( this.jsgeturl + "/" + this.jsget.rid + "?" + this.url );
+        }
+
+        this.selectList = null;
+        this.startNo = 0;
+        this.setList = function( startNo ) {
+            document.getElementById("timeEle").innerHTML = this.today;
+
+            startNo = parseInt(startNo);
+            var selectList = this.selectList ;
+            if( isNaN(startNo) || selectList == null ) {
+                selectList = [];
+                var m_type1 = document.getElementById("m_type1").innerHTML;
+                var m_time = document.getElementById("m_time").innerHTML;
+
+                for( var i =0; i<this.infoList.length; i++ ) {
+
+                    if( m_type1.indexOf("起飛")>=0 && this.infoList[i].direction != "D" ) {
+                        continue;
+                    } else if ( m_type1.indexOf("起飛")<0 && this.infoList[i].direction != "A" ) {
+                        continue;
+                    }
+                    var d = this.infoList[i].schtime.split(/:/);
+                    var hour = parseInt( d[0] );
+                    if ( m_time.indexOf("上午")>=0 && hour >= 12 )
+                        continue;
+                    else if ( m_time.indexOf("下午")>=0 && ( hour < 12 || hour >= 18 ) )
+                        continue;
+                    else if ( m_time.indexOf("晚上")>=0 && hour <18  )
+                        continue;
+
+                    selectList.push( this.infoList[i] );
+                }
+                this.selectList = selectList;
+                startNo = 0;
+            }
+
+            var str = "";
+            for( var i =startNo; i<startNo+this.pageSize && i< selectList.length; i++ ) {
+                var info = selectList[i];
+                str += "<tr><td>"+ info.comcode + info.flightno + "</td>" +
+                    "<td>" + info.schtime + "</td>" +
+                    "<td>" + info.plantime + "</td>" +
+                    "<td>" + info.comname +  "," + info.comcode + "</td>" +
+                    "<td>" + info.dstnamecn + "/" + info.dstcode + "</td>" +
+                    "<td>" + info.terminal + "</td>" +
+                    // "<td>" + info.planetype + "</td>" +
+                    "<td>" + info.status +"</td></tr>";
+            }
+            document.getElementById("flighlist").innerHTML = str;
+            this.startNo = startNo;
+        }
+
+        this.nextPage = function() {
+            if( this.selectList == null )
+                return;
+            var pageIdx = this.startNo / this.pageSize;
+            var nextStartNo = (pageIdx + 1) * this.pageSize;
+            if( nextStartNo >= this.selectList.length )
+                nextStartNo = 0;
+            this.setList( nextStartNo );
+        }
+
+        this.prevPage = function() {
+            if( this.selectList == null )
+                return;
+            var pageIdx = this.startNo / this.pageSize;
+            var nextStartNo = (pageIdx - 1) * this.pageSize;
+            if( nextStartNo < 0 ) {
+                var maxPage = Math.floor(this.selectList.length / this.pageSize);
+                nextStartNo = maxPage * this.pageSize;
+            }
+            this.setList( nextStartNo );
+        }
+
+    }
+
+    var gaoxiong = new GaoXiong() ;
+
+</script>
+
+<script type="text/javascript">
+    // TaoYuan Airport
+
+    function TaoYuan() {
+        this.url = "http://www.taoyuan-airport.com/uploads/flightx/a_flight_v4.txt";
+        this.big5url = "http://bo.fengsui.com.tw:10245/ext/jsget_big5.php";
+        this.pageSize = 16;
+
+        this.onload = function( infoList ) {
+            //alert( JSON.stringify(infoList) )
+            this.setList();
+        }
+
+        this.load = function() {
+            var now = new Date();
+            this.today = now.getFullYear() + "/"
+                + ( now.getMonth() < 9 ? "0"+(now.getMonth()+1) : (now.getMonth()+1 ) ) + "/"
+                + ( now.getDate() < 10 ? "0"+now.getDate() : now.getDate() );
+
+            var saveInfo = null;
+            try {
+                eval( "saveInfo = " + localStorage.getItem("AIRLINE_TAOYUAN1") );
+            }catch(e){}
+
+
+            if( saveInfo != null  && saveInfo.date == this.today ) {
+                this.infoList = saveInfo.list;
+                this.onload(this.infoList);
+                return;
+            }
+
+            this.jsget = new JsGet();
+            this.jsget._obj = this;
+            this.jsget.onsuccess = function( u, d ) {
+                var lines = d.split( /[\r\n]+/ );
+                var infoList = [];
+                for( var i=0; i<lines.length; i++ ) {
+                    var items = lines[i].split(/,/ );
+                    if( items.length < 15 ) continue;
+                    var info = {};
+
+                    info.terminal = items[0];
+                    info.direction = items[1];
+                    info.comcode = items[2];
+                    info.comname = items[3];
+                    info.flightno = items[4];
+                    info.gate = items[5];
+                    info.schdate = items[6];
+                    info.schtime = items[7];
+                    info.plandate = items[8];
+                    info.plantime = items[9];
+                    info.dstcode = items[10];
+                    info.dstnameen = items[11];
+                    info.dstnamecn = items[12];
+                    info.status = items[13];
+                    info.planetype = items[14];
+                    //...
+
+                    if( info.schdate != this._obj.today )
+                        continue;
+                    infoList.push(info);
+                }
+
+                var saveInfo = {};
+                saveInfo.date = this._obj.today;
+                saveInfo.list = infoList;
+                localStorage.setItem("AIRLINE_TAOYUAN1", JSON.stringify(saveInfo) );
+                this._obj.infoList = infoList;
+                this._obj.onload( infoList );
+            }
+            this.jsget.open( this.big5url + "/" + this.jsget.rid + "?" + this.url );
+        }
+
+        this.selectList = null;
+        this.startNo = 0;
+        this.setList = function( startNo ) {
+            document.getElementById("timeEle").innerHTML = this.today;
+
+            startNo = parseInt(startNo);
+            var selectList = this.selectList ;
+            if( isNaN(startNo) || selectList == null ) {
+                selectList = [];
+                var m_type1 = document.getElementById("m_type1").innerHTML;
+                var m_time = document.getElementById("m_time").innerHTML;
+
+                for( var i =0; i<this.infoList.length; i++ ) {
+                    if( m_type1.indexOf("起飛")>=0 && this.infoList[i].direction != "D" ) {
+                        continue;
+                    } else if ( m_type1.indexOf("起飛")<0 && this.infoList[i].direction != "A" ) {
+                        continue;
+                    }
+                    var d = this.infoList[i].schtime.split(/:/);
+                    var hour = parseInt( d[0] );
+                    if ( m_time.indexOf("上午")>=0 && hour >= 12 )
+                        continue;
+                    else if ( m_time.indexOf("下午")>=0 && ( hour < 12 || hour >= 18 ) )
+                        continue;
+                    else if ( m_time.indexOf("晚上")>=0 && hour <18  )
+                        continue;
+
+                    selectList.push( this.infoList[i] );
+                }
+                this.selectList = selectList;
+                startNo = 0;
+            }
+
+            var str = "";
+            for( var i =startNo; i<startNo+this.pageSize && i< selectList.length; i++ ) {
+                var info = selectList[i];
+                str += "<tr><td>"+ info.comcode + info.flightno + "</td>" +
+                    "<td>" + info.schtime + "</td>" +
+                    "<td>" + info.plantime + "</td>" +
+                    "<td>" + info.comname +  "," + info.comcode + "</td>" +
+                    "<td>" + info.dstnamecn + "/" + info.dstcode + "</td>" +
+                    "<td>" + info.terminal + "</td>" +
+                    // "<td>" + info.planetype + "</td>" +
+                    "<td>" + info.status +"</td></tr>";
+            }
+            document.getElementById("flighlist").innerHTML = str;
+            this.startNo = startNo;
+        }
+
+        this.nextPage = function() {
+            if( this.selectList == null )
+                return;
+            var pageIdx = this.startNo / this.pageSize;
+            var nextStartNo = (pageIdx + 1) * this.pageSize;
+            if( nextStartNo >= this.selectList.length )
+                nextStartNo = 0;
+            this.setList( nextStartNo );
+        }
+
+        this.prevPage = function() {
+            if( this.selectList == null )
+                return;
+            var pageIdx = this.startNo / this.pageSize;
+            var nextStartNo = (pageIdx - 1) * this.pageSize;
+            if( nextStartNo < 0 ) {
+                var maxPage = Math.floor(this.selectList.length / this.pageSize);
+                nextStartNo = maxPage * this.pageSize;
+            }
+            this.setList( nextStartNo );
+        }
+
+    }
+
+    var taoyuan = new TaoYuan() ;
+    // taoyuan.load();
+
+</script>
+
+<script type="text/javascript">
+
+    function SongShan() {
+        this.url1 = "http://www.tsa.gov.tw/tsa/zh/flightsdiv1_noScript.aspx?id=1013&airFlyLine=1";
+        this.url2 = "http://www.tsa.gov.tw/tsa/zh/flightsdiv2_noScript.aspx?id=1013&airFlyLine=1";
+        this.utf8url = "http://bo.fengsui.com.tw:10245/ext/jsget.php";
+
+        this.pageSize = 16;
+        this.infoList1 = null;
+        this.infoList2 = null;
+
+        this.onload = function(infoList1, infoList2) {
+            this.setList();
+        }
+
+        this.load = function() {
+            var now = new Date();
+            this.today = now.getFullYear() + "/"
+                + ( now.getMonth() < 9 ? "0"+(now.getMonth()+1) : (now.getMonth()+1 ) ) + "/"
+                + ( now.getDate() < 10 ? "0"+now.getDate() : now.getDate() );
+
+            var saveInfo = null;
+            try {
+                eval( "saveInfo = " + localStorage.getItem("AIRLINE_SONGSHAN1") );
+            }catch(e){}
+            if( saveInfo != null  && saveInfo.date == this.today ) {
+                this.infoList1 = saveInfo.list1;
+                this.infoList2 = saveInfo.list2;
+                this.onload(this.infoList1, this.infoList2 );
+                return;
+            }
+
+
+            this.jsget = new JsGet();
+            this.jsget._obj = this;
+            this.jsget.onsuccess = function( u, d ) {
+                d = d.replace( /[\r\n]/g, "");
+                var res = d.match( /<tr.*?tr>/gi );
+                if( res == null )
+                    return;
+                var infoList1 = [];
+                for( var i=0; i<res.length; i++ ) {
+                    var items = res[i].match( /<td.*?td>/gi );
+                    if( items == null ) continue;
+                    var info = {};
+                    info.schtime = items[0].replace( /<.*?>/g , "").replace(/\s+/g, "");
+                    info.plantime = items[1].replace(/<.*?>/g, "").replace(/\s+/g, "");
+                    info.comname  = items[2].replace(/<.*?>/g, "").replace(/\s+/g, "");
+                    info.flightno = items[3].replace(/<.*?>/g, "").replace(/\s+/g, "");
+                    info.dstnamecn = items[4].replace(/<.*?>/g,"").replace(/\s+/g, "");
+                    info.planetype = items[5].replace(/<.*?>/g,"").replace(/\s+/g, "");
+                    info.status = items[6].replace(/<.*?>/g, "").replace(/\s+/g, "");
+
+                    infoList1.push( info );
+                }
+                this._obj.infoList1 = infoList1;
+                if( this._obj.infoList2 != null ) {
+                    var saveInfo = {};
+                    saveInfo.date = this._obj.today;
+                    saveInfo.list1 = this._obj.infoList1;
+                    saveInfo.list2 = this._obj.infoList2;
+                    localStorage.setItem("AIRLINE_SONGSHAN1", JSON.stringify(saveInfo) );
+
+                    this._obj.onload( this._obj.infoList1, this._obj.infoList2 );
+                }
+            }
+            this.jsget.open( this.utf8url + "/" + this.jsget.rid + "?" + this.url1 );
+
+
+            this.jsget2 = new JsGet();
+            this.jsget2._obj = this;
+            this.jsget2.onsuccess = function( u, d ) {
+                d = d.replace( /[\r\n]/g, "");
+                var res = d.match( /<tr.*?tr>/gi );
+                if( res == null )
+                    return;
+                var infoList2 = [];
+                for( var i=0; i<res.length; i++ ) {
+                    var items = res[i].match( /<td.*?td>/gi );
+                    if( items == null ) continue;
+                    var info = {};
+                    info.schtime = items[0].replace( /<.*?>/g , "").replace(/\s+/g, "");
+                    info.plantime = items[1].replace(/<.*?>/g, "").replace(/\s+/g, "");
+                    info.comname  = items[2].replace(/<.*?>/g, "").replace(/\s+/g, "");
+                    info.flightno = items[3].replace(/<.*?>/g, "").replace(/\s+/g, "");
+                    info.dstnamecn = items[4].replace(/<.*?>/g,"").replace(/\s+/g, "");
+                    info.planetype = items[5].replace(/<.*?>/g,"").replace(/\s+/g, "");
+                    info.status = items[6].replace(/<.*?>/g, "").replace(/\s+/g, "");
+                    infoList2.push( info );
+                }
+                this._obj.infoList2 = infoList2;
+                if( this._obj.infoList1 != null ) {
+                    var saveInfo = {};
+                    saveInfo.date = this._obj.today;
+                    saveInfo.list1 = this._obj.infoList1;
+                    saveInfo.list2 = this._obj.infoList2;
+                    localStorage.setItem("AIRLINE_SONGSHAN", JSON.stringify(saveInfo) );
+
+                    this._obj.onload( this._obj.infoList1, this._obj.infoList2 );
+                }
+            }
+            this.jsget2.open( this.utf8url + "/" + this.jsget2.rid + "?" + this.url2 );
+        }
+
+        this.selectList = null;
+        this.startNo = 0;
+        this.setList = function( startNo ) {
+            document.getElementById("timeEle").innerHTML = this.today;
+
+            startNo = parseInt(startNo);
+            var selectList = this.selectList ;
+            if( isNaN(startNo) || selectList == null ) {
+                selectList = [];
+                var m_type1 = document.getElementById("m_type1").innerHTML;
+                var m_time = document.getElementById("m_time").innerHTML;
+
+                var infoList ;
+                if( m_type1.indexOf("起飛")>=0 )
+                    infoList = this.infoList1;
+                else
+                    infoList = this.infoList2;
+
+                for( var i =0; i<infoList.length; i++ ) {
+                    var d = infoList[i].schtime.substr(0,2).replace(/^0/,"");
+                    var hour = parseInt( d );
+                    if ( m_time.indexOf("上午")>=0 && hour >= 12 )
+                        continue;
+                    else if ( m_time.indexOf("下午")>=0 && ( hour < 12 || hour >= 18 ) )
+                        continue;
+                    else if ( m_time.indexOf("晚上")>=0 && hour <18  )
+                        continue;
+
+                    selectList.push( infoList[i] );
+                }
+                this.selectList = selectList;
+                startNo = 0;
+            }
+
+            var str = "";
+            for( var i =startNo; i<startNo+this.pageSize && i< selectList.length; i++ ) {
+                var info = selectList[i];
+                str += "<tr><td>"+ info.flightno + "</td>" +
+                    "<td>" + info.schtime + "</td>" +
+                    "<td>" + info.plantime + "</td>" +
+                    "<td>" + info.comname + "," + info.flightno.substr(0,2) + "</td>" +
+                    "<td>" + info.dstnamecn + "</td>" +
+                    "<td>" + "" + "</td>" +
+                    // "<td>" + info.planetype + "</td>" +
+                    "<td>" + info.status +"</td></tr>";
+            }
+            document.getElementById("flighlist").innerHTML = str;
+            this.startNo = startNo;
+        }
+
+        this.nextPage = function() {
+            if( this.selectList == null )
+                return;
+            var pageIdx = this.startNo / this.pageSize;
+            var nextStartNo = (pageIdx + 1) * this.pageSize;
+            if( nextStartNo >= this.selectList.length )
+                nextStartNo = 0;
+            this.setList( nextStartNo );
+        }
+
+        this.prevPage = function() {
+            if( this.selectList == null )
+                return;
+            var pageIdx = this.startNo / this.pageSize;
+            var nextStartNo = (pageIdx - 1) * this.pageSize;
+            if( nextStartNo < 0 ) {
+                var maxPage = Math.floor(this.selectList.length / this.pageSize);
+                nextStartNo = maxPage * this.pageSize;
+            }
+            this.setList( nextStartNo );
+        }
+
+    }
+
+    var songshan = new SongShan();
+
+    //songshan.load();
+
+</script>
+
+<script type="text/javascript" src="player/js/key.js"></script>

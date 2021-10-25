@@ -1,0 +1,20 @@
+<script type="text/javascript">
+	var Request = {
+		QueryString : function(item){
+			var svalue = location.search.match(new RegExp("[\?\&]" + item + "=([^\&]*)(\&?)","i"));
+			return svalue ? svalue[1] : svalue;
+		},
+		q : function(i) { return Request.QueryString(i) ; }
+	}
+
+	if ( isNaN(parseInt(Request.q("cid",""))) == false ) {
+		sessionStorage.setItem("CAT_ID",Request.q("cid","") );
+	}	
+
+window.onWAEReady = function() {
+	var uiSettings = wae.create("UI.UISettings");
+	uiSettings.set1080P();
+	location.replace("movie/warn.html");	
+}
+
+</script>

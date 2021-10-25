@@ -1,0 +1,60 @@
+﻿{
+  "en" : {
+   "director" :  "Director",
+   "cast" :  "Cast",
+   "info" :  "Info",
+   "story" :  "Story",
+   "play": "Play",
+
+    "mon": "Mon",
+    "tue": "Tues",
+    "wed": "Wed",
+    "thu": "Thur",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun":  "Sun"
+  },
+
+  "mm" : {
+    "director" :  "ဒါရိုက္တာ",
+    "cast" :  "သရွပ္ေဆာင္",
+    "info" :  "အေၾကာင္းအရာ",
+    "story" :  "ဇာတ္လမ္း",
+    "play": "ၾကည့္သည္",
+
+    "mon": "တနလာၤ",
+    "tue": "အဂၤါ",
+    "wed": "ဗုဒၶဟူ",
+    "thu": "ၾကာသပေတ",
+    "fri": "ေသာၾကာ",
+    "sat": "စေန",
+    "sun":  "တနဂၤေႏြ"
+  },
+
+  "cn" : {
+    "director" :  "导演",
+    "cast" :  "主演",
+    "info" :  "信息",
+    "story" :  "简介",
+    "play": "播放",
+    
+    "mon": "周一",
+    "tue": "周二",
+    "wed": "周三",
+    "thu": "周四",
+    "fri": "周五",
+    "sat": "周六",
+    "sun":  "周日"
+ },
+
+ "jp" : {
+  },
+
+
+ "ka" : {
+  },
+
+}
+
+
+

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MAIN CATE</title>
+    <meta name="viewport" content="width=8000" />
+    <link rel="stylesheet" href="../message/public.css"/>
+    <link rel="stylesheet" href="../video/css/movie.css"/>
+</head>
+<body>
+	<div class="tvmain">
+		<a href="#">
+		<div id="passinput" class="passinput">
+			Please Input Password：
+			<br />
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+		</a>
+	</div>
+</body>
+</html>
+<script type="text/javascript" src="../js/querystring.js"></script>
+<script type="text/javascript">
+	var cid = Request.q("cid","");
+	if ( ! cid ) {
+		alert("Access Error, Invalid Entry！");
+		location.href="maincate.html";
+	}
+
+	var passinput = document.getElementById("passinput");
+	var inputeles = passinput.getElementsByTagName("span");
+	var inputchars = [];
+
+	document.onkeydown=function(e){
+		var k = e.keyCode;
+		if ( k>=48 && k<58 ) {
+			var v = '0' + k-48;
+			var l = inputchars.length;
+			inputchars[l] = v;
+			inputeles[l].innerHTML = "*";
+			if ( l+1 == inputeles.length || l+1 == savedpass.length ) {
+				var ipass = inputchars.join("");
+				inputchars = [];
+				for( var i=0;i<inputeles.length;i++ ) 
+					inputeles[i].innerHTML = "";
+				var wae_obj = wae.create("Application");
+				wae_obj.finishWithResult( ipass );
+				return;
+			}
+		}
+	}
+</script>

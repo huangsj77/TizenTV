@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="en">
+<head style="background: url(./image/1.jpg) no-repeat;">
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <meta name="viewport" content="width=1920"/>
+    <link rel="stylesheet" href="../../css/portal.css"/>
+    <style>
+        @font-face {
+            font-family: "Product Sans Regular";
+            src: url(./css/ProductSansRegular.ttf);
+        }
+
+        body{background-size: 1920px 1080px;color: #676767;font-family: Product Sans Regular;}
+        .portaltop{                      
+            width: 100%;
+            height: 200px;
+            position: absolute;
+            display: block;
+            background: url(./images/tool.png) no-repeat;
+            top: 50px;
+        }
+
+        .portallogo {
+            position: absolute;
+            width: 390px;
+            height: 200px;
+            top: 0px;
+            left: 0px;
+            text-align: center;
+        }
+        .portallogo img{height: 145px;margin-top:30px;}
+        .portallogo div{font-size: 22px;}
+
+        .portalnavlist a{
+            display: inline-block;
+            text-align: center;
+            width: 320px;
+            height: 200px;
+            line-height: 200px;
+            margin: 0px;
+            overflow: hidden;
+            background-size: 100% 100%;
+            background-position: 100% 0px;
+            background-repeat: no-repeat;
+            font-size: 24px;
+            padding-top: 0px;
+        }
+
+        .portalnavlist a:hover, .portalnavlist a.currentFocus{
+            color: white;
+        }
+        .portalframe a{
+            color: #676767;
+            height:100px;
+            line-height: 100px;
+            text-align: center;
+            font-size: 24px;
+            background: rgba(255,255,255,0.7);
+        }
+
+        .portalframe a.currentFocus, .portalframe a:hover {
+            color: white;
+            background: url(./images/frameFocus.png);
+            background-size: 320px 100px;
+            /*background: rgba(56,165,65,0.7);*/
+        }
+
+        .currentActived {
+            color: white;
+            background: url(./images/frameFocus.png);
+            background-size: 320px 100px;
+        }
+        .timedate span{
+            width: 100%;
+            display: block;
+            text-align: right;
+            word-spacing: 2px;
+        }
+
+        .locweather {
+            position: absolute;
+            right: 450px;
+            top: 13px;
+            color: white;
+            text-align: right;
+            font-size: 25px;
+        }
+        .locweather span {
+            margin: 0px;
+            display: inline-block;
+            position: relative;
+            top: 25px;
+            color: #676767;
+        }
+
+        .locweather img {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            margin-right: 10px;
+        }
+
+        .timedate {
+            position: absolute;
+            right: 100px;
+            top: 20px;
+            height: 100px;
+            font-size: 30px;
+            color: #676767;
+            width: 450px;
+            text-align: right;
+            line-height: 40px;
+        }
+        .timedate span{font-size: 22px;margin:5px 0px;}
+
+        .deviceinfo {
+            position: absolute;
+            top: 145px;
+            right: 80px;
+            height: 50px;
+        }
+        .deviceinfo img {
+            height: 30px;
+        }
+
+        .versioninfo {
+            position: absolute;
+            bottom: 30px;
+            right: 50px;
+            font-size: 20px;
+            color: gray;
+        }
+
+        .messageZone {
+            background: url(./images/msg.png) no-repeat;
+            width: 120px;
+            height: 100px;
+            overflow: hidden;
+            position: absolute;
+            top: 160px;
+            right: 80px;
+        }
+        .messageZone div{
+            float: right;
+            margin-top: 15px;
+            margin-right: 15px;
+            padding: 0px 7px;
+            background-color: red;
+            font-size: 20px;
+            height: 24px;
+            line-height: 24px;
+            color: white;
+            border-radius: 15px;
+        }
+
+        .portaltop a:hover, .portaltop a.currentFocus {
+            background: url(./images/msg1.png) no-repeat;
+        }
+
+        .portalnav {
+            position: fixed;
+            width: 1920px;
+            height: 200px;
+            top: 880px;
+        }
+        .splitline{
+            position: relative;
+            top:125px;
+            left:390px;
+            width:1530px;
+            height: 11px;
+            display: block;
+            background:url(./images/split.png) repeat-x;
+        }
+        .hotelInfo{
+            position: relative;
+            left: 390px;
+            width: 500px;
+            height: 160px;
+            overflow: hidden;
+            top: 40px;
+            font-size: 22px;
+            line-height: 35px;
+        }
+        .welDesc{margin-top:30px;}
+
+    </style>
+</head>
+<body style="background: black">
+<div id="portalmain" class="portalmain">
+    <marquee id="adtext" class="adtext"></marquee>
+    <div class="portaltop" id="portaltop" style="">
+        <div class="locweather" style="display:block;">
+            <img id="weaIcon" src="../../images/weaicon2/sunny.png" alt="">
+            <span id="weaText"></span>
+        </div>
+        <div class="timedate">
+            <span id="timeDiv" style="font-size:36px;"></span>
+            <span id="dateDiv"></span>
+        </div>
+        <div class="deviceinfo" style="display: none;">
+            <img id="wifiIcon" src="../../images/wifi_super.png"/>
+            <img id="usbIcon" style="display: none;" src="../../images/b.png"/>
+            <span id="deviceID"></span>
+            <div id="messageNum" style="display: none"></div>
+        </div>
+        <div class="deviceinfo2">
+            <span id="expirydate"></span>
+        </div>
+        <div class="splitline"></div>
+        <div id="portallogo" class="portallogo"><img src="../../icon.png" alt=""></div>
+        <div class="hotelInfo">
+            <div id="weltext" class="welcomeText">&nbsp;</div>
+            <div id="roomtext" class="rootText">&nbsp;</div>
+            <div id="welDesc" class="welDesc">We hope you will enjoy your stay at our hotel.</div>
+        </div>
+    </div>
+    <div id="portalnav" class="portalnav" style="background-image: url(./images/bottom_bg.png);">
+        <div class="portalnavlist" id="portalnavlist"></div>
+    </div>
+
+    <div id="portalframe" class="portalframe"></div>
+    <div id="versioninfo" class="versioninfo"></div>
+</div>
+
+<div id="adlist" class="adlist"></div>
+</body>
+</html>
+<script type="text/javascript" src="./js/config.js"></script>
+<script type="text/javascript" src="./js/jsget.js"></script>
+<script type="text/javascript" src="./js/cate.js"></script>
+<script type="text/javascript" src="./js/locweather.js?wlogo=weaIcon&wtemp=weltext"></script>
+<script type="text/javascript" src="./js/portaldata.js"></script>
+<script type="text/javascript" src="./js/recaction.js"></script>
+<script type="text/javascript" src="./js/timedate.js?timeele=timeDiv&dateele=dateDiv"></script>
+<script type="text/javascript">
+    var _username = "Guest";
+    var _roomno = "Welcome to our hotel!";
+    //localStorage.setItem("username",userNameVal);
+    //localStorage.setItem("roomno",roomNoVal);
+    var _username = localStorage.getItem('username') ? localStorage.getItem('username') :"Guest";
+    var _roomno = localStorage.getItem('roomno') ? "Hotel Room No: "+ localStorage.getItem('roomno') : "Welcome to Araliya - Unawatuna";
+    document.getElementById("weltext").innerText = _username;
+    document.getElementById("roomtext").innerText = _roomno;
+	document.addEventListener("tizenhwkey", function(e) {
+         if (e.keyName === "back") {
+             try {
+                 //tizen.application.getCurrentApplication().exit();
+             } catch (error) {
+                 console.error("getCurrentApplication(): " + error.message);
+             }
+         }
+     });
+       
+        
+    function HLister(parentEle, pageSize) {
+        this.oninit = function () {
+        }
+
+        this.init = function (parentEle, pageSize) {
+            this.parentEle = parentEle;
+            this.eles = this.parentEle.getElementsByTagName("a");
+            this.pageSize = pageSize;
+
+            for (var i = pageSize; i < this.eles.length; i++) {
+                this.eles[i].style.display = "none";
+            }
+            this.startIndex = 0;
+
+            var _this = this;
+            parentEle.style.position = "relative";
+            parentEle['left'] = function () {
+                return _this.prev();
+            }
+            parentEle['right'] = function () {
+                return _this.next();
+            }
+            this.oninit();
+        }
+
+        this.show = function (idx, show_flag) {
+            if (idx < 0) return;
+            if (idx >= this.eles.length) return;
+
+            var display_status = (show_flag) ? "" : "none";
+            this.eles[idx].style.display = display_status;
+        }
+
+        this.prev = function () {
+            if (this.startIndex <= 0)
+                return this.eles[this.startIndex];
+            this.show(this.startIndex - 1, true);
+            this.show(this.startIndex + this.pageSize - 1, false);
+            this.startIndex--;
+            return this.eles[this.startIndex];
+        }
+
+        this.next = function () {
+            var lastIndex = this.startIndex + this.pageSize - 1;
+            if (lastIndex >= this.eles.length - 1)
+                return this.eles[this.eles.length - 1];
+            this.show(this.startIndex, false);
+            this.show(lastIndex + 1, true);
+            this.startIndex++;
+
+            return this.eles[lastIndex + 1];
+        }
+
+        if (typeof(parentEle) != "undefined")
+            this.init(parentEle, pageSize);
+    }
+
+
+</script>
+<script type="text/javascript">
+
+    function setLoadingImageAndBackground(path, bkpath, barbgpath, logopath) {
+        var file_obj = null;
+        try {
+            file_obj = wae.create("DATA.File");
+        } catch (e) {
+            setTimeout(function () {
+                setLoadingImageAndBackground(path, bkpath);
+            }, 1000 * 3);
+            return;
+        }
+        path = location.href.replace("file://", "").replace(/html\/.*$/, "") + path;
+        file_obj.writeAll(file_obj.getFilesDir() + "/welcome.loc", path);
+
+        if (!!bkpath) {
+            bkpath = location.href.replace("file://", "").replace(/html\/.*$/, "") + bkpath;
+            file_obj.writeAll(file_obj.getFilesDir() + "/bg.loc", bkpath);
+        }
+
+        if ( !! barbgpath ) {
+            barbgpath = location.href.replace("file://", "").replace(/html\/.*$/, "") + barbgpath;
+            file_obj.writeAll(file_obj.getFilesDir() + "/barbg.loc", barbgpath);
+        }
+
+        if ( !! logopath ) {
+            logopath = location.href.replace("file://", "").replace(/html\/.*$/, "") + logopath;
+            file_obj.writeAll(file_obj.getFilesDir() + "/logo.loc", logopath);
+        }
+    }
+
+
+    function PortalInfo() {
+
+        this.portal = portalData.getPortalModule();
+        try {
+            var portalmain = document.getElementById("portalmain");
+           
+            portalmain.style.backgroundImage = "url('" + this.portal.public.background.logo + "' )";
+        } catch (e) {
+        }
+
+		if(this.portal.public.appbackground.logo) {
+			console.log("set appbackground");
+			localStorage.setItem("appbackground", this.portal.public.appbackground.logo);
+		}
+
+        try {
+            var portallogo = document.getElementById("portallogo");
+            portallogo.innerHTML = "<img src='../" + this.portal.public.top.logo + "' onerror='this.style.display=\"none\"' />";
+        } catch (e) {
+        }
+
+        try {
+            var portalnav = document.getElementById("portalnav");
+            var portaltop = document.getElementById("portaltop");
+            portalnav.style.backgroundImage = "url(../" + this.portal.public.toolbackground.logo + ")";
+            //portaltop.style.backgroundImage = "url(../" + this.portal.public.toolbackground.logo + ")";
+        } catch (e) {
+        }
+
+        this.setNav = function (listId) {
+            var htmlsrc = "";
+            var portallist = this.portal.portallist;
+            this.valid_portallist = [];
+            var count = 0;
+            for (var j = 0; j < portallist.length; j++) {
+                if (portallist[j].name.indexOf("_") == 0)
+                    continue;
+                this.valid_portallist[count++] = portallist[j];
+            }
+            portallist = this.valid_portallist;
+
+            for (var i = 0; i < portallist.length; i++) {
+                var str = "<a href='javascript:;' onclick='portalInfo.doClick(" + i + ")' "
+                    + " onfocus='portalInfo.doFocus(" + i + ")' "
+                    + " onblur='portalInfo.doBlur(" + i + ")' "
+                    + " style='background-image:url(../" + portallist[i].logo + ")' >"
+                    + "</a>";
+                htmlsrc += str;
+            }
+			
+			console.log(htmlsrc);
+            this.listEle = document.getElementById(listId);
+            this.listEle.innerHTML = htmlsrc;
+
+            this.listman = new HLister(this.listEle, 7);
+
+            var parentEle = this.listEle.offsetParent;
+        }
+
+        this.onNavFocus = function (idx, btnEle) {
+        }
+
+        this.skip_focus = false;
+        this.navFocusIdx = -1;
+        this.doFocus = function (idx) {
+            this.navFocusIdx = idx;
+            var portalItem = this.valid_portallist[idx];
+            var portalEle = this.listEle.getElementsByTagName("a")[idx];
+            if ( !! portalItem )
+                portalEle.style.backgroundImage = "url(../"+ portalItem.icoa+")";
+
+            this.onNavFocus(idx, portalEle);
+        }
+        this.doBlur = function (idx) {
+            var portalItem = this.valid_portallist[idx];
+            var portalEle = this.listEle.getElementsByTagName("a")[idx];
+            if (!!portalItem){
+                portalEle.style.backgroundImage = "url(../" + portalItem.logo + ")";
+            }
+        }
+
+        this.doClick = function (idx) {
+            if (this.navFocusIdx != idx) {
+                this.doFocus(idx);
+                return;
+            }
+
+            var portalItem = this.valid_portallist[idx];
+            
+          	if( portalItem.app_index != "") {
+          	     location.href = portalItem.app_index + "?durl=" + portalItem.dataUrl;
+          	}
+          	
+           	return;
+        }
+
+
+        this.portaldata = portalData.getPortalData();
+
+        this.frameEle = null;
+        this.setFrame = function (frameID) {
+            var plist = this.portal.portallist;
+            var htmlstr = "";
+            this.frameCount = 0;
+            for (var i = 0; i < plist.length; i++) {
+                var d = this.portaldata[plist[i].id];
+                var itemstr = "";
+                if (!!d) {
+
+                    var adlist = d.putong;
+                    for (var j = 0; !!adlist && !!adlist.length && j < adlist.length; j++) {
+                        var o = adlist[j];
+                        var n = o.title.split("_");
+                        var s = "<a href='javascript:portalInfo.doRecClick(" + plist[i].id + "," + j + ")' "
+                                + " onfocus='portalInfo.doFrameFocus(" + i + ")' "
+                                + " onblur='portalInfo.doFrameBlur(" + i + ")' ";
+                        if (!!n && n.length > 2) {
+                            if (parseInt(n[1]) < 0) n[1] = 1920 + parseInt(n[1]);
+                            if (n.length > 4)
+                                s += " style='left: " + n[1] + "px; top: " + n[2] + "px; width: " + n[3] + "px; height: " + n[4] + "px; overflow:hidden;'";
+                            else
+                                s += " style='left: " + n[1] + "px; top: " + n[2] + "px;'";
+                            o.title = n[0];
+                        }
+
+                        s += ">" + o.title + "</a>\n";
+                        itemstr += s;
+                    }
+                }
+                if (itemstr != "") this.frameCount++;
+                // var str;
+                // if( this.frameCount == 1) str = "<span>" + itemstr + "</span>";
+                // else str = "<span style='display: none;'>" + itemstr + "</span>";
+                var str = "<span style='display: none;'>" + itemstr + "</span>";
+                htmlstr += str;
+            }
+            // alert( htmlstr );
+            this.frameEle = document.getElementById(frameID);
+            //this.frameEle.innerHTML =  "<div style='width: 80000px;'>" + htmlstr  + "</div>";
+            this.frameEle.innerHTML = htmlstr;
+            // alert(this.frameCount);
+            if (this.frameCount == 1) {
+                var flist = this.frameEle.getElementsByTagName("span");
+                flist[0].style.display = "block";
+            }
+        }
+        
+        this.doFrameFocus = function (idx) {;
+            var portalItem = this.valid_portallist[idx];
+            var portalEle = this.listEle.getElementsByTagName("a")[idx];
+            if (!!portalItem){
+                portalEle.style.backgroundImage = "url(../" + portalItem.icoa + ")";
+            }
+        }
+
+        this.doFrameBlur = function (idx) {
+            var portalItem = this.valid_portallist[idx];
+            var portalEle = this.listEle.getElementsByTagName("a")[idx];
+            if (!!portalItem){
+                portalEle.style.backgroundImage = "url(../" + portalItem.logo + ")";
+            }
+        }
+
+        this.doRecClick = function (portalId, recNo) {
+            var d = this.portaldata[portalId];
+            if (!d) return;
+            var rinfo = d.putong[recNo];
+            if (!rinfo) return;
+            
+           
+            location.href = rinfo.path + "?durl=" + encodeURI(rinfo.dataUrl);
+    		return;
+            //window.open("./tvapp/"+ rinfo.path + "?cat_id=" + encodeURI(rinfo.dataUrl));
+        }
+
+        this.itemFrames = null;
+        this.onNavFocus = function (idx, navEle) {
+            this.navEle = navEle;
+            this.navIdx = idx;
+            if (!this.frameEle) return;
+            var actived_eles = document.getElementsByClassName("currentActived");
+            if ( !!actived_eles && actived_eles.length > 0 ){
+                for( var i =0 ; i<actived_eles.length; i++)
+                {
+                    var aele = actived_eles[i];
+                    aele.className = aele.className.replace( /currentActived/ , " " ).replace( /\s+/, " ");
+                }
+            }
+            
+            navEle.className += " currentActived";
+            if (this.itemFrames == null) {
+                this.itemFrames = this.frameEle.getElementsByTagName("span");
+                var _this = this;
+                this.frameEle['down'] = function () {
+                    return _this.navEle;
+                }
+                this.frameEle['left'] = function () {
+                    var navlist = _this.listEle.getElementsByTagName("a");
+                    var next = (_this.navIdx + navlist.length - 1) % navlist.length;
+                    var nextNav = navlist[next];
+                    try {
+                        var recList = _this.itemFrames[next].getElementsByTagName("a");
+                        if (!!recList && !!recList.length) {
+                            _this.onNavFocus(next, nextNav);
+                            return recList[recList.length - 1];
+                        }
+                    } catch (e) {
+                    }
+                    return nextNav;
+                }
+                this.frameEle['right'] = function () {
+                    var navlist = _this.listEle.getElementsByTagName("a");
+                    var next = (_this.navIdx + 1) % navlist.length;
+                    var nextNav = navlist[next];
+                    try {
+                        var recList = _this.itemFrames[next].getElementsByTagName("a");
+                        if (!!recList && !!recList.length) {
+                            _this.onNavFocus(next, nextNav);
+                            return recList[0];
+                        }
+                    } catch (e) {
+                    }
+                    return nextNav;
+                }
+            }
+
+            for (var i = 0; i < this.itemFrames.length; i++) {
+                var cf = this.itemFrames[i];
+                if (i != idx) {
+                    cf.style.display = "none";
+                } else {
+                    setTimeout((function () {
+                        this.style.display = "block";
+                        VatataKeyMove.initById(this.getElementsByTagName("a")[0]);
+                    }).bind(cf), 10);
+                }
+            }
+
+            // var ele =  this.itemFrames.getElementsByTagName("a")[0];
+            // VatataKeyMove.initById(ele);
+        }
+
+    }
+
+    var portalInfo = new PortalInfo();
+
+
+</script>
+<script type="text/javascript" src="./js/wifistatus.js"></script>
+<script type="text/javascript" src="./js/deviceinfo.js"></script>
+
+<script type="text/javascript">
+    function gotoAuth() {
+        try {
+            var intent_obj = wae.create("Intent");
+
+            intent_obj.create("com.vatata.angel.link.OPEN");
+            // intent_obj.addData("dataUrl", "activation/activation.html" );
+            intent_obj.addData("url", "activation/activation.html");
+            // intent_obj.addData("url", "./index.html" );
+
+            intent_obj.startActivity();
+            var app = wae.create("Application");
+            app.finishActivity();
+            return;
+        } catch (e) {
+        }
+        alert("System Error!");
+    }
+    var deviceInfo = new DeviceInfo();
+    deviceInfo.onload = function (dinfo) {
+        try {
+            var ainfo = this.authInfo.info
+            var status = ainfo.status;
+            var perf_obj = wae.create("DATA.Preferences");
+
+            if (status == "1" || status == 1) {
+                localStorage.setItem("auth_status", "off");
+                perf_obj.put("auth_status", "off");
+                // skip device releate check!
+                return;
+            } else {
+                localStorage.removeItem("auth_status");
+                perf_obj.remove("auth_status");
+            }
+        } catch (e) {
+        }
+
+        if (!dinfo || dinfo.isillegal != "no" || dinfo.status != "1") {
+            gotoAuth();
+            return;
+        }
+
+        var expire_time = parseInt(dinfo.time);
+        var now = Math.ceil((new Date()).getTime() / 1000);
+
+        var valid_days = Math.ceil((expire_time - now) / 3600 / 24);
+
+        if (expire_time != 0 && valid_days < 0) {
+            gotoAuth();
+            return;
+        }
+
+        if (expire_time != 0 && valid_days < 30 && valid_days > 0) {
+            var adstr = "Device Valid Date:"
+                + valid_days + " days; ";
+
+            var plan = dinfo.plan;
+            var balance = dinfo.blance;
+
+            var allstr = "";
+            var edate = new Date();
+            for (var i = 0; !!plan && i < plan.length; i++) {
+                var vtime = parseInt(plan[i].created) + parseInt(plan[i].plan_time);
+                var edatestr = "";
+                var str = "Plan " + plan[i].plan_name + ":";
+                if (!isNaN(vtime)) {
+                    var d = Math.ceil((vtime - now) / 3600 / 24);
+                    str += d + " days;";
+                }
+                allstr += str;
+            }
+
+            adstr = adstr + allstr;
+            document.getElementById("adtext").innerHTML = adstr;
+        }
+        else {
+        }
+
+        startCheckMessage(deviceInfo.getID().toUpperCase());
+
+        var expirydate = "";
+        var plan = dinfo.plan;
+
+        var estr = "";
+        for (var i = 0; !!plan && i < plan.length; i++) {
+            var planitem = plan[i];
+            if (parseInt(planitem['showExpiry']) == 1) {
+                var vtime = parseInt(plan[i].created) + parseInt(plan[i].plan_time);
+                var date = new Date();
+                date.setTime(vtime * 1000);
+                var dstr = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + (date.getDate());
+                estr = "Expiry Date: " + dstr;
+            }
+        }
+        document.getElementById("expirydate").innerHTML = estr;
+    }
+
+    //deviceInfo.load();
+
+    portalInfo.setNav("portalnavlist");
+    portalInfo.setFrame("portalframe");
+</script>
+<script type="text/javascript" src="./js/key.js"></script>
+<script type="text/javascript">
+    function LocalCache( ) {
+        this.oninit = function() {
+            this.clean();
+        }
+
+        this.init = function( path ) {
+            if( typeof(wae) == "undefined" ) {
+                var _this = this;
+                setTimeout( function() {
+                    _this.init(path);
+                }, 300 );
+                return;
+            }
+
+            if( !this.file_obj ) {
+                this.file_obj = wae.create("DATA.File");
+            }
+            if ( ! this.util_obj ) {
+                this.util_obj = wae.create("Utils.Utils");
+            }
+            if ( ! this.down_obj ) {
+                this.down_obj = wae.create("Net.Downloader");
+                this.down_obj._this = this;
+                this.down_obj.onSuccess = function( a ) {
+                    this._this.onDownloaded( a.arguments[0], a.arguments[1], 'downloaded');
+                }
+                this.down_obj.onFailure = function() {
+                }
+            }
+            if( path.charAt(0) != '/') {
+                path = this.file_obj.getCacheDir() + "/" + path;
+            }
+            this.file_obj.createDir( path );
+            this.path = path;
+
+            this.oninit();
+            this.init_flag = true;
+        }
+        this.init_flag = false;
+
+
+        this.max_files = 60;
+        this.clean = function() {
+            var filelist = [];
+            try {
+                eval( "filelist = " + this.file_obj.list( this.path ) );
+            }catch(e){
+                return;
+            }
+
+            while ( filelist.length > this.max_files ) {
+                var r = Math.floor( Math.random() * filelist.length );
+                var f = filelist.splice( r, 1 );
+                if ( f.length > 0 )
+                    this.file_obj.remove( this.path + "/" + f[0] );
+            }
+        }
+
+        this.download = function( url ) {
+            if ( this.init_flag == false ) {
+                var _down_obj = this;
+                setTimeout( function() {
+                    _down_obj.download( url );
+                }, 1000 );
+                return;
+            }
+
+            var suffix = url.replace( /\?.*/, "" ).replace( /\#.*/, "" ).replace( /.*\./, '' );
+            var md5str = this.util_obj.md5(url);
+            var fname = md5str + "." + suffix;
+
+            if ( this.file_obj.isFile( this.path + "/" + fname) ) {
+                this.onDownloaded( url, this.path + "/" + fname, "cached" );
+                return;
+            }
+            this.down_obj.downloadTo( url, this.path + "/" + fname );
+        }
+
+        this.onDownloaded = function( url, path, status ) {
+        }
+    }
+
+</script>

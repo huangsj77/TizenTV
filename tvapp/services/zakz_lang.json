@@ -1,0 +1,43 @@
+﻿{
+  "tw" : {
+	  "Setup" : "設定完成",
+	  "SetupInfo" : "鬧鐘響鈴時，按遙控器任意鍵關閉響鈴。" ,
+	  "Alarm" : "鬧鐘時間",
+	  "AlarmMsg" : "到達鬧鐘時間，按遙控器任意鍵關閉響鈴。",
+	  "Clock" : "鬧鐘設置",
+  },
+
+  "cn" : {
+	  "Setup" : "设定完成",
+	  "SetupInfo" : "闹钟响铃时，按遥控器任意键关闭响铃。" ,
+	  "Alarm" : "闹钟时间",
+	  "AlarmMsg" : "到达闹钟时间，按遥控器任意键关闭响铃。",
+	  "Clock" : "闹钟设置",
+  },
+
+  "jp" : {
+	  "Setup" : "一式",
+	  "SetupInfo" : "アラームが鳴ったら、リングを閉じるために、リモコンの任意のキーを押します。" ,
+	  "Alarm" : "アラーム時間",
+	  "AlarmMsg" : "アラーム時刻に達した、リングを閉じるには、リモコンの任意のキーを押します。",
+	  "Clock" : "アラームセット",
+  },
+
+  "en" : {
+	  "Setup" : " Complete set ",
+	  "SetupInfo" : " When the alarm sounds, press any key on the remote control to close rings。" ,
+	  "Alarm" : " Alarm time ",
+	  "AlarmMsg" : " Alarm time is reached, press any key on the remote control to close rings。",
+	  "Clock" : " Alarm set ",
+  },
+
+  "kr" : {
+	  "Setup" : "전체 집합",
+	  "SetupInfo" : "알람이 울리면, 반지를 닫 리모콘의 아무 키나 누르십시오。" ,
+	  "Alarm" : "알람 시간",
+	  "AlarmMsg" : "알람 시간이 반지를 닫 리모콘의 아무 키나 누르면, 도달。",
+	  "Clock" : "알람 설정",
+  },
+
+}
+

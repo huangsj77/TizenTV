@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SERVICES</title>
+    <meta name="viewport" content="width=8000" />
+    <link rel="stylesheet" href="../message/public.css"/>
+    <link rel="stylesheet" href="../services/services.css"/>
+</head>
+<body>
+<div class="main">
+	<div class="maincont fwpfcont">
+		<div id="pfdiv">
+			<div id="pfheader">
+				<span><div id="level1">非常滿意</div> <img src="../shop/image/1.png"/></span>
+				<span><div id="level2">滿意</div><img src="../services/pf02.png"/></span>
+				<span><div id="level3">普通</div><img src="../services/pf03.png"/></span>
+				<span><div id="level4">不滿意</div><img src="../services/pf04.png"/></span>
+				<span><div id="level5">非常不滿意</div><img src="../services/pf05.png"/></span>
+			</div>
+			<div class="pfline">
+				<span id="fortotal">您對本飯店整體員工服務感到：</span>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+			</div>
+			<div class="pfline">
+				<span id="forhardware">您對本飯店硬件設施感到：</span>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+			</div>
+			<div class="pfline">
+				<span id="fordesign">您對本飯店空間規劃感到：</span>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+			</div>
+			<div class="pfline">
+				<span id="forquery">您對本飯店處理查詢感到：</span>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+			</div>
+			<div class="pfline">
+				<span id="forresponse">您對本飯店投訴的滿意度感到：</span>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+				<a href="#"></a>
+			</div>
+		</div>
+		<div id="thanksmsg">
+			萬分感謝您的蒞臨及指教，若您有任何批評指教的地方，歡迎隨時與我們聯絡，祝您順心愉快！
+		</div>
+
+	</div>
+
+	<div class="fwpftitle" id="scoretitle">服務品質評分</div>
+	<div class="fwpftext" id="tellus">讓我們了解您對本飯店的滿意度</div>
+	<img src="../image/op_intro.png" class="remoter-tips"/>  
+
+</div>
+
+</body>
+</html>
+<script type="text/javascript" src="../video/public/js/lang.js"></script>
+<script type="text/javascript" src="../video/public/js/config.js"></script>
+<script type="text/javascript" src="../video/public/js/jsget.js"></script>
+<script type="text/javascript" src="../../js/cate.js"></script>
+<script type="text/javascript" src="../video/public/js/deviceinfo.js"></script>
+<script type="text/javascript">
+var deviceInfo = new DeviceInfo();
+deviceInfo.onload = function( dinfo ) {
+}
+deviceInfo.load();
+
+</script>
+<script type="text/javascript">
+function $(name) {
+	return document.getElementById(name);
+}
+$("level1").innerHTML = TR("Best");
+$("level2").innerHTML = TR("Good");
+$("level3").innerHTML = TR("OK");
+$("level4").innerHTML = TR("Bad");
+$("level5").innerHTML = TR("Terrible");
+
+$("fortotal").innerHTML = TR("For Total");
+$("forhardware").innerHTML = TR("For Hardware");
+$("fordesign").innerHTML = TR("For Design");
+$("forquery").innerHTML = TR("For Query");
+$("forresponse").innerHTML = TR("For Response");
+
+$("thanksmsg").innerHTML = TR("Thanks");
+$("scoretitle").innerHTML = TR("Score");
+$("tellus").innerHTML = TR("Tell us");
+
+</script>
+<script type="text/javascript" src="player/js/key.js"></script>
+<script type="text/javascript">
+	var focusedLine = null;
+	function setfocusline() {
+		var eles = document.getElementById("pfdiv").getElementsByTagName("a");
+		for( var i = 0; i<eles.length; i++ ) {
+			eles[i].onfocus = function() {
+				var lele = this.parentElement;
+				if ( lele != focusedLine && focusedLine != null ) {
+					focusedLine.style.backgroundImage = "";
+				}
+				focusedLine = lele;
+				focusedLine.style.backgroundImage = "url(pf_line.png)";
+			}
+			eles[i].onclick = function() {
+				selectOption( this );
+			}
+			eles[i].href = "javascript:void(0);"
+		}
+		focusedLine = eles[0].parentElement;
+		focusedLine.style.backgroundImage = "url(pf_line.png)";
+	}
+	setfocusline();
+
+	function selectOption( aele ) {
+		var eles = aele.parentElement.getElementsByTagName("a");
+		for( var i = 0; i<eles.length; i++ ) {
+			if ( eles[i] == aele ) {
+				eles[i].innerHTML = "<img src='pf_selected.png' />";
+				aele.parentElement.currentSeleceted = i;				
+			}
+			else
+				eles[i].innerHTML = "";
+		}
+
+		var res = {} ;
+		eles = aele.parentElement.parentElement.getElementsByClassName("pfline");
+		for( var i = 0; i<eles.length; i++ ) {
+			if( isNaN(eles[i]['currentSeleceted'])  ) {
+				VatataKeyMove.initById (eles[i].getElementsByTagName("a")[0] );
+				return ;
+			}
+			res[i] = eles[i]['currentSeleceted'];
+		}
+		var resstr = (JSON.stringify(res));
+
+		var msg = new PushMessage();
+		msg.push( 925, "服務評分", deviceInfo.info.contacts, resstr , "");
+		document.getElementById("thanksmsg").style.display = "block";
+	}
+
+
+</script>
